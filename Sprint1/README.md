@@ -21,4 +21,4 @@
 - Mikko: Created the initial product backlog. Contributed to refining them and the presentation.
 - Janne: Worked on the presentation slides and wireframe.
 - Samuel: Worked on the presentation and its structure.
-  -Roni: Worked on the presentation and helped with the user stories.
+- Roni: Worked on the presentation and helped with the user stories.
