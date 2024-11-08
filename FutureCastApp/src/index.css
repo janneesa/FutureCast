@@ -1,3 +1,70 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1 {
+  @apply text-3xl font-bold text-primaryText mb-4;
+}
+
+h2 {
+  @apply text-2xl font-semibold text-primaryText mb-3;
+}
+
+h3 {
+  @apply text-xl font-medium text-primaryText mb-2;
+}
+
+h4 {
+  @apply text-lg font-medium text-primaryText mb-2;
+}
+
+p {
+  @apply text-sm text-secondaryText;
+}
+
+label {
+  @apply text-sm font-medium text-primaryText;
+}
+
+/* Reusable classes */
+
+.input {
+  @apply p-2 border border-gray-300 rounded;
+}
+
+.button {
+  @apply w-full p-2 bg-primaryButton text-white rounded hover:bg-primaryButton/90 transition;
+}
+
+.link {
+  @apply text-sm text-blue-600 hover:underline;
+}
+
+.card {
+  @apply w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden;
+}
+
+.card-header {
+  @apply p-4 space-y-1;
+}
+
+.card-content {
+  @apply p-4;
+}
+
+.card-footer {
+  @apply p-4 flex flex-wrap items-center justify-between gap-2;
+}
+
+/* Flex utilities */
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.flex-between {
+  @apply flex items-center justify-between;
+}
+
+.absolute-center {
+  @apply absolute inset-0 flex items-center justify-center;
+}
