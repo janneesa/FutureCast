@@ -36,6 +36,14 @@ label {
   @apply w-full p-2 bg-primaryButton text-white rounded hover:bg-primaryButton/90 transition;
 }
 
+.button-secondary {
+  @apply w-full p-2 bg-white border border-gray-300 text-primaryText rounded hover:bg-background transition;
+}
+
+.button-ghost {
+  @apply w-full p-2 bg-transparent text-primaryText rounded hover:bg-gray-100 transition;
+}
+
 .link {
   @apply text-sm text-blue-600 hover:underline;
 }
@@ -45,7 +53,7 @@ label {
 }
 
 .card-header {
-  @apply p-4 space-y-1;
+  @apply p-4 pb-0 space-y-1;
 }
 
 .card-content {
