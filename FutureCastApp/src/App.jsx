@@ -4,6 +4,7 @@ import LoginScreen from "./frontend/layouts/LoginScreen";
 import MainScreen from "./frontend/layouts/MainScreen";
 
 import Login from "./frontend/components/Login";
+import Register from "./frontend/components/Register";
 import Profile from "./frontend/components/Profile";
 import Prediction from "./frontend/components/Prediction";
 
@@ -28,6 +29,7 @@ function App() {
           {/* Login Screen */}
           <Route path="/" element={<LoginScreen />}>
             <Route index element={<Login />} />
+            <Route path="register" element={<Register />} />
           </Route>
 
           {/* Home Page */}

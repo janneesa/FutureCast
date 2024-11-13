@@ -33,15 +33,15 @@ label {
 }
 
 .button {
-  @apply w-full p-2 bg-primaryButton text-white rounded hover:bg-primaryButton/90 transition;
+  @apply w-full p-2 bg-primaryButton text-white rounded hover:bg-primaryButton/90 transition text-center;
 }
 
 .button-secondary {
-  @apply w-full p-2 bg-white border border-gray-300 text-primaryText rounded hover:bg-background transition;
+  @apply w-full p-2 bg-white border border-gray-300 text-primaryText rounded hover:bg-background transition text-center;
 }
 
 .button-ghost {
-  @apply w-full p-2 bg-transparent text-primaryText rounded hover:bg-gray-100 transition;
+  @apply w-full p-2 bg-transparent text-primaryText rounded hover:bg-gray-100 transition text-center;
 }
 
 .link {

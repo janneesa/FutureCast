@@ -1,9 +1,35 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "./Card";
 
 import { Outlet, Link } from "react-router-dom";
 
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const userEmail = email;
+    const userPassword = password;
+    setEmail("");
+    setPassword("");
+    setError("");
+    if (authenticateUser(userEmail, userPassword)) {
+      window.location.href = "/true";
+    } else {
+      setError("Invalid email or password");
+    }
+  };
+
+  const authenticateUser = (email, password) => {
+    // Authenticate user logic here
+    return true;
+  };
+
   return (
     <div className="flex-center min-h-screen p-4">
       {/* Card Title and description */}
@@ -19,6 +45,7 @@ function Login() {
           <form>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
+                {error && <p className="text-red-600">{error}</p>}
                 <label htmlFor="email">Email</label>
                 <input
                   id="email"
@@ -26,6 +53,8 @@ function Login() {
                   placeholder="m@example.com"
                   className="input"
                   required
+                  value={email}
+                  onChange={handleEmailChange}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -36,18 +65,13 @@ function Login() {
                   placeholder="Password"
                   className="input"
                   required
+                  value={password}
+                  onChange={handlePasswordChange}
                 />
               </div>
-              <button type="submit" className="button">
+              <button type="submit" className="button" onClick={handleSubmit}>
                 Sign In
               </button>
-              {/* Demo Link */}
-              <Link
-                to="/true/profile"
-                className="text-primaryText hover:text-secondaryText self-center"
-              >
-                Demo link to sign in
-              </Link>
             </div>
           </form>
           {/* Forgot password */}
@@ -92,7 +116,7 @@ function Login() {
           <div className="card-footer">
             <div className="text-sm text-gray-600">Don't have an account?</div>
             <button className="text-blue-600 hover:underline">
-              <a href="/signup">Create an account</a>
+              <Link to="/register">Create an account</Link>
             </button>
           </div>
         </div>
