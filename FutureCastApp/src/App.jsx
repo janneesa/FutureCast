@@ -1,3 +1,5 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import Login from "./frontend/components/Login";
 import Navigation from "./frontend/components/Navigation";
 import Profile from "./frontend/components/Profile";
@@ -19,18 +21,17 @@ function App() {
 
   return (
     <div className="bg-background min-h-screen">
-      <Navigation />
-
-      <p>Profile</p>
-      <Profile />
-
-      <p>Prediction</p>
-      <div className="p-4 flex justify-center items-center">
-        <Prediction {...predictionx} />
-      </div>
-
-      <p>Login</p>
-      <Login />
+      <BrowserRouter>
+        <Navigation />
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/home" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/search" element={<Prediction {...predictionx} />} />
+          <Route path="/messages" element={<Prediction {...predictionx} />} />
+          <Route path="/settings" element={<Prediction {...predictionx} />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,33 +16,33 @@ function Navigation() {
             <div className="text-xl font-bold text-primaryText">FutureCast</div>
           </div>
           <div className="hidden md:flex space-x-4">
-            <a href="/" className="text-primaryText hover:text-secondaryText">
+            <Link to="/" className="text-primaryText hover:text-secondaryText">
               Home
-            </a>
-            <a
-              href="/profile"
+            </Link>
+            <Link
+              to="/profile"
               className="text-primaryText hover:text-secondaryText"
             >
               Profile
-            </a>
-            <a
-              href="/search"
+            </Link>
+            <Link
+              to="/search"
               className="text-primaryText hover:text-secondaryText"
             >
               Search
-            </a>
-            <a
-              href="/messages"
+            </Link>
+            <Link
+              to="/messages"
               className="text-primaryText hover:text-secondaryText"
             >
               Messages
-            </a>
-            <a
-              href="/settings"
+            </Link>
+            <Link
+              to="/settings"
               className="text-primaryText hover:text-secondaryText"
             >
               Settings
-            </a>
+            </Link>
           </div>
           <div className="md:hidden">
             <button
