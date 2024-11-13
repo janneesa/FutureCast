@@ -1,6 +1,8 @@
 import React from "react";
 import Card from "./Card";
 
+import { Outlet, Link } from "react-router-dom";
+
 function Login() {
   return (
     <div className="flex-center min-h-screen p-4">
@@ -39,6 +41,13 @@ function Login() {
               <button type="submit" className="button">
                 Sign In
               </button>
+              {/* Demo Link */}
+              <Link
+                to="/true/profile"
+                className="text-primaryText hover:text-secondaryText self-center"
+              >
+                Demo link to sign in
+              </Link>
             </div>
           </form>
           {/* Forgot password */}

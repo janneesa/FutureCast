@@ -1,7 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+import LoginScreen from "./frontend/layouts/LoginScreen";
+import MainScreen from "./frontend/layouts/MainScreen";
+
 import Login from "./frontend/components/Login";
-import Navigation from "./frontend/components/Navigation";
 import Profile from "./frontend/components/Profile";
 import Prediction from "./frontend/components/Prediction";
 
@@ -22,14 +24,21 @@ function App() {
   return (
     <div className="bg-background min-h-screen">
       <BrowserRouter>
-        <Navigation />
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/home" element={<Profile />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/search" element={<Prediction {...predictionx} />} />
-          <Route path="/messages" element={<Prediction {...predictionx} />} />
-          <Route path="/settings" element={<Prediction {...predictionx} />} />
+          {/* Login Screen */}
+          <Route path="/" element={<LoginScreen />}>
+            <Route index element={<Login />} />
+          </Route>
+
+          {/* Home Page */}
+          <Route path="/true" element={<MainScreen />}>
+            <Route index element={<Profile />} />
+            <Route path="home" element={<Prediction {...predictionx} />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="search" element={<Prediction {...predictionx} />} />
+            <Route path="messages" element={<Prediction {...predictionx} />} />
+            <Route path="settings" element={<Prediction {...predictionx} />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

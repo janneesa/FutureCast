@@ -16,32 +16,38 @@ function Navigation() {
             <div className="text-xl font-bold text-primaryText">FutureCast</div>
           </div>
           <div className="hidden md:flex space-x-4">
-            <Link to="/" className="text-primaryText hover:text-secondaryText">
+            <Link
+              to="/true/home"
+              className="text-primaryText hover:text-secondaryText"
+            >
               Home
             </Link>
             <Link
-              to="/profile"
+              to="/true/profile"
               className="text-primaryText hover:text-secondaryText"
             >
               Profile
             </Link>
             <Link
-              to="/search"
+              to="/true/search"
               className="text-primaryText hover:text-secondaryText"
             >
               Search
             </Link>
             <Link
-              to="/messages"
+              to="/true/messages"
               className="text-primaryText hover:text-secondaryText"
             >
               Messages
             </Link>
             <Link
-              to="/settings"
+              to="/true/settings"
               className="text-primaryText hover:text-secondaryText"
             >
               Settings
+            </Link>
+            <Link to="/" className="text-primaryText hover:text-secondaryText">
+              Logout
             </Link>
           </div>
           <div className="md:hidden">
