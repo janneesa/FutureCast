@@ -17,31 +17,31 @@ function Navigation() {
           </div>
           <div className="hidden md:flex space-x-4">
             <Link
-              to="/true/home"
+              to="/app/home"
               className="text-primaryText hover:text-secondaryText"
             >
               Home
             </Link>
             <Link
-              to="/true/profile"
+              to="/app/profile"
               className="text-primaryText hover:text-secondaryText"
             >
               Profile
             </Link>
             <Link
-              to="/true/search"
+              to="/app/search"
               className="text-primaryText hover:text-secondaryText"
             >
               Search
             </Link>
             <Link
-              to="/true/messages"
+              to="/app/messages"
               className="text-primaryText hover:text-secondaryText"
             >
               Messages
             </Link>
             <Link
-              to="/true/settings"
+              to="/app/settings"
               className="text-primaryText hover:text-secondaryText"
             >
               Settings
@@ -78,36 +78,42 @@ function Navigation() {
       {isOpen && (
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a
-              href="/"
+            <Link
+              to="/true/home"
               className="block text-primaryText hover:text-secondaryText"
             >
               Home
-            </a>
-            <a
-              href="/profile"
+            </Link>
+            <Link
+              to="/true/profile"
               className="block text-primaryText hover:text-secondaryText"
             >
               Profile
-            </a>
-            <a
-              href="/search"
+            </Link>
+            <Link
+              to="/true/search"
               className="block text-primaryText hover:text-secondaryText"
             >
               Search
-            </a>
-            <a
-              href="/messages"
+            </Link>
+            <Link
+              to="/true/messages"
               className="block text-primaryText hover:text-secondaryText"
             >
               Messages
-            </a>
-            <a
-              href="/settings"
+            </Link>
+            <Link
+              to="/true/settings"
               className="block text-primaryText hover:text-secondaryText"
             >
               Settings
-            </a>
+            </Link>
+            <Link
+              to="/"
+              className="block text-primaryText hover:text-secondaryText"
+            >
+              Logout
+            </Link>
           </div>
         </div>
       )}

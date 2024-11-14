@@ -1,33 +1,37 @@
 import React, { useState } from "react";
 import Card from "./Card";
 
-import { Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ loginFunction }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  const handleSubmit = (e) => {
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    // Prevent default form submission
     e.preventDefault();
-    const userEmail = email;
-    const userPassword = password;
-    setEmail("");
-    setPassword("");
-    setError("");
-    if (authenticateUser(userEmail, userPassword)) {
-      window.location.href = "/true";
+    // Check if email and password are empty
+    if (!email || !password) {
+      setError("Please enter email and password");
+      return;
+    }
+    // Call login function passed from App.jsx
+    // If login is successful, redirect to /true
+    if (await loginFunction(email, password)) {
+      setEmail("");
+      setPassword("");
+      setError("");
+      navigate("/app");
     } else {
       setError("Invalid email or password");
     }
-  };
-
-  const authenticateUser = (email, password) => {
-    // Authenticate user logic here
-    return true;
   };
 
   return (

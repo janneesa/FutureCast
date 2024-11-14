@@ -1,7 +1,13 @@
 import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Card from "./Card";
-
-import { Outlet, Link } from "react-router-dom";
+import {
+  validateEmail,
+  validateUserName,
+  validatePassword,
+  validatePhonenumber,
+  validateDateofbirth,
+} from "../validations/RegisterValidation";
 
 function Register() {
   const [name, setName] = useState("");
@@ -12,6 +18,8 @@ function Register() {
   const [dateofbirth, setDateofbirth] = useState("");
   const [error, setError] = useState("");
 
+  const navigate = useNavigate();
+
   const handleNameChange = (e) => setName(e.target.value);
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handleUsernameChange = (e) => setUsername(e.target.value);
@@ -19,42 +27,7 @@ function Register() {
   const handlePhonenumberChange = (e) => setPhonenumber(e.target.value);
   const handleDateofbirthChange = (e) => setDateofbirth(e.target.value);
 
-  const validateEmail = (email) => {
-    // Email validation logic here
-    return true;
-  };
-
-  const validateUserName = (username) => {
-    // Username validation logic here
-    if (username.length < 3) {
-      setError("Name must be at least 3 characters long");
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const validatePassword = (password) => {
-    // Password validation logic here
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long");
-      return false;
-    } else {
-      return true;
-    }
-  };
-
-  const validatePhonenumber = (phonenumber) => {
-    // Phonenumber validation logic here
-    return true;
-  };
-
-  const validateDateofbirth = (dateofbirth) => {
-    // Date of birth validation logic here
-    return true;
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newUser = {
       name: name,
@@ -64,45 +37,54 @@ function Register() {
       phonenumber: phonenumber,
       dateofbirth: dateofbirth,
     };
-    if (
-      validateUserName(newUser.name) &&
-      validateEmail(newUser.email) &&
-      validatePassword(newUser.password) &&
-      validatePhonenumber(newUser.phonenumber) &&
-      validateDateofbirth(newUser.dateofbirth)
-    ) {
-      if (registerUser(newUser)) {
+
+    const errors = [
+      validateEmail(newUser.email),
+      validateUserName(newUser.username),
+      validatePassword(newUser.password),
+      validatePhonenumber(newUser.phonenumber),
+      validateDateofbirth(newUser.dateofbirth),
+    ].filter((error) => error !== "");
+
+    if (errors.length > 0) {
+      setError(errors.join(", "));
+      return;
+    }
+
+    try {
+      const response = await registerUser(newUser);
+
+      if (response) {
         setName("");
         setEmail("");
         setUsername("");
         setPassword("");
         setPhonenumber("");
         setDateofbirth("");
-        window.location.href = "/true";
+        navigate("/");
+        alert("User registered successfully");
       } else {
         setError("Error registering user");
       }
+    } catch (error) {
+      setError("Registration failed. Please try again later.");
     }
   };
 
-  const registerUser = (email, password) => {
-    // Authenticate user logic here
+  const registerUser = async (newUser) => {
+    // Register user logic here
     return true;
   };
 
   return (
     <div className="flex-center min-h-screen p-4">
-      {/* Card Title and description */}
       <Card>
         <div className="card-header">
-          <h2>Register to FutureCast</h2>
-          <p>Enter your email and password to register a new account</p>
+          <h2>Register for FutureCast</h2>
+          <p>Enter your details to create an account</p>
         </div>
-
-        {/* Card Content */}
         <div className="card-content">
-          {/* Login Form */}
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <label htmlFor="name">Name</label>
@@ -110,10 +92,10 @@ function Register() {
                   id="name"
                   type="text"
                   placeholder="Firstname Lastname"
-                  className="input"
-                  required
                   value={name}
                   onChange={handleNameChange}
+                  className="input"
+                  required
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -122,10 +104,10 @@ function Register() {
                   id="email"
                   type="email"
                   placeholder="m@example.com"
-                  className="input"
-                  required
                   value={email}
                   onChange={handleEmailChange}
+                  className="input"
+                  required
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -133,11 +115,11 @@ function Register() {
                 <input
                   id="username"
                   type="text"
-                  placeholder="Username"
-                  className="input"
-                  required
+                  placeholder="username"
                   value={username}
                   onChange={handleUsernameChange}
+                  className="input"
+                  required
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -145,40 +127,37 @@ function Register() {
                 <input
                   id="password"
                   type="password"
-                  placeholder="Password"
-                  className="input"
-                  required
+                  placeholder="******"
                   value={password}
                   onChange={handlePasswordChange}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="name">Phone Number</label>
-                <input
-                  id="phonenumber"
-                  type="text"
-                  placeholder="Phone Number"
                   className="input"
                   required
-                  value={phonenumber}
-                  onChange={handlePhonenumberChange}
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label htmlFor="name">Date of Birth</label>
+                <label htmlFor="phonenumber">Phone Number</label>
+                <input
+                  id="phonenumber"
+                  type="tel"
+                  placeholder="123-456-7890"
+                  value={phonenumber}
+                  onChange={handlePhonenumberChange}
+                  className="input"
+                  required
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="dateofbirth">Date of Birth</label>
                 <input
                   id="dateofbirth"
                   type="date"
-                  placeholder="DD-MM-YYYY"
-                  className="input"
-                  required
                   value={dateofbirth}
                   onChange={handleDateofbirthChange}
+                  className="input"
+                  required
                 />
               </div>
-
               {error && <p className="text-red-600">{error}</p>}
-
               <button type="submit" className="button" onClick={handleSubmit}>
                 Register
               </button>
