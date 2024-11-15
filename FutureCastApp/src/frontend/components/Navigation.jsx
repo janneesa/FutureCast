@@ -79,31 +79,31 @@ function Navigation() {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              to="/true/home"
+              to="/app/home"
               className="block text-primaryText hover:text-secondaryText"
             >
               Home
             </Link>
             <Link
-              to="/true/profile"
+              to="/app/profile"
               className="block text-primaryText hover:text-secondaryText"
             >
               Profile
             </Link>
             <Link
-              to="/true/search"
+              to="/app/search"
               className="block text-primaryText hover:text-secondaryText"
             >
               Search
             </Link>
             <Link
-              to="/true/messages"
+              to="/app/messages"
               className="block text-primaryText hover:text-secondaryText"
             >
               Messages
             </Link>
             <Link
-              to="/true/settings"
+              to="/app/settings"
               className="block text-primaryText hover:text-secondaryText"
             >
               Settings

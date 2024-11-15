@@ -36,6 +36,14 @@ function App() {
     }
   };
 
+  const followUser = (userId) => {
+    // Logic Here
+    setUser((prevUser) => ({
+      ...prevUser,
+      following: [...prevUser.following, userId],
+    }));
+  };
+
   return (
     <div className="bg-background min-h-screen">
       <BrowserRouter>
@@ -52,7 +60,7 @@ function App() {
             <Route index element={<Profile user={user} />} />
             <Route path="home" element={<Home />} />
             <Route path="profile" element={<Profile user={user} />} />
-            <Route path="search" element={<Search />} />
+            <Route path="search" element={<Search user={user} />} />
             <Route path="messages" element={<Messages />} />
             <Route path="settings" element={<Settings />} />
           </Route>
