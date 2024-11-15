@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import LoginScreen from "./frontend/layouts/LoginScreen";
 import MainScreen from "./frontend/layouts/MainScreen";
@@ -25,9 +25,11 @@ function App() {
 
     // Mock Login
     if (email && password) {
-      const fetchedUser = mockData.user;
+      const users = mockData.users;
+      const fetchedUser = users.find(
+        (user) => user.email === email && user.password === password
+      );
       setUser(fetchedUser);
-
       return fetchedUser;
     }
   };

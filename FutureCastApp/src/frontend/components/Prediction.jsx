@@ -12,7 +12,7 @@ function handleVote(postId, type) {
 
 function Prediction({
   id,
-  user,
+  username,
   avatar,
   lastVoteDate,
   prediction,
@@ -28,11 +28,11 @@ function Prediction({
           <div className="flex items-center">
             <img
               src={avatar}
-              alt={user}
+              alt={username}
               className="h-12 w-12 rounded-full mr-2"
             />
             <p className="text-primaryText text-xl font-bold self-center">
-              {user}
+              {username}
             </p>
           </div>
           <div className="flex items-center text-sm text-secondaryText">
@@ -63,7 +63,10 @@ function Prediction({
           <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-background">
             <div
               style={{
-                width: `${calculateAgreementPercentage(agrees, disagrees)}%`,
+                width: `${calculateAgreementPercentage(
+                  agrees.length,
+                  disagrees.length
+                )}%`,
               }}
               className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primaryButton"
             ></div>

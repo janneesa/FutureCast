@@ -19,7 +19,7 @@ function Profile({ user }) {
 
   useEffect(() => {
     fetchPredictions();
-  }, []);
+  }, [user]);
 
   return (
     <div>
