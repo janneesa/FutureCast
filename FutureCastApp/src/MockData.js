@@ -42,7 +42,7 @@ const predictions = {
   agrees: [2, 3, 4, 5],
   // List of user ids who disagree with the prediction
   disagrees: [6, 7, 8, 9],
-  // Add comments later
+  // Add comments later (just number is fine now)
   comments: 15,
   lastVoteDate: "2024-12-31",
   avatar:
