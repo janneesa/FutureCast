@@ -10,7 +10,7 @@ import ForgotPassword from "./frontend/components/login/ForgotPassword";
 
 import Home from "./frontend/components/Home";
 import Profile from "./frontend/components/Profile/Profile";
-import Search from "./frontend/components/Search";
+import Search from "./frontend/components/search/Search";
 import Messages from "./frontend/components/Messages";
 import Settings from "./frontend/components/Settings";
 
