@@ -23,7 +23,7 @@ const user = {
   // METHODS
   // GET All
   // GET By Id
-  // POST
+  // DELETE
   // PUT (update)
 
   // GET By Username
