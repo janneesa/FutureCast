@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Card from "./Card";
+import Card from "../Card";
 
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -80,9 +80,9 @@ function Login({ loginFunction }) {
           </form>
           {/* Forgot password */}
           <div className="mt-4 text-center">
-            <a href="/forgot-password" className="link">
+            <Link to="/forgot-password" className="link">
               Forgot password?
-            </a>
+            </Link>
           </div>
           {/* Divider */}
           <div className="relative my-4">

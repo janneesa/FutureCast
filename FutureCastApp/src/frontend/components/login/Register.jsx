@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Card from "./Card";
+import Card from "../Card";
 import {
   validateEmail,
   validateUserName,
   validatePassword,
   validatePhonenumber,
   validateDateofbirth,
-} from "../validations/RegisterValidation";
+} from "../../validations/RegisterValidation";
 
-import { mockData } from "../data/MockData";
+import { mockData } from "../../data/MockData";
 
 function Register() {
   const [name, setName] = useState("");

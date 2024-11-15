@@ -4,8 +4,10 @@ import { useEffect, useState } from "react";
 import LoginScreen from "./frontend/layouts/LoginScreen";
 import MainScreen from "./frontend/layouts/MainScreen";
 
-import Login from "./frontend/components/Login";
-import Register from "./frontend/components/Register";
+import Login from "./frontend/components/login/Login";
+import Register from "./frontend/components/login/Register";
+import ForgotPassword from "./frontend/components/login/ForgotPassword";
+
 import Home from "./frontend/components/Home";
 import Profile from "./frontend/components/Profile/Profile";
 import Search from "./frontend/components/Search";
@@ -42,6 +44,7 @@ function App() {
           <Route path="/" element={<LoginScreen />}>
             <Route index element={<Login loginFunction={getUser} />} />
             <Route path="register" element={<Register />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
           </Route>
 
           {/* Home Page */}
