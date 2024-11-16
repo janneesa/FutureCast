@@ -1,69 +1,62 @@
-let userArray = [];
-let nextId = 1;
+const mongoose = require("mongoose");
 
-const getAll = () => {
-    return userArray;
-};
+const Schema = mongoose.Schema;
 
-const addOne = (name, email, password, phone_number, date_of_birth) => {
-    if (!name | !email | !password | !phone_number | !date_of_birth) {
-        return false;
+const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    username: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+    },
+    phone_number: {
+        type: String,
+        required: false,
+    },
+    date_of_birth: {
+        type: Date,
+        required: true,
+    },
+    bio: {
+        type: String,
+        required: false,
+    },
+    followers: {
+        type: [Number],
+        required: false,
+    },
+    following: {
+        type: [Number],
+        required: false,
+    },
+    predictions: {
+        type: [Number],
+        required: false,
+    },
+    successfulPredictions: {
+        type: [Number],
+        required: false,
+    },
+    predictionScore: {
+        type: Number,
+        required: false,
+    },
+    avatar: {
+        type: String,
+        required: false,
     }
-    const newUser = {
-        id: nextId++,
-        name: name,
-        email: email,
-        password: password,
-        phone_number: phone_number,
-        date_of_birth: date_of_birth,
-    };
-    userArray.push(newUser);
-    return newUser;
-}
+},
+    { timestamps: true }
+);
 
-const findById = (id) => {
-    const user = userArray.find((user) => user.id === Number(id));
-    if (user) {
-        return user;
-    } else return false;
-};
-
-const updateOneById = (id, updatedData) => {
-    const user = findById(id);
-    if (user) {
-        if (updatedData.name) {
-            user.name = updatedData.name;
-        }
-        if (updatedData.email) {
-            user.email = updatedData.email;
-        }
-        if (updatedData.password) {
-            user.password = updatedData.password;
-        }
-        if (updatedData.phone_number) {
-            user.phone_number = updatedData.phone_number;
-        }
-        if (updatedData.date_of_birth) {
-            user.date_of_birth = updatedData.date_of_birth;
-        }
-        return user;
-    }
-    return false;
-};
-
-const deleteOneById = (id) => {
-    const user = findById(id);
-    if (user) {
-        const initialLenght = userArray.length;
-        userArray = userArray.filter((user) => user.id !== Number(id));
-        return userArray.length < initialLenght;
-    } else return false;
-};
-
-module.exports = {
-    getAll,
-    addOne,
-    findById,
-    updateOneById,
-    deleteOneById,
-};
+module.exports = mongoose.model("User", userSchema);
