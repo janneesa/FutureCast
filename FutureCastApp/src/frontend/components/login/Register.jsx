@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Card from "./Card";
+import Card from "../Card";
 import {
   validateEmail,
   validateUserName,
   validatePassword,
   validatePhonenumber,
   validateDateofbirth,
-} from "../validations/RegisterValidation";
+} from "../../validations/RegisterValidation";
+
+import { mockData } from "../../data/MockData";
 
 function Register() {
   const [name, setName] = useState("");
@@ -36,6 +38,13 @@ function Register() {
       password: password,
       phonenumber: phonenumber,
       dateofbirth: dateofbirth,
+      bio: "",
+      followers: [],
+      following: [],
+      predictions: [],
+      successfulPredictions: [],
+      predictionScore: 0,
+      avatar: "",
     };
 
     const errors = [
@@ -72,7 +81,7 @@ function Register() {
   };
 
   const registerUser = async (newUser) => {
-    // Register user logic here
+    mockData.users.push(newUser);
     return true;
   };
 

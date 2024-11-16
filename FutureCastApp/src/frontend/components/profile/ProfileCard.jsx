@@ -23,7 +23,7 @@ function ProfileCard({ user }) {
               <p className="text-sm text-muted-foreground">Following</p>
             </div>
             <div className="text-center">
-              <p className="font-bold">{user?.totalPredictions}</p>
+              <p className="font-bold">{user?.predictions.length}</p>
               <p className="text-sm text-muted-foreground">Predictions</p>
             </div>
           </div>
