@@ -9,7 +9,7 @@ import Register from "./frontend/components/login/Register";
 import ForgotPassword from "./frontend/components/login/ForgotPassword";
 
 import Home from "./frontend/components/Home";
-import Profile from "./frontend/components/Profile/Profile";
+import Profile from "./frontend/components/profile/Profile";
 
 import Search from "./frontend/components/search/Search";
 

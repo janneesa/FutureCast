@@ -9,7 +9,7 @@ const {
   deleteUser,
   // patchUser
 } = require("../controllers/userController");
- 
+
 // GET /users
 router.get("/", getAllUsers);
 
@@ -28,7 +28,7 @@ router.put("/:userId", updateUser);
 // DELETE /users/:userId
 router.delete("/:userId", deleteUser);
 
-// Update user using PATCH 
+// Update user using PATCH
 // router.patch('/:userId', patchUser)
 
 module.exports = router;

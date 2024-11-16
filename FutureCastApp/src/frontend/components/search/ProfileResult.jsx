@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import ProfileCard from "../Profile/ProfileCard";
-import ScoreCard from "../Profile/ScoreCard";
-import ContentCard from "../Profile/ContentCard";
+import ProfileCard from "../profile/ProfileCard";
+import ScoreCard from "../profile/ScoreCard";
+import ContentCard from "../profile/ContentCard";
 
 import { mockData } from "../../data/MockData";
 
