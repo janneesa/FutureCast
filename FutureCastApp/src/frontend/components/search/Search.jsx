@@ -9,6 +9,18 @@ function Search({ user }) {
   const [searchWord, setSearchWord] = useState("");
   const [results, setResults] = useState([]);
 
+  // DEMO to fetct all users
+  const fetchAllUsers = () => {
+    // Fetch all users
+    const allUsers = mockData.users;
+    // Remove current user from search results
+    const currentUserIndex = allUsers.findIndex((u) => u.id === user.id);
+    if (currentUserIndex > -1) {
+      allUsers.splice(currentUserIndex, 1);
+    }
+    setResults(allUsers);
+  };
+
   const handleSearchWordChange = (e) => {
     setSearchWord(e.target.value);
   };
@@ -16,19 +28,14 @@ function Search({ user }) {
   const fetchResults = () => {
     // Fetch results
     const searchResults = mockData.users.filter((u) =>
-      u.username.includes(searchWord)
+      u.username.toLowerCase().includes(searchWord.toLowerCase())
     );
-    // Remove current user from search results
-    const currentUserIndex = searchResults.findIndex((u) => u.id === user.id);
-    if (currentUserIndex > -1) {
-      searchResults.splice(currentUserIndex, 1);
-    }
     setResults(searchResults);
   };
 
   useEffect(() => {
-    fetchResults();
-  }, [searchWord]);
+    fetchAllUsers();
+  }, []);
 
   return (
     <div className="p-4 flex flex-col gap-4 items-center">
@@ -37,16 +44,24 @@ function Search({ user }) {
           <h3>Search users</h3>
           <p>Type username to search other users</p>
         </div>
-        <div className="card-content">
+        <div className="card-content flex">
           <input
             id="search"
             type="text"
             placeholder="username"
-            className="p-1 border border-gray-300 rounded w-full"
+            className="p-1 border border-gray-300 rounded w-full mr-4"
             required
             value={searchWord}
             onChange={handleSearchWordChange}
           />
+          <div className="self-center ml-auto">
+            <button
+              className="button button-secondary ml-auto"
+              onClick={fetchResults}
+            >
+              Search
+            </button>
+          </div>
         </div>
       </Card>
 
