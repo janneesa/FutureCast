@@ -12,64 +12,37 @@ import Home from "./frontend/components/Home";
 import Profile from "./frontend/components/Profile/Profile";
 
 import Search from "./frontend/components/search/Search";
-import ProfileResult from "./frontend/components/search/ProfileResult";
 
 import Messages from "./frontend/components/Messages";
 import Settings from "./frontend/components/Settings";
 
 import { mockData } from "./frontend/data/MockData";
+import { UserProvider } from "./frontend/components/context/UserContext";
 
 function App() {
-  // User State
-  const [user, setUser] = useState(null);
-
-  // getUser Function gets passed down to Login.jsx to handle login.
-  // Function is setup in App.jsx because user state is managed here.
-  const getUser = async (email, password) => {
-    // Logic Here
-
-    // Mock Login
-    if (email && password) {
-      const users = mockData.users;
-      const fetchedUser = users.find(
-        (user) => user.email === email && user.password === password
-      );
-      setUser(fetchedUser);
-      return fetchedUser;
-    }
-  };
-
-  const followUser = (userId) => {
-    // Logic Here
-    setUser((prevUser) => ({
-      ...prevUser,
-      following: [...prevUser.following, userId],
-    }));
-  };
-
   return (
-    <div className="bg-background min-h-screen">
-      <BrowserRouter>
-        <Routes>
-          {/* Login Screen */}
-          <Route path="/" element={<LoginScreen />}>
-            <Route index element={<Login loginFunction={getUser} />} />
-            <Route path="register" element={<Register />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-          </Route>
+    <UserProvider>
+      <div className="bg-background min-h-screen">
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LoginScreen />}>
+              <Route index element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+            </Route>
 
-          {/* Home Page */}
-          <Route path="/app" element={<MainScreen />}>
-            <Route index element={<Profile user={user} />} />
-            <Route path="home" element={<Home />} />
-            <Route path="profile" element={<Profile user={user} />} />
-            <Route path="search" element={<Search user={user} />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="settings" element={<Settings />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </div>
+            <Route path="/app" element={<MainScreen />}>
+              <Route index element={<Profile />} />
+              <Route path="home" element={<Home />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="search" element={<Search />} />
+              <Route path="messages" element={<Messages />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </UserProvider>
   );
 }
 

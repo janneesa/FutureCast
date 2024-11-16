@@ -1,11 +1,14 @@
 import Card from "../Card";
 import SearchResult from "./SearchResult";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
+import { UserContext } from "../context/UserContext";
 import { mockData } from "../../data/MockData";
 
-function Search({ user }) {
+function Search() {
+  const { user } = useContext(UserContext);
+
   const [searchWord, setSearchWord] = useState("");
   const [results, setResults] = useState([]);
 
@@ -34,8 +37,10 @@ function Search({ user }) {
   };
 
   useEffect(() => {
-    fetchAllUsers();
-  }, []);
+    if (user) {
+      fetchAllUsers();
+    }
+  }, [user]);
 
   return (
     <div className="p-4 flex flex-col gap-4 items-center">
@@ -72,7 +77,6 @@ function Search({ user }) {
           username={result.username}
           predictionScore={result.predictionScore}
           id={result.id}
-          user={user}
         />
       ))}
     </div>

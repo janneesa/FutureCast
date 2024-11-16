@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ProfileCard from "./ProfileCard";
 import ScoreCard from "./ScoreCard";
 import ContentCard from "./ContentCard";
 
+import { UserContext } from "../context/UserContext";
+
 import { mockData } from "../../data/MockData";
 
-function Profile({ user }) {
+function Profile() {
+  const { user } = useContext(UserContext);
   const [predictions, setPredictions] = useState([]);
 
   // Call backend that fetches users predictions.
@@ -18,7 +21,9 @@ function Profile({ user }) {
   };
 
   useEffect(() => {
-    fetchPredictions();
+    if (user) {
+      fetchPredictions();
+    }
   }, [user]);
 
   return (

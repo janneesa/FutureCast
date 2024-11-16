@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
+
+import { UserContext } from "../context/UserContext";
 import Card from "../Card";
 
-function SearchResult({ avatar, username, predictionScore, id, user }) {
+function SearchResult({ avatar, username, predictionScore, id }) {
+  const { user } = useContext(UserContext);
+
   const [ableToFollow, setAbleToFollow] = useState(
     !user.following.includes(id)
   );

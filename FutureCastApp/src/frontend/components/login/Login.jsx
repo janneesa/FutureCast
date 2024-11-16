@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
 import Card from "../Card";
 
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
-function Login({ loginFunction }) {
+import { mockData } from "../../data/MockData";
+
+function Login() {
+  const { setUser } = useContext(UserContext);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,24 +18,30 @@ function Login({ loginFunction }) {
   const handleEmailChange = (e) => setEmail(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    // Prevent default form submission
+  const handleLogin = async (e) => {
+    // Mock Login
     e.preventDefault();
     // Check if email and password are empty
     if (!email || !password) {
       setError("Please enter email and password");
       return;
     }
-    // Call login function passed from App.jsx
-    // If login is successful, redirect to /true
-    if (await loginFunction(email, password)) {
-      setEmail("");
-      setPassword("");
-      setError("");
-      navigate("/app");
-    } else {
-      setError("Invalid email or password");
+
+    if (email && password) {
+      const users = mockData.users;
+      const fetchedUser = users.find(
+        (user) => user.email === email && user.password === password
+      );
+      if (fetchedUser) {
+        const { email, password, ...userData } = fetchedUser; // Exclude email and password
+        setUser(userData);
+        setEmail("");
+        setPassword("");
+        setError("");
+        navigate("/app");
+      } else {
+        setError("Invalid email or password");
+      }
     }
   };
 
@@ -41,6 +52,8 @@ function Login({ loginFunction }) {
         <div className="card-header">
           <h2>Login to FutureCast</h2>
           <p>Enter your email and password to access your account</p>
+          <p>Test Credentials:</p>
+          <p>m@example.com password</p>
         </div>
 
         {/* Card Content */}
@@ -73,7 +86,7 @@ function Login({ loginFunction }) {
                   onChange={handlePasswordChange}
                 />
               </div>
-              <button type="submit" className="button" onClick={handleSubmit}>
+              <button type="submit" className="button" onClick={handleLogin}>
                 Sign In
               </button>
             </div>
