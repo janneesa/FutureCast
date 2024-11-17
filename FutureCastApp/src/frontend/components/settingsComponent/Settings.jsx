@@ -1,6 +1,7 @@
 import React from "react";
 import ProfileSettings from "./ProfileSettings";
 import AccountSettings from "./AccountSettings";
+import NotificationSettings from "./NotificationSettings";
 import Card from "../Card";
 
 function Settings() {
@@ -18,7 +19,7 @@ function Settings() {
           </div>
           {/* Predictions and Badges */}
           <div className="flex justify-center items-start">
-            <Card>third</Card>
+            <NotificationSettings />
           </div>
           <div className="flex justify-center items-start">
             <Card>fourth</Card>
