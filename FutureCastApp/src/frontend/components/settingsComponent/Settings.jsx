@@ -1,10 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
-
-import Card from "../Card";
+import React from "react";
 import ProfileSettings from "./ProfileSettings";
-
-import { UserContext } from "../context/UserContext";
-import { mockData } from "../../data/MockData";
+import AccountSettings from "./AccountSettings";
+import Card from "../Card";
 
 function Settings() {
   return (
@@ -12,18 +9,18 @@ function Settings() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
           {/* Profile Settings */}
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-start">
             <ProfileSettings />
           </div>
-          {/* Stats */}
-          <div className="flex justify-center items-center">
-            <Card>second</Card>
+          {/* Account Settings */}
+          <div className="flex justify-center items-start">
+            <AccountSettings />
           </div>
           {/* Predictions and Badges */}
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-start">
             <Card>third</Card>
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-start">
             <Card>fourth</Card>
           </div>
         </div>
@@ -31,4 +28,5 @@ function Settings() {
     </div>
   );
 }
+
 export default Settings;
