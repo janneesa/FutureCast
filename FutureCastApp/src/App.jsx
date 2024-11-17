@@ -14,9 +14,8 @@ import Profile from "./frontend/components/profile/Profile";
 import Search from "./frontend/components/search/Search";
 
 import Messages from "./frontend/components/Messages";
-import Settings from "./frontend/components/Settings";
+import Settings from "./frontend/components/settingsComponent/Settings";
 
-import { mockData } from "./frontend/data/MockData";
 import { UserProvider } from "./frontend/components/context/UserContext";
 
 function App() {
