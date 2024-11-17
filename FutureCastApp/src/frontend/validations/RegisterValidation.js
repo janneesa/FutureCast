@@ -1,9 +1,13 @@
 // RegisterValidation.js
 
+import { mockData } from "../data/MockData";
+
 export const validateEmail = (email) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(email)) {
     return "Invalid email address";
+  } else if (mockData.users.some((user) => user.email === email)) {
+    return "Email is already in use";
   }
   return "";
 };
@@ -11,6 +15,10 @@ export const validateEmail = (email) => {
 export const validateUserName = (username) => {
   if (username.length < 3) {
     return "Username must be at least 3 characters long";
+  } else if (username.length > 10) {
+    return "Username must be at most 10 characters long";
+  } else if (mockData.users.some((user) => user.username === username)) {
+    return "Username is already in use";
   }
   return "";
 };
@@ -18,6 +26,14 @@ export const validateUserName = (username) => {
 export const validatePassword = (password) => {
   if (password.length < 8) {
     return "Password must be at least 8 characters long";
+  }
+  return "";
+};
+
+export const checkPasswordMatch = (id, password) => {
+  const user = mockData.users.find((user) => user.id === id);
+  if (user.password !== password) {
+    return "Incorrect password";
   }
   return "";
 };

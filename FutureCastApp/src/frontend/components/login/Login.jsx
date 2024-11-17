@@ -33,7 +33,7 @@ function Login() {
         (user) => user.email === email && user.password === password
       );
       if (fetchedUser) {
-        const { email, password, ...userData } = fetchedUser; // Exclude email and password
+        const { password, ...userData } = fetchedUser; // Exclude email and password
         setUser(userData);
         setEmail("");
         setPassword("");

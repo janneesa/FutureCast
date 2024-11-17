@@ -37,7 +37,9 @@ function Profile() {
             <ScoreCard user={user} />
           </div>
           {/* Predictions and Badges */}
-          <ContentCard predictions={predictions} />
+          <div className="flex justify-center">
+            <ContentCard predictions={predictions} />
+          </div>
         </div>
       </main>
     </div>
