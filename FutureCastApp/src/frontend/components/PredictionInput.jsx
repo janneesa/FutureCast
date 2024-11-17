@@ -8,8 +8,8 @@ function PredictionInput({ addPrediction }) {
   const handlePostPrediction = () => {
     const newPrediction = {
       id: mockData.predictions.length + 1,
-      userId: 1,
-      username: 'username', // Replace with actual username if available
+      userId: 1, // Replace with actual id
+      username: 'username', // Replace with actual username
       prediction: predictionText,
       agrees: [],
       disagrees: [],

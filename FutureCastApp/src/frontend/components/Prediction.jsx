@@ -1,13 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from './Card';
 
 function calculateAgreementPercentage(agrees, disagrees) {
-  const total = agrees + disagrees;
-  return total === 0 ? 0 : (agrees / total) * 100;
-}
-
-function handleVote(postId, type) {
-  // Handle vote logic here
+  const total = agrees.length + disagrees.length;
+  return total === 0 ? 0 : (agrees.length / total) * 100;
 }
 
 function Prediction({
@@ -20,6 +16,35 @@ function Prediction({
   disagrees,
   comments,
 }) {
+  const [userVote, setUserVote] = useState(null);
+
+  const handleVote = (type) => {
+    // Check if user has voted
+    if (userVote === type) {
+      if (type === 'agrees') {
+        agrees.splice(agrees.indexOf(1), 1);
+      } else if (type === 'disagrees') {
+        disagrees.splice(disagrees.indexOf(1), 1);
+      }
+      setUserVote(null);
+      return;
+    }
+
+    if (userVote === 'agrees') {
+      agrees.splice(agrees.indexOf(1), 1);
+    } else if (userVote === 'disagrees') {
+      disagrees.splice(disagrees.indexOf(1), 1);
+    }
+
+    if (type === 'agrees') {
+      agrees.push(1);
+    } else if (type === 'disagrees') {
+      disagrees.push(1);
+    }
+
+    setUserVote(type);
+  };
+
   return (
     <Card>
       <div className='card-content'>
@@ -50,7 +75,6 @@ function Prediction({
                 d='M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5'
               />
             </svg>
-
             <span className='ml-2'>Vote until: {lastVoteDate}</span>
           </div>
         </div>
@@ -63,10 +87,7 @@ function Prediction({
           <div className='overflow-hidden h-2 mb-4 text-xs flex rounded bg-background'>
             <div
               style={{
-                width: `${calculateAgreementPercentage(
-                  agrees.length,
-                  disagrees.length
-                )}%`,
+                width: `${calculateAgreementPercentage(agrees, disagrees)}%`,
               }}
               className='shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primaryButton'
             ></div>
@@ -74,21 +95,25 @@ function Prediction({
         </div>
         {/* Agree vs Disagree Count */}
         <div className='flex justify-between text-secondaryText'>
-          <p>{agrees} Agrees</p>
-          <p>{disagrees} Disagrees</p>
+          <p>{agrees.length} Agrees</p>
+          <p>{disagrees.length} Disagrees</p>
         </div>
         {/* Buttons */}
         <div className='flex justify-between mt-4'>
           <div className='flex space-x-2'>
             <button
-              className='button-secondary'
-              onClick={() => handleVote(id, 'agrees')}
+              className={`button-secondary ${
+                userVote === 'agrees' ? 'button-agree' : 'button-neutral'
+              }`}
+              onClick={() => handleVote('agrees')}
             >
               Agree
             </button>
             <button
-              className='button-secondary'
-              onClick={() => handleVote(id, 'disagrees')}
+              className={`button-secondary ${
+                userVote === 'disagrees' ? 'button-disagree' : 'button-neutral'
+              }`}
+              onClick={() => handleVote('disagrees')}
             >
               Disagree
             </button>
@@ -106,7 +131,7 @@ function Prediction({
                 <path
                   strokeLinecap='round'
                   strokeLinejoin='round'
-                  d='M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z'
+                  d='M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.4 0-4.8.2-7.2.6-1.584.233-2.707 1.626-2.707 3.228v6.932z'
                 />
               </svg>
               {comments} Comments

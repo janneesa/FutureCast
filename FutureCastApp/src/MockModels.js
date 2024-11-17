@@ -39,7 +39,7 @@ const predictions = {
   prediction:
     'By 2025, renewable energy will account for 50% of global electricity production.',
   // List of user ids who agree with the prediction
-  agrees: [2, 3, 4, 5],
+  agrees: [1, 2, 3, 4, 5],
   // List of user ids who disagree with the prediction
   disagrees: [6, 7, 8, 9],
   // Add comments later (just number is fine now)

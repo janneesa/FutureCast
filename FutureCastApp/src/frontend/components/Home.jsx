@@ -10,6 +10,10 @@ function Home() {
     setPredictions([...predictions, newPrediction]);
   };
 
+  const sortedPredictions = predictions.sort(
+    (a, b) => new Date(a.lastVoteDate) - new Date(b.lastVoteDate)
+  );
+
   return (
     <div className='p-4 flex flex-col gap-4 items-center'>
       <PredictionInput addPrediction={addPrediction} />

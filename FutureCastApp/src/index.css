@@ -44,6 +44,14 @@ label {
   @apply w-full p-2 bg-transparent text-primaryText rounded hover:bg-gray-100 transition text-center;
 }
 
+.button-agree {
+  @apply bg-green-500 text-white;
+}
+
+.button-disagree {
+  @apply bg-red-500 text-white;
+}
+
 .link {
   @apply text-sm text-blue-600 hover:underline;
 }
