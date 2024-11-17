@@ -3,53 +3,53 @@
 @tailwind utilities;
 
 h1 {
-  @apply text-3xl font-bold text-primaryText mb-4;
+  @apply text-3xl font-bold text-primaryText mb-4 dark:text-darkPrimaryText;
 }
 
 h2 {
-  @apply text-2xl font-semibold text-primaryText mb-3;
+  @apply text-2xl font-semibold text-primaryText mb-3 dark:text-darkPrimaryText;
 }
 
 h3 {
-  @apply text-xl font-medium text-primaryText mb-2;
+  @apply text-xl font-medium text-primaryText mb-2 dark:text-darkPrimaryText;
 }
 
 h4 {
-  @apply text-lg font-medium text-primaryText mb-2;
+  @apply text-lg font-medium text-primaryText mb-2 dark:text-darkPrimaryText;
 }
 
 p {
-  @apply text-sm text-secondaryText;
+  @apply text-sm text-secondaryText dark:text-darkSecondaryText;
 }
 
 label {
-  @apply text-sm font-medium text-primaryText;
+  @apply text-sm font-medium text-primaryText dark:text-darkPrimaryText;
 }
 
 /* Reusable classes */
 
 .input {
-  @apply p-2 border border-gray-300 rounded;
+  @apply p-2 border border-gray-300 rounded dark:border-darkMutedText dark:bg-darkCard dark:text-darkPrimaryText;
 }
 
 .button {
-  @apply w-full p-2 bg-primaryButton text-white rounded hover:bg-primaryButton/90 transition text-center;
+  @apply w-full p-2 bg-primaryButton text-white rounded hover:bg-primaryButton/90 transition text-center dark:bg-darkPrimaryButton dark:hover:bg-darkPrimaryButton/90;
 }
 
 .button-secondary {
-  @apply w-full p-2 bg-white border border-gray-300 text-primaryText rounded hover:bg-background transition text-center;
+  @apply w-full p-2 bg-white border border-gray-300 text-primaryText rounded hover:bg-background transition text-center dark:bg-darkSecondaryButton dark:border-darkMutedText dark:text-darkPrimaryText dark:hover:bg-darkBackground;
 }
 
 .button-ghost {
-  @apply w-full p-2 bg-transparent text-primaryText rounded hover:bg-gray-100 transition text-center;
+  @apply w-full p-2 bg-transparent text-primaryText rounded hover:bg-gray-100 transition text-center dark:text-darkPrimaryText dark:hover:bg-darkMutedText;
 }
 
 .link {
-  @apply text-sm text-blue-600 hover:underline;
+  @apply text-sm text-blue-600 hover:underline dark:text-blue-400;
 }
 
 .card {
-  @apply w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden;
+  @apply w-full max-w-md bg-white shadow-lg rounded-lg overflow-hidden dark:bg-darkCard;
 }
 
 .card-header {

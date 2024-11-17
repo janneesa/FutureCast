@@ -2,6 +2,7 @@ import React from "react";
 import ProfileSettings from "./ProfileSettings";
 import AccountSettings from "./AccountSettings";
 import NotificationSettings from "./NotificationSettings";
+import PreferenceSettings from "./PreferenceSettings";
 import Card from "../Card";
 
 function Settings() {
@@ -22,7 +23,7 @@ function Settings() {
             <NotificationSettings />
           </div>
           <div className="flex justify-center items-start">
-            <Card>fourth</Card>
+            <PreferenceSettings />
           </div>
         </div>
       </main>

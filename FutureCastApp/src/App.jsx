@@ -21,7 +21,7 @@ import { UserProvider } from "./frontend/components/context/UserContext";
 function App() {
   return (
     <UserProvider>
-      <div className="bg-background min-h-screen">
+      <div className="bg-background min-h-screen dark:bg-darkBackground">
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LoginScreen />}>
