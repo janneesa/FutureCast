@@ -10,7 +10,7 @@ const users = [
     bio: "Tech enthusiast and prediction lover. Always curious about the future!",
     followers: [2, 3, 4, 5, 6],
     following: [2, 3],
-    predictions: ["648ab1c2f3a59e12d4567890", "648ab1c2f3a59e12d4567891"],
+    predictions: ["648ab1c2f3a59e12d4567890"],
     successfulPredictions: ["648ab1c2f3a59e12d4567890"],
     predictionScore: 75,
     avatar: "https://randomuser.me/api/portraits/men/21.jpg",
@@ -66,15 +66,15 @@ const users = [
   {
     id: 5,
     name: "Michael Brown",
-    email: "michaelbrown@example.com",
+    email: "michael@example.com",
     username: "michaelbrown",
-    password: "password789",
+    password: "password",
     phonenumber: "999-888-7777",
     dateOfBirth: "1985-09-25",
     bio: "Futurist and advocate for clean energy and electric vehicles.",
     followers: [1, 2, 4],
     following: [1, 4],
-    predictions: ["648ab1c2f3a59e12d4567890", "648ab1c2f3a59e12d4567891"],
+    predictions: ["648ab1c2f3a59e12d4567895"],
     successfulPredictions: ["648ab1c2f3a59e12d4567891"],
     predictionScore: 70,
     avatar: "https://randomuser.me/api/portraits/men/34.jpg",
@@ -95,9 +95,9 @@ const predictions = [
     avatar: users[0].avatar,
   },
   {
-    id: "648ab1c2f3a59e12d4567891",
+    id: "648ab1c2f3a59e12d4567892",
     userId: 2,
-    username: "janedoe",
+    username: "janesmith",
     prediction:
       "AI will surpass human intelligence by 2030 in specific fields like medicine and logistics.",
     agrees: [1, 4, 5],
@@ -107,9 +107,9 @@ const predictions = [
     avatar: users[1].avatar,
   },
   {
-    id: "648ab1c2f3a59e12d4567892",
+    id: "648ab1c2f3a59e12d4567893",
     userId: 3,
-    username: "alexsmith",
+    username: "alexjohnson",
     prediction:
       "The global temperature will rise by 1.5°C by 2035 if no drastic climate actions are taken.",
     agrees: [1, 2, 4, 5, 7],
@@ -119,9 +119,9 @@ const predictions = [
     avatar: users[2].avatar,
   },
   {
-    id: "648ab1c2f3a59e12d4567893",
+    id: "648ab1c2f3a59e12d4567894",
     userId: 4,
-    username: "emilyjones",
+    username: "emilycarter",
     prediction:
       "Space tourism will become affordable for the middle class by 2040.",
     agrees: [2, 3, 6],
@@ -131,7 +131,7 @@ const predictions = [
     avatar: users[3].avatar,
   },
   {
-    id: "648ab1c2f3a59e12d4567894",
+    id: "648ab1c2f3a59e12d4567895",
     userId: 5,
     username: "michaelbrown",
     prediction: "Electric vehicles will dominate 80% of new car sales by 2035.",
