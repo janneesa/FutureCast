@@ -32,19 +32,19 @@ const userSchema = new Schema(
       required: false,
     },
     followers: {
-      type: [Number],
+      type: [String],
       required: false,
     },
     following: {
-      type: [Number],
+      type: [String],
       required: false,
     },
     predictions: {
-      type: [Number],
+      type: [String],
       required: false,
     },
     successfulPredictions: {
-      type: [Number],
+      type: [String],
       required: false,
     },
     predictionScore: {

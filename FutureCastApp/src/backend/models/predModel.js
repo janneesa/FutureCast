@@ -16,11 +16,11 @@ const predSchema = new Schema(
             required: true,
         },
         agrees: {
-            type: [Number],
+            type: [String],
             required: true,
         },
         disagrees: {
-            type: [Number],
+            type: [String],
             required: true,
         },
         comments: {
