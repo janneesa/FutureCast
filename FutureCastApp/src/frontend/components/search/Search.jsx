@@ -54,16 +54,13 @@ function Search() {
             id="search"
             type="text"
             placeholder="username"
-            className="p-1 border border-gray-300 rounded w-full mr-4"
+            className="input w-full mr-4"
             required
             value={searchWord}
             onChange={handleSearchWordChange}
           />
           <div className="self-center ml-auto">
-            <button
-              className="button button-secondary ml-auto"
-              onClick={fetchResults}
-            >
+            <button className="button ml-auto" onClick={fetchResults}>
               Search
             </button>
           </div>

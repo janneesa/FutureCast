@@ -17,55 +17,38 @@ function Navigation() {
   };
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0">
+    <nav>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex-between h-16">
           <div className="flex items-center">
-            <div className="text-xl font-bold text-primaryText">FutureCast</div>
+            <div className="text-2xl font-bold text-primaryText dark:text-darkPrimaryText">
+              FutureCast
+            </div>
           </div>
           <div className="hidden md:flex space-x-4">
-            <Link
-              to="/app/home"
-              className="text-primaryText hover:text-secondaryText"
-            >
+            <Link to="/app/home" className="nav-link">
               Home
             </Link>
-            <Link
-              to="/app/profile"
-              className="text-primaryText hover:text-secondaryText"
-            >
+            <Link to="/app/profile" className="nav-link">
               Profile
             </Link>
-            <Link
-              to="/app/search"
-              className="text-primaryText hover:text-secondaryText"
-            >
+            <Link to="/app/search" className="nav-link">
               Search
             </Link>
-            <Link
-              to="/app/messages"
-              className="text-primaryText hover:text-secondaryText"
-            >
+            <Link to="/app/messages" className="nav-link">
               Messages
             </Link>
-            <Link
-              to="/app/settings"
-              className="text-primaryText hover:text-secondaryText"
-            >
+            <Link to="/app/settings" className="nav-link">
               Settings
             </Link>
-            <Link
-              to="/"
-              onClick={handleLogout}
-              className="text-primaryText hover:text-secondaryText"
-            >
+            <Link to="/" onClick={handleLogout} className="nav-link">
               Logout
             </Link>
           </div>
           <div className="md:hidden">
             <button
               onClick={toggleMenu}
-              className="text-primaryText hover:text-secondaryText focus:outline-none"
+              className="text-primaryText hover:text-secondaryText focus:outline-none dark:text-darkPrimaryText"
             >
               <svg
                 className="h-6 w-6"
@@ -92,44 +75,40 @@ function Navigation() {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               to="/app/home"
-              className="block text-primaryText hover:text-secondaryText"
+              className="block nav-link"
               onClick={toggleMenu}
             >
               Home
             </Link>
             <Link
               to="/app/profile"
-              className="block text-primaryText hover:text-secondaryText"
+              className="block nav-link"
               onClick={toggleMenu}
             >
               Profile
             </Link>
             <Link
               to="/app/search"
-              className="block text-primaryText hover:text-secondaryText"
+              className="block nav-link"
               onClick={toggleMenu}
             >
               Search
             </Link>
             <Link
               to="/app/messages"
-              className="block text-primaryText hover:text-secondaryText"
+              className="block nav-link"
               onClick={toggleMenu}
             >
               Messages
             </Link>
             <Link
               to="/app/settings"
-              className="block text-primaryText hover:text-secondaryText"
+              className="block nav-link"
               onClick={toggleMenu}
             >
               Settings
             </Link>
-            <Link
-              to="/"
-              className="block text-primaryText hover:text-secondaryText"
-              onClick={handleLogout}
-            >
+            <Link to="/" className="block nav-link" onClick={handleLogout}>
               Logout
             </Link>
           </div>

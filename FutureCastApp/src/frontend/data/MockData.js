@@ -14,6 +14,15 @@ const users = [
     successfulPredictions: ["648ab1c2f3a59e12d4567890"],
     predictionScore: 75,
     avatar: "https://randomuser.me/api/portraits/men/21.jpg",
+    settings: {
+      notifications: {
+        email: true,
+        push: true,
+      },
+      preferences: {
+        darkMode: true,
+      },
+    },
   },
   {
     id: 2,
@@ -30,6 +39,15 @@ const users = [
     successfulPredictions: ["648ab1c2f3a59e12d4567892"],
     predictionScore: 90,
     avatar: "https://randomuser.me/api/portraits/women/50.jpg",
+    settings: {
+      notifications: {
+        email: true,
+        push: true,
+      },
+      preferences: {
+        darkMode: true,
+      },
+    },
   },
   {
     id: 3,
@@ -46,6 +64,15 @@ const users = [
     successfulPredictions: [],
     predictionScore: 40,
     avatar: "https://randomuser.me/api/portraits/men/63.jpg",
+    settings: {
+      notifications: {
+        email: true,
+        push: true,
+      },
+      preferences: {
+        darkMode: true,
+      },
+    },
   },
   {
     id: 4,
@@ -62,6 +89,15 @@ const users = [
     successfulPredictions: ["648ab1c2f3a59e12d4567894"],
     predictionScore: 85,
     avatar: "https://randomuser.me/api/portraits/women/28.jpg",
+    settings: {
+      notifications: {
+        email: true,
+        push: true,
+      },
+      preferences: {
+        darkMode: true,
+      },
+    },
   },
   {
     id: 5,
@@ -78,6 +114,15 @@ const users = [
     successfulPredictions: ["648ab1c2f3a59e12d4567891"],
     predictionScore: 70,
     avatar: "https://randomuser.me/api/portraits/men/34.jpg",
+    settings: {
+      notifications: {
+        email: true,
+        push: true,
+      },
+      preferences: {
+        darkMode: true,
+      },
+    },
   },
 ];
 

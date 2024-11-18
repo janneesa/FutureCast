@@ -18,7 +18,7 @@ export const UserProvider = ({ children }) => {
   // Save user data to localStorage
   useEffect(() => {
     if (user) {
-      const { password, ...userData } = user; // Exclude email and password
+      const { password, ...userData } = user; // Exclude password
       localStorage.setItem("user", JSON.stringify(userData));
     } else {
       localStorage.removeItem("user");

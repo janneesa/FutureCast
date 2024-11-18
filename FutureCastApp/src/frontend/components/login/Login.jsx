@@ -101,14 +101,14 @@ function Login() {
           <div className="relative my-4">
             <div className="border-t border-gray-300"></div>
             <div className="absolute-center">
-              <span className="bg-white px-2 text-gray-600 text-sm">
+              <span className="bg-card dark:bg-darkCard px-2 text-secondaryText dark:text-darkSecondaryText text-sm">
                 Or continue with
               </span>
             </div>
           </div>
           {/* Social login buttons */}
           <div className="flex gap-4">
-            <button className="w-full p-2 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-100">
+            <button className="w-full p-2 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-100 text-primaryText dark:text-darkPrimaryText">
               <svg
                 className="mr-2 h-4 w-4"
                 fill="currentColor"
@@ -118,7 +118,7 @@ function Login() {
               </svg>
               Github
             </button>
-            <button className="w-full p-2 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-100">
+            <button className="w-full p-2 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-100 text-primaryText dark:text-darkPrimaryText">
               <svg
                 className="mr-2 h-4 w-4"
                 fill="currentColor"
@@ -131,8 +131,10 @@ function Login() {
           </div>
           {/* Create Account */}
           <div className="card-footer">
-            <div className="text-sm text-gray-600">Don't have an account?</div>
-            <button className="text-blue-600 hover:underline">
+            <div className="text-sm text-primaryText dark:text-darkPrimaryText">
+              Don't have an account?
+            </div>
+            <button className="link hover:underline">
               <Link to="/register">Create an account</Link>
             </button>
           </div>

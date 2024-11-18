@@ -20,16 +20,20 @@ function ContentCard({ predictions }) {
       {activeTab === "predictions" && (
         <div
           id="predictions"
-          className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-4"
+          className="w-full bg-card shadow-lg rounded-lg overflow-hidden p-4 dark:bg-darkCard"
         >
-          <h2 className="card-header">Predictions</h2>
+          <h2 className="card-header text-primaryText dark:text-darkPrimaryText">
+            Predictions
+          </h2>
           {/* Mapping predictions */}
           {predictions.map((prediction) => (
             <div key={prediction.id} className="card-content">
               {/* Prediction */}
-              <p className="text-primaryText">{prediction.prediction}</p>
+              <p className="text-primaryText dark:text-darkPrimaryText">
+                {prediction.prediction}
+              </p>
               {/* Vote Until */}
-              <div className="flex items-center text-sm text-secondaryText mt-1">
+              <div className="flex items-center text-sm text-secondaryText dark:text-darkSecondaryText mt-1">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -50,7 +54,7 @@ function ContentCard({ predictions }) {
               </div>
               {/* Agree */}
               <div className="flex mt-1">
-                <div className="flex items-center text-sm text-primaryText mt-1">
+                <div className="flex items-center text-sm text-primaryText dark:text-darkPrimaryText mt-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -68,7 +72,7 @@ function ContentCard({ predictions }) {
 
                   <span>{prediction.agrees} Agree</span>
                 </div>
-                <div className="flex items-center text-sm text-primaryText mt-1 ml-4">
+                <div className="flex items-center text-sm text-primaryText dark:text-darkPrimaryText mt-1 ml-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -86,7 +90,7 @@ function ContentCard({ predictions }) {
 
                   <span>{prediction.disagrees} Disagree</span>
                 </div>
-                <div className="flex items-center text-sm text-primaryText mt-1 ml-4">
+                <div className="flex items-center text-sm text-primaryText dark:text-darkPrimaryText mt-1 ml-4">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -112,7 +116,7 @@ function ContentCard({ predictions }) {
       {activeTab === "badges" && (
         <div
           id="badges"
-          className="w-full bg-white shadow-lg rounded-lg overflow-hidden p-4"
+          className="w-full bg-card dark:bg-darkCard shadow-lg rounded-lg overflow-hidden p-4"
         >
           <h2 className="card-header">Badges</h2>
         </div>

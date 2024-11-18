@@ -3,7 +3,6 @@ import ProfileSettings from "./ProfileSettings";
 import AccountSettings from "./AccountSettings";
 import NotificationSettings from "./NotificationSettings";
 import PreferenceSettings from "./PreferenceSettings";
-import Card from "../Card";
 
 function Settings() {
   return (

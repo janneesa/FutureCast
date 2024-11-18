@@ -18,12 +18,20 @@ h4 {
   @apply text-lg font-medium text-primaryText mb-2 dark:text-darkPrimaryText;
 }
 
+h5 {
+  @apply text-sm font-medium text-primaryText mb-2 dark:text-darkPrimaryText;
+}
+
 p {
   @apply text-sm text-secondaryText dark:text-darkSecondaryText;
 }
 
 label {
   @apply text-sm font-medium text-primaryText dark:text-darkPrimaryText;
+}
+
+nav {
+  @apply bg-card shadow-lg sticky top-0 z-50 dark:bg-darkCard;
 }
 
 /* Reusable classes */
@@ -54,6 +62,10 @@ label {
 
 .link {
   @apply text-sm text-blue-600 hover:underline dark:text-blue-400;
+}
+
+.nav-link {
+  @apply text-primaryText hover:text-secondaryText dark:text-darkPrimaryText dark:hover:text-darkSecondaryText;
 }
 
 .card {
