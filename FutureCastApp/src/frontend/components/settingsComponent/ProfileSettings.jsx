@@ -15,6 +15,7 @@ function ProfileSettings() {
   const [bio, setBio] = useState("");
 
   const [error, setError] = useState("");
+  const [settingsOk, setSettingsOk] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -46,6 +47,7 @@ function ProfileSettings() {
     // Save changes
     console.log("Saving changes");
     setUser((u) => ({ ...u, name: name, username: username, bio: bio }));
+    setSettingsOk("Profile updated successfully");
     setError("");
   };
 
@@ -111,6 +113,8 @@ function ProfileSettings() {
         </div>
         {/* Save Button */}
         {error && <p className="text-red-600 mt-4">{error}</p>}
+        {settingsOk && <p className="text-green-600 mt-4">{settingsOk}</p>}
+
         <div className="mt-4 w-32">
           <button className="button" onClick={saveChanges}>
             Save Changes
