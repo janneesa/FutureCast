@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../components/context/UserContext';
-
 import Card from './Card';
+import CommentModal from './CommentModal';
 
 function calculateAgreementPercentage(agrees, disagrees) {
   const total = agrees.length + disagrees.length;
@@ -20,8 +20,8 @@ function Prediction({
   comments,
 }) {
   const { user } = useContext(UserContext);
-
   const [userVote, setUserVote] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -140,7 +140,11 @@ function Prediction({
             </button>
           </div>
           <div>
-            <button className='button-ghost flex'>
+            <button
+              className='button-ghost flex'
+              onClick={() => setIsModalOpen(true)}
+              disabled={comments.length === 0}
+            >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 fill='none'
@@ -160,6 +164,11 @@ function Prediction({
           </div>
         </div>
       </div>
+      <CommentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        comments={comments}
+      />
     </Card>
   );
 }
