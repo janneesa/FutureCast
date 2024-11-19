@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import ProfileCard from "./ProfileCard";
 import ScoreCard from "./ScoreCard";
 import ContentCard from "./ContentCard";
+import Loading from "../Loading";
 
 import { UserContext } from "../context/UserContext";
 
@@ -25,6 +26,10 @@ function Profile() {
       fetchPredictions();
     }
   }, [user]);
+
+  if (!user) {
+    return <Loading></Loading>; // Fallback UI while user data is being loaded
+  }
 
   return (
     <div>
