@@ -29,9 +29,6 @@ function Navigation() {
   };
 
   const handleSearch = () => {
-    if (searchOpen) {
-      setSearchOpen(false);
-    }
     navigate("/app/search", { state: { searchWord } });
   };
 

@@ -11,7 +11,7 @@ import { mockData } from "../../data/MockData";
 function Search() {
   const { user } = useContext(UserContext);
   const location = useLocation();
-  const searchWord = location.state?.searchWord || "";
+  let searchWord = location.state?.searchWord || "";
 
   const [results, setResults] = useState([]);
   const [viewingProfile, setViewingProfile] = useState(false);
@@ -39,9 +39,14 @@ function Search() {
     }
   };
 
+  const backToResults = () => {
+    setViewingProfile(false);
+  };
+
   useEffect(() => {
     if (user) {
       fetchUsers();
+      setViewingProfile(false);
     }
   }, [user, searchWord]);
 
@@ -60,6 +65,15 @@ function Search() {
             />
           ))}
       </div>
+      {viewingProfile && (
+        <div className="max-w-[39rem] lg:max-w-7xl mx-auto px-4 sm:px-6 lg:px-8  flex">
+          <div>
+            <button className="button-secondary" onClick={backToResults}>
+              Back to Results
+            </button>
+          </div>
+        </div>
+      )}
       {viewingProfile && <Profile profile={profile} />}
     </>
   );
