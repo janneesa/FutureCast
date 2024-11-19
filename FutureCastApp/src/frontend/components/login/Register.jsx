@@ -177,7 +177,7 @@ function Register() {
           <div className="relative my-4">
             <div className="border-t border-gray-300"></div>
             <div className="absolute-center">
-              <span className="bg-white px-2 text-gray-600 text-sm">
+              <span className="bg-card dark:bg-darkCard px-2 text-secondaryText dark:text-darkSecondaryText text-sm">
                 Or Sign in
               </span>
             </div>

@@ -15,9 +15,6 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-
   const handleLogin = async (e) => {
     // Mock Login
     e.preventDefault();
@@ -71,7 +68,7 @@ function Login() {
                   className="input"
                   required
                   value={email}
-                  onChange={handleEmailChange}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -83,7 +80,7 @@ function Login() {
                   className="input"
                   required
                   value={password}
-                  onChange={handlePasswordChange}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <button type="submit" className="button" onClick={handleLogin}>
