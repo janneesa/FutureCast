@@ -11,6 +11,7 @@ function calculateAgreementPercentage(agrees, disagrees) {
 function Prediction({
   id,
   username,
+  userId,
   avatar,
   lastVoteDate,
   prediction,
@@ -122,6 +123,7 @@ function Prediction({
                 userVote === 'agrees' ? 'button-agree' : 'button-neutral'
               }`}
               onClick={() => handleVote('agrees')}
+              disabled={userId === user.id}
             >
               Agree
             </button>
@@ -130,6 +132,7 @@ function Prediction({
                 userVote === 'disagrees' ? 'button-disagree' : 'button-neutral'
               }`}
               onClick={() => handleVote('disagrees')}
+              disabled={userId === user.id}
             >
               Disagree
             </button>
