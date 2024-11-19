@@ -71,6 +71,11 @@ function Prediction({
     return null;
   }
 
+  const isVotingDisabled = () => {
+    const currentDate = new Date().toISOString().split('T')[0];
+    return currentDate > lastVoteDate || userId === user.id;
+  };
+
   return (
     <Card>
       <div className='card-content'>
@@ -134,7 +139,7 @@ function Prediction({
                 userVote === 'agrees' ? 'button-agree' : 'button-neutral'
               }`}
               onClick={() => handleVote('agrees')}
-              disabled={userId === user.id}
+              disabled={isVotingDisabled()}
             >
               Agree
             </button>
@@ -143,7 +148,7 @@ function Prediction({
                 userVote === 'disagrees' ? 'button-disagree' : 'button-neutral'
               }`}
               onClick={() => handleVote('disagrees')}
-              disabled={userId === user.id}
+              disabled={isVotingDisabled()}
             >
               Disagree
             </button>
@@ -152,7 +157,6 @@ function Prediction({
             <button
               className='button-ghost flex'
               onClick={() => setIsModalOpen(true)}
-              disabled={comments.length === 0}
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'

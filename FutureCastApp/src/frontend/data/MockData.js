@@ -162,7 +162,7 @@ const predictions = [
       'AI will surpass human intelligence by 2030 in specific fields like medicine and logistics.',
     agrees: [1, 4, 5],
     disagrees: [3, 6],
-    lastVoteDate: '2024-11-15',
+    lastVoteDate: '2024-12-15',
     avatar: users[1].avatar,
     comments: [],
   },
@@ -174,7 +174,7 @@ const predictions = [
       'The global temperature will rise by 1.5°C by 2035 if no drastic climate actions are taken.',
     agrees: [1, 2, 4, 5, 7],
     disagrees: [6, 8],
-    lastVoteDate: '2024-10-01',
+    lastVoteDate: '2024-12-01',
     avatar: users[2].avatar,
     comments: [],
   },
@@ -186,7 +186,7 @@ const predictions = [
       'Space tourism will become affordable for the middle class by 2040.',
     agrees: [2, 3, 6],
     disagrees: [1, 5, 7],
-    lastVoteDate: '2024-09-15',
+    lastVoteDate: '2024-11-15',
     avatar: users[3].avatar,
     comments: [
       {
