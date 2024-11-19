@@ -42,8 +42,15 @@ const predictions = {
   agrees: [1, 2, 3, 4, 5],
   // List of user ids who disagree with the prediction
   disagrees: [6, 7, 8, 9],
-  // Add comments later (just number is fine now)
-  comments: 15,
+  comments: [
+    {
+      id: 1,
+      username: 'username',
+      userId: 4,
+      comment: 'I think this is very likely.',
+      likes: [1, 2],
+    },
+  ],
   lastVoteDate: '2024-12-31',
   avatar:
     'https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b',
