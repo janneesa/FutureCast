@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
 
 import LoginScreen from "./frontend/layouts/LoginScreen";
 import MainScreen from "./frontend/layouts/MainScreen";
@@ -31,7 +30,7 @@ function App() {
             </Route>
 
             <Route path="/app" element={<MainScreen />}>
-              <Route index element={<Profile />} />
+              <Route index element={<Home />} />
               <Route path="home" element={<Home />} />
               <Route path="profile" element={<Profile />} />
               <Route path="search" element={<Search />} />

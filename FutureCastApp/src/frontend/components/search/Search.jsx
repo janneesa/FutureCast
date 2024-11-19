@@ -46,7 +46,6 @@ function Search() {
   useEffect(() => {
     if (user) {
       fetchUsers();
-      setViewingProfile(false);
     }
   }, [user, searchWord]);
 
