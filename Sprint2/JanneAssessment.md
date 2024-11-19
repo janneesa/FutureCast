@@ -134,7 +134,7 @@ if (!user) {
 
 - I made reusable classes that are easy to use and provide the same look and styling for the whole application.
 
-````css
+```css
 .input {
   @apply p-2 border border-gray-300 rounded dark:border-darkMutedText dark:bg-darkCard dark:text-darkPrimaryText;
 }
@@ -183,4 +183,3 @@ if (!user) {
 #### Improvements
 
 - Few components could benefit from more error handling but at this point when the data comes from MockData.js it is not needed. Once backend gets connected to frontend I will add more error handling.
-````
