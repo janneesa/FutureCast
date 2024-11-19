@@ -1,3 +1,4 @@
+require("dotenv").config();
 const connectDB = require("./backend/config/db");
 const express = require("express");
 const app = express();
@@ -15,7 +16,6 @@ app.get("/", (req, res) => res.send("API Running!"));
 app.use("/api/users", userRouter);
 // Use the predRouter for all routes starting with /api/predictions
 app.use("/api/predictions", predRouter);
-
 
 const port = process.env.PORT || 4000;
 app.listen(port, () =>

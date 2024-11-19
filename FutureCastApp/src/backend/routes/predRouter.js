@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const {
-    getAllPredictions,
-    createPrediction,
-    getPredictionById,
-    getPredictionByUsername,
-    updatePrediction,
-    deletePrediction
-    // patchPrediction
+  getAllPredictions,
+  createPrediction,
+  getPredictionById,
+  getPredictionByUsername,
+  updatePrediction,
+  deletePrediction,
+  // patchPrediction
 } = require("../controllers/predController");
 
 // GET /predictions
