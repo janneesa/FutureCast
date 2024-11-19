@@ -167,7 +167,7 @@ function Prediction({
       <CommentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        comments={comments}
+        initialComments={comments}
       />
     </Card>
   );

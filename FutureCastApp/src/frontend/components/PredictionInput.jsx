@@ -29,6 +29,7 @@ function PredictionInput({ addPrediction }) {
       comments: 0,
       lastVoteDate: lastVoteDate,
       avatar: user.avatar,
+      comments: [],
     };
 
     addPrediction(newPrediction);

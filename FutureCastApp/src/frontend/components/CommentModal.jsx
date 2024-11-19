@@ -1,7 +1,37 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { UserContext } from './context/UserContext';
+import Comment from './Comment';
 
-function CommentModal({ isOpen, onClose, comments }) {
+function CommentModal({ isOpen, onClose, initialComments }) {
+  const { user } = useContext(UserContext);
+  const [comments, setComments] = useState(initialComments);
+
+  useEffect(() => {
+    setComments(initialComments);
+  }, [initialComments]);
+
   if (!isOpen) return null;
+
+  const handleLike = (commentId) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) => {
+        if (comment.id === commentId) {
+          if (comment.likes.includes(user.id)) {
+            return {
+              ...comment,
+              likes: comment.likes.filter((userId) => userId !== user.id),
+            };
+          } else {
+            return {
+              ...comment,
+              likes: [...comment.likes, user.id],
+            };
+          }
+        }
+        return comment;
+      })
+    );
+  };
 
   return (
     <div className='fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50'>
@@ -17,15 +47,7 @@ function CommentModal({ isOpen, onClose, comments }) {
         </div>
         <div className='space-y-4'>
           {comments.map((comment) => (
-            <div key={comment.id} className='border-b pb-2'>
-              <p className='text-primaryText text-xl font-bold self-center'>
-                {comment.username}
-              </p>
-              <p className='text-primaryText my-2'>{comment.comment}</p>
-              <p className='text-sm text-gray-500'>
-                {comment.likes.length} likes
-              </p>
-            </div>
+            <Comment key={comment.id} comment={comment} onLike={handleLike} />
           ))}
         </div>
       </div>
