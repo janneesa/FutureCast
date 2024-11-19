@@ -1,35 +1,38 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
+import { mockData } from "../../data/MockData";
+import { useNavigate } from "react-router-dom";
 import ProfileCard from "./ProfileCard";
 import ScoreCard from "./ScoreCard";
 import ContentCard from "./ContentCard";
 import Loading from "../Loading";
 
-import { UserContext } from "../context/UserContext";
-
-import { mockData } from "../../data/MockData";
-
-function Profile() {
+function Profile({ profile }) {
   const { user } = useContext(UserContext);
   const [predictions, setPredictions] = useState([]);
 
   // Call backend that fetches users predictions.
-  const fetchPredictions = async () => {
+  const fetchPredictions = async (userId) => {
     const fetchedPredictions = mockData.predictions;
     const userPredictions = fetchedPredictions.filter(
-      (prediction) => prediction.userId === user.id
+      (prediction) => prediction.userId === userId
     );
     setPredictions(userPredictions);
   };
 
   useEffect(() => {
-    if (user) {
-      fetchPredictions();
+    if (profile) {
+      fetchPredictions(profile.id);
+    } else if (user) {
+      fetchPredictions(user.id);
     }
-  }, [user]);
+  }, [profile, user]);
 
-  if (!user) {
-    return <Loading></Loading>; // Fallback UI while user data is being loaded
+  if (!user && !profile) {
+    return <Loading />; // Fallback UI while user data is being loaded
   }
+
+  const displayedProfile = profile || user;
 
   return (
     <div>
@@ -37,9 +40,10 @@ function Profile() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
           <div className="flex flex-col gap-8 justify-center items-center">
             {/* Profile Card */}
-            <ProfileCard user={user} />
+            <ProfileCard user={displayedProfile} />
+
             {/* Stats */}
-            <ScoreCard user={user} />
+            <ScoreCard user={displayedProfile} />
           </div>
           {/* Predictions and Badges */}
           <div className="flex justify-center">

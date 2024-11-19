@@ -1,19 +1,38 @@
 import React, { useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { UserContext } from "./context/UserContext";
 
 function Navigation() {
   const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchWord, setSearchWord] = useState("");
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+    if (searchOpen) {
+      setSearchOpen(false);
+    }
   };
 
   const handleLogout = () => {
     setUser(null);
+  };
+
+  const toggleSearch = () => {
+    setIsOpen(!isOpen);
+    setSearchOpen(!searchOpen);
+  };
+
+  const handleSearch = () => {
+    if (searchOpen) {
+      setSearchOpen(false);
+    }
+    navigate("/app/search", { state: { searchWord } });
   };
 
   return (
@@ -25,7 +44,7 @@ function Navigation() {
               FutureCast
             </div>
           </div>
-          <div className="hidden md:flex space-x-4">
+          <div className="hidden lg:flex items-center space-x-4">
             <Link to="/app/home" className="nav-link">
               Home
             </Link>
@@ -45,7 +64,20 @@ function Navigation() {
               Logout
             </Link>
           </div>
-          <div className="md:hidden">
+          <div className="hidden lg:flex -ml-28">
+            <input
+              type="text"
+              placeholder="Search on FutureCast"
+              className="input"
+              value={searchWord}
+              onChange={(e) => setSearchWord(e.target.value)}
+            />
+            <button className="button ml-4" onClick={handleSearch}>
+              Search
+            </button>
+          </div>
+
+          <div className="lg:hidden">
             <button
               onClick={toggleMenu}
               className="text-primaryText hover:text-secondaryText focus:outline-none dark:text-darkPrimaryText"
@@ -71,7 +103,7 @@ function Navigation() {
         </div>
       </div>
       {isOpen && (
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               to="/app/home"
@@ -87,13 +119,9 @@ function Navigation() {
             >
               Profile
             </Link>
-            <Link
-              to="/app/search"
-              className="block nav-link"
-              onClick={toggleMenu}
-            >
+            <button className="block nav-link" onClick={toggleSearch}>
               Search
-            </Link>
+            </button>
             <Link
               to="/app/messages"
               className="block nav-link"
@@ -111,6 +139,24 @@ function Navigation() {
             <Link to="/" className="block nav-link" onClick={handleLogout}>
               Logout
             </Link>
+          </div>
+        </div>
+      )}
+      {searchOpen && (
+        <div className="lg:hidden">
+          <div className=" py-2 px-4 flex items-center">
+            <input
+              type="text"
+              placeholder="Search users"
+              className="input w-full"
+              value={searchWord}
+              onChange={(e) => setSearchWord(e.target.value)}
+            ></input>
+            <div className="ml-2">
+              <button className="button" onClick={handleSearch}>
+                Search
+              </button>
+            </div>
           </div>
         </div>
       )}

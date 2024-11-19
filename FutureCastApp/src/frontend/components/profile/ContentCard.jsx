@@ -4,7 +4,7 @@ function ContentCard({ predictions }) {
   const [activeTab, setActiveTab] = useState("predictions");
 
   return (
-    <div className="w-full max-w-lg overflow-hidden justify-center items-start">
+    <div className="w-full md:max-w-xl lg:max-w-2xl overflow-hidden">
       <div className="flex mb-2">
         <button
           className="button-ghost"
