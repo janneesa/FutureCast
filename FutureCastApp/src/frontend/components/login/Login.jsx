@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Card from "../Card";
 
 import { Link } from "react-router-dom";
@@ -9,6 +9,11 @@ import { mockData } from "../../data/MockData";
 
 function Login() {
   const { setUser } = useContext(UserContext);
+
+  const [loginData, setLoginData] = useState(() => {
+    const fetchedLogin = localStorage.getItem("user");
+    return fetchedLogin ? JSON.parse(fetchedLogin) : null;
+  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -41,6 +46,12 @@ function Login() {
       }
     }
   };
+
+  useEffect(() => {
+    if (loginData) {
+      navigate("/app");
+    }
+  }, [loginData]);
 
   return (
     <div className="flex-center min-h-screen p-4">

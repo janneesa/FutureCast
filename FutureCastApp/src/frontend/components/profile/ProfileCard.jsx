@@ -1,6 +1,37 @@
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 import Card from "../Card";
 
 function ProfileCard({ user }) {
+  const { user: currentUser, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const isOwnProfile = currentUser.id === user.id;
+  const [isFollowing, setIsFollowing] = useState(
+    currentUser.following.includes(user.id)
+  );
+
+  const handleEditProfile = () => {
+    navigate("/app/settings");
+  };
+
+  const handleFollow = () => {
+    setIsFollowing(true);
+    setUser((prevUser) => ({
+      ...prevUser,
+      following: [...prevUser.following, user.id],
+    }));
+  };
+
+  const handleUnfollow = () => {
+    setIsFollowing(false);
+    setUser((prevUser) => ({
+      ...prevUser,
+      following: prevUser.following.filter((id) => id !== user.id),
+    }));
+  };
+
   return (
     <Card>
       <div className="card-content">
@@ -27,9 +58,23 @@ function ProfileCard({ user }) {
               <p className="text-sm text-muted-foreground">Predictions</p>
             </div>
           </div>
+          {isOwnProfile ? (
+            <button className="button mt-4" onClick={handleEditProfile}>
+              Edit Profile
+            </button>
+          ) : isFollowing ? (
+            <button className="button-secondary mt-4" onClick={handleUnfollow}>
+              Unfollow
+            </button>
+          ) : (
+            <button className="button mt-4" onClick={handleFollow}>
+              Follow
+            </button>
+          )}
         </div>
       </div>
     </Card>
   );
 }
+
 export default ProfileCard;
