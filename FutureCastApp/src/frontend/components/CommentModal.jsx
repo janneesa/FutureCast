@@ -1,8 +1,15 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from './context/UserContext';
 import Comment from './Comment';
+import CommentInput from './CommentInput';
 
-function CommentModal({ isOpen, onClose, initialComments }) {
+function CommentModal({
+  isOpen,
+  onClose,
+  initialComments,
+  predictionId,
+  onAddComment,
+}) {
   const { user } = useContext(UserContext);
   const [comments, setComments] = useState(initialComments);
 
@@ -33,6 +40,11 @@ function CommentModal({ isOpen, onClose, initialComments }) {
     );
   };
 
+  const handleAddComment = (newComment) => {
+    setComments([...comments, newComment]);
+    onAddComment(newComment);
+  };
+
   return (
     <div className='fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50'>
       <div className='bg-white rounded-lg shadow-lg p-6 w-full max-w-lg'>
@@ -50,6 +62,11 @@ function CommentModal({ isOpen, onClose, initialComments }) {
             <Comment key={comment.id} comment={comment} onLike={handleLike} />
           ))}
         </div>
+        <CommentInput
+          predictionId={predictionId}
+          onAddComment={handleAddComment}
+          user={user}
+        />
       </div>
     </div>
   );
