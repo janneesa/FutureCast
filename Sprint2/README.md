@@ -1,5 +1,7 @@
 ## Project description
 
+- Link to project repo: https://github.com/janneesa/FutureCast
+
 - The title of the project: FutureCast
 - The names of the members:
 - - Samuel Puhakka
