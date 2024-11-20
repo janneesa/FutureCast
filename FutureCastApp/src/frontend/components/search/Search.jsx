@@ -1,6 +1,6 @@
-import Card from "../Card";
 import SearchResult from "./SearchResult";
 import Profile from "../profile/Profile";
+import Loading from "../Loading";
 
 import { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
@@ -48,6 +48,14 @@ function Search() {
       fetchUsers();
     }
   }, [user, searchWord]);
+
+  if (!user) {
+    return (
+      <div className="p-4 flex flex-col gap-4 items-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <>

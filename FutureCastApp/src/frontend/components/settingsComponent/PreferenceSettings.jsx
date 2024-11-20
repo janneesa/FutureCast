@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card";
 import Switcher from "../utility/switcher";
+import Loading from "../Loading";
 
 import { UserContext } from "../context/UserContext";
 
 function PreferenceSettings() {
+  const { user } = useContext(UserContext);
   // Load dark mode preference from localStorage
   const [darkmode, setDarkmode] = useState(() => {
     const savedPreference = localStorage.getItem("darkmode");
@@ -20,6 +22,10 @@ function PreferenceSettings() {
     // Save dark mode preference to localStorage
     localStorage.setItem("darkmode", JSON.stringify(darkmode));
   }, [darkmode]);
+
+  if (!user) {
+    return <Loading />;
+  }
 
   return (
     <Card>

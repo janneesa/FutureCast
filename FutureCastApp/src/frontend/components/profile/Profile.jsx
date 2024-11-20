@@ -29,7 +29,11 @@ function Profile({ profile }) {
   }, [profile, user]);
 
   if (!user && !profile) {
-    return <Loading />; // Fallback UI while user data is being loaded
+    return (
+      <div className="p-4 flex flex-col gap-4 items-center">
+        <Loading />
+      </div>
+    );
   }
 
   const displayedProfile = profile || user;

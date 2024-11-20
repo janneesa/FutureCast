@@ -53,11 +53,11 @@ nav {
 }
 
 .button-agree {
-  @apply bg-green-500 text-white;
+  @apply bg-green-500 text-white dark:bg-green-600;
 }
 
 .button-disagree {
-  @apply bg-red-500 text-white;
+  @apply bg-red-500 text-white dark:bg-red-600;
 }
 
 .link {
@@ -69,7 +69,7 @@ nav {
 }
 
 .card {
-  @apply w-full md:max-w-xl lg:max-w-2xl bg-white shadow-lg rounded-lg overflow-hidden dark:bg-darkCard;
+  @apply w-full md:max-w-xl lg:max-w-2xl bg-card shadow-lg rounded-lg overflow-hidden dark:bg-darkCard;
 }
 
 .card-header {

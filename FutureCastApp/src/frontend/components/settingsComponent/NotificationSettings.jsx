@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Card from "../Card";
 import Switcher from "../utility/switcher";
+import Loading from "../Loading";
+import { UserContext } from "../context/UserContext";
 
 function NotificationSettings() {
+  const { user } = useContext(UserContext);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
 
@@ -11,6 +14,10 @@ function NotificationSettings() {
     console.log("Email Notifications:", emailNotifications);
     console.log("Push Notifications:", pushNotifications);
   };
+
+  if (!user) {
+    return <Loading />;
+  }
 
   return (
     <Card>
