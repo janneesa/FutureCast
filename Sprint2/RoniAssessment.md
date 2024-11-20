@@ -30,7 +30,7 @@ const getUserByUsername = async (req, res) => {
 };
 ```
 
-The next one is the code that LLM modified. The LLM added a feature that excludes the password from the search. This makes it safer. Although in some cases the password might be neccessary. It also added a console.log, added comments and modified the if-statement structure. 
+The next one is the code that LLM modified. The LLM added a feature that excludes the password from the search. This makes it safer. Although in some cases the password might be necessary. It also added a console.log, added comments and modified the if-statement structure. 
 
 ```js
 // GET /users/:username
@@ -130,7 +130,7 @@ module.exports = mongoose.model("User", userSchema);
 
 ```
 
-The next one is the version that LLM modified. It added validators to check if the email addesses and phone numbers are correct. This won't be neccessary since the front-end will likely do this instead. 
+The next one is the version that LLM modified. It added validators to check if the email addesses and phone numbers are correct. This won't be necessary since the front-end will likely do this instead. 
 
 It also made some variables like `followers` into objects. This might be handy, although originally the value was supposed to be user's id. 
 
