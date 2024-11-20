@@ -26,7 +26,6 @@ function PredictionInput({ addPrediction }) {
       prediction: predictionText,
       agrees: [],
       disagrees: [],
-      comments: 0,
       lastVoteDate: lastVoteDate,
       avatar: user.avatar,
       comments: [],

@@ -48,12 +48,6 @@ function Prediction({
       return;
     }
 
-    if (userVote === 'agrees') {
-      agrees.splice(agrees.indexOf(user.id), 1);
-    } else if (userVote === 'disagrees') {
-      disagrees.splice(disagrees.indexOf(user.id), 1);
-    }
-
     if (type === 'agrees') {
       agrees.push(user.id);
     } else if (type === 'disagrees') {
