@@ -1,21 +1,21 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import LoginScreen from "./frontend/layouts/LoginScreen";
-import MainScreen from "./frontend/layouts/MainScreen";
+import LoginScreen from "./layouts/LoginScreen";
+import MainScreen from "./layouts/MainScreen";
 
-import Login from "./frontend/components/login/Login";
-import Register from "./frontend/components/login/Register";
-import ForgotPassword from "./frontend/components/login/ForgotPassword";
+import Login from "./components/login/Login";
+import Register from "./components/login/Register";
+import ForgotPassword from "./components/login/ForgotPassword";
 
-import Home from "./frontend/components/Home";
-import Profile from "./frontend/components/profile/Profile";
+import Home from "./components/Home";
+import Profile from "./components/profile/Profile";
 
-import Search from "./frontend/components/search/Search";
+import Search from "./components/search/Search";
 
-import Messages from "./frontend/components/Messages";
-import Settings from "./frontend/components/settingsComponent/Settings";
+import Messages from "./components/Messages";
+import Settings from "./components/settingsComponent/Settings";
 
-import { UserProvider } from "./frontend/components/context/UserContext";
+import { UserProvider } from "./components/context/UserContext";
 
 function App() {
   return (

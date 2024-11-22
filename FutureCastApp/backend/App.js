@@ -1,15 +1,15 @@
 require("dotenv").config();
-const connectDB = require("./backend/config/db");
+const connectDB = require("./config/db");
 const express = require("express");
 const app = express();
-const userRouter = require("./backend/routes/userRouter");
-const predRouter = require("./backend/routes/predRouter");
+const userRouter = require("./routes/userRouter");
+const predRouter = require("./routes/predRouter");
 
 connectDB();
 
 app.use(express.json()); // middleware to parse JSON bodies
 
-app.get("/", (req, res) => res.send("API Running!"));
+app.get("/", (req, res) => res.send("FutureCast API Running!"));
 
 // Routes
 // Use the userRouter for all routes starting with /api/users
