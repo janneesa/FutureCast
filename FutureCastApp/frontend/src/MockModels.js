@@ -1,13 +1,13 @@
 const user = {
   // Id comes from mongo db
   id: 1,
-  name: 'Firstname Lastname',
-  email: 'email',
-  username: 'username',
-  password: 'password',
-  phonenumber: '123-456-7890',
-  dateOfBirth: '2000-01-01',
-  bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  name: "Firstname Lastname",
+  email: "email",
+  username: "username",
+  password: "password",
+  phonenumber: "123-456-7890",
+  dateOfBirth: "2000-01-01",
+  bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
   // List of user ids
   followers: [2, 3, 4, 5, 6],
   // List of user ids
@@ -18,7 +18,16 @@ const user = {
   successfulPredictions: [1],
   predictionScore: 50,
   avatar:
-    'https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b',
+    "https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b",
+  settings: {
+    notifications: {
+      email: true,
+      push: true,
+    },
+    preferences: {
+      darkMode: true,
+    },
+  },
 
   // METHODS
   // GET All
@@ -35,9 +44,9 @@ const predictions = {
   // Id of the user who made the prediction
   userId: 1,
   // Username of the user who made the prediction
-  username: 'username',
+  username: "username",
   prediction:
-    'By 2025, renewable energy will account for 50% of global electricity production.',
+    "By 2025, renewable energy will account for 50% of global electricity production.",
   // List of user ids who agree with the prediction
   agrees: [1, 2, 3, 4, 5],
   // List of user ids who disagree with the prediction
@@ -45,15 +54,15 @@ const predictions = {
   comments: [
     {
       id: 1,
-      username: 'username',
+      username: "username",
       userId: 4,
-      comment: 'I think this is very likely.',
+      comment: "I think this is very likely.",
       likes: [1, 2],
     },
   ],
-  lastVoteDate: '2024-12-31',
+  lastVoteDate: "2024-12-31",
   avatar:
-    'https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b',
+    "https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b",
 
   // METHODS
   // GET All
