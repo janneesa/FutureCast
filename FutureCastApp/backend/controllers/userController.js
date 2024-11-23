@@ -124,7 +124,7 @@ const updateUser = async (req, res) => {
     const updatedUser = await User.findOneAndUpdate(
       { _id: userId },
       { ...req.body },
-      { new: true }
+      { new: true, runValidators: true, context: "query" }
     );
     if (updatedUser) {
       res.status(200).json(updatedUser);
@@ -132,9 +132,19 @@ const updateUser = async (req, res) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to update user", error: error.message });
+    if (error.code === 11000) {
+      // Duplicate key error
+      const field = Object.keys(error.keyValue)[0];
+      const value = error.keyValue[field];
+      res.status(400).json({
+        message: `${field} with value '${value}' already exists.`,
+        error: `Duplicate key error. ${error.message}`,
+      });
+    } else {
+      res
+        .status(500)
+        .json({ message: "Failed to update user", error: error.message });
+    }
   }
 };
 

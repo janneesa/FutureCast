@@ -4,8 +4,6 @@ import Loading from "../Loading";
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
-import { validateUserName } from "../../validations/RegisterValidation";
-
 function ProfileSettings() {
   const { user, setUser } = useContext(UserContext);
 
@@ -28,16 +26,7 @@ function ProfileSettings() {
 
   const changeAvatar = () => {};
 
-  const saveChanges = () => {
-    // Check if username has changed
-    if (username.toLowerCase() !== user.username.toLowerCase()) {
-      const validationError = validateUserName(username);
-      if (validationError) {
-        setError(validationError);
-        return;
-      }
-    }
-
+  const saveChanges = async () => {
     // Check if any field is empty
     if (name === "" || username === "" || bio === "") {
       setError("Please fill all fields");
@@ -45,10 +34,37 @@ function ProfileSettings() {
     }
 
     // Save changes
-    console.log("Saving changes");
-    setUser((u) => ({ ...u, name: name, username: username, bio: bio }));
-    setSettingsOk("Profile updated successfully");
-    setError("");
+    const updatedUser = {
+      userId: user._id,
+      name: name,
+      username: username,
+      bio: bio,
+    };
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/users/${user._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatedUser),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSettingsOk("Settings updated successfully");
+        setUser(data);
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      setError("Failed to update settings");
+      console.log(error);
+    }
   };
 
   if (!user) {
@@ -112,8 +128,14 @@ function ProfileSettings() {
           </div>
         </div>
         {/* Save Button */}
-        {error && <p className="text-red-600 mt-4">{error}</p>}
-        {settingsOk && <p className="text-green-600 mt-4">{settingsOk}</p>}
+        {error && (
+          <p className="text-red-600 dark:text-red-600 mt-4">{error}</p>
+        )}
+        {settingsOk && (
+          <p className="text-green-600 dark:text-green-600 mt-4">
+            {settingsOk}
+          </p>
+        )}
 
         <div className="mt-4 w-32">
           <button className="button" onClick={saveChanges}>

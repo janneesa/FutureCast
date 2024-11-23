@@ -20,6 +20,11 @@ export const UserProvider = ({ children }) => {
     if (user) {
       const { password, ...userData } = user; // Exclude password
       localStorage.setItem("user", JSON.stringify(userData));
+      if (user.settings.preferences.darkMode) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     } else {
       localStorage.removeItem("user");
     }
