@@ -1,6 +1,7 @@
 require("dotenv").config();
 const connectDB = require("./config/db");
 const express = require("express");
+const cors = require("cors"); // Import CORS middleware
 const app = express();
 const userRouter = require("./routes/userRouter");
 const predRouter = require("./routes/predRouter");
@@ -9,6 +10,12 @@ const commRouter = require("./routes/commRouter");
 connectDB();
 
 app.use(express.json()); // middleware to parse JSON bodies
+
+app.use(
+  cors({
+    origin: `http://localhost:${process.env.PORT}`, // Allow requests from this origin
+  })
+);
 
 app.get("/", (req, res) => res.send("FutureCast API Running!"));
 
