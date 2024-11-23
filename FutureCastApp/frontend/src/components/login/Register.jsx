@@ -5,7 +5,6 @@ import {
   validateEmail,
   validateUserName,
   validatePassword,
-  validatePhonenumber,
   validateDateofbirth,
 } from "../../validations/RegisterValidation";
 
@@ -19,15 +18,9 @@ function Register() {
   const [phonenumber, setPhonenumber] = useState("");
   const [dateofbirth, setDateofbirth] = useState("");
   const [error, setError] = useState("");
+  const [okMessage, setOkMessage] = useState("");
 
   const navigate = useNavigate();
-
-  const handleNameChange = (e) => setName(e.target.value);
-  const handleEmailChange = (e) => setEmail(e.target.value);
-  const handleUsernameChange = (e) => setUsername(e.target.value);
-  const handlePasswordChange = (e) => setPassword(e.target.value);
-  const handlePhonenumberChange = (e) => setPhonenumber(e.target.value);
-  const handleDateofbirthChange = (e) => setDateofbirth(e.target.value);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,8 +29,8 @@ function Register() {
       email: email,
       username: username,
       password: password,
-      phonenumber: phonenumber,
-      dateofbirth: dateofbirth,
+      phone_number: phonenumber,
+      date_of_birth: dateofbirth,
       bio: "",
       followers: [],
       following: [],
@@ -45,14 +38,22 @@ function Register() {
       successfulPredictions: [],
       predictionScore: 0,
       avatar: "",
+      settings: {
+        notifications: {
+          email: true,
+          push: true,
+        },
+        preferences: {
+          darkMode: true,
+        },
+      },
     };
 
     const errors = [
       validateEmail(newUser.email),
       validateUserName(newUser.username),
       validatePassword(newUser.password),
-      validatePhonenumber(newUser.phonenumber),
-      validateDateofbirth(newUser.dateofbirth),
+      validateDateofbirth(newUser.date_of_birth),
     ].filter((error) => error !== "");
 
     if (errors.length > 0) {
@@ -60,29 +61,35 @@ function Register() {
       return;
     }
 
-    try {
-      const response = await registerUser(newUser);
+    await registerUser(newUser);
+  };
 
-      if (response) {
+  const registerUser = async (newUser) => {
+    try {
+      const response = await fetch("http://localhost:4000/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setOkMessage("User registered successfully");
+        setError("");
         setName("");
         setEmail("");
         setUsername("");
         setPassword("");
         setPhonenumber("");
         setDateofbirth("");
-        navigate("/");
-        alert("User registered successfully");
       } else {
-        setError("Error registering user");
+        setError(data.message);
       }
     } catch (error) {
-      setError("Registration failed. Please try again later.");
+      console.log("Failed to register user", error);
     }
-  };
-
-  const registerUser = async (newUser) => {
-    mockData.users.push(newUser);
-    return true;
   };
 
   return (
@@ -102,7 +109,7 @@ function Register() {
                   type="text"
                   placeholder="Firstname Lastname"
                   value={name}
-                  onChange={handleNameChange}
+                  onChange={(e) => setName(e.target.value)}
                   className="input"
                   required
                 />
@@ -114,7 +121,7 @@ function Register() {
                   type="email"
                   placeholder="m@example.com"
                   value={email}
-                  onChange={handleEmailChange}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="input"
                   required
                 />
@@ -126,7 +133,7 @@ function Register() {
                   type="text"
                   placeholder="username"
                   value={username}
-                  onChange={handleUsernameChange}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="input"
                   required
                 />
@@ -138,7 +145,7 @@ function Register() {
                   type="password"
                   placeholder="******"
                   value={password}
-                  onChange={handlePasswordChange}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="input"
                   required
                 />
@@ -150,7 +157,7 @@ function Register() {
                   type="tel"
                   placeholder="123-456-7890"
                   value={phonenumber}
-                  onChange={handlePhonenumberChange}
+                  onChange={(e) => setPhonenumber(e.target.value)}
                   className="input"
                   required
                 />
@@ -161,11 +168,12 @@ function Register() {
                   id="dateofbirth"
                   type="date"
                   value={dateofbirth}
-                  onChange={handleDateofbirthChange}
+                  onChange={(e) => setDateofbirth(e.target.value)}
                   className="input"
                   required
                 />
               </div>
+              {okMessage && <p className="text-green-600">{okMessage}</p>}
               {error && <p className="text-red-600">{error}</p>}
               <button type="submit" className="button" onClick={handleSubmit}>
                 Register

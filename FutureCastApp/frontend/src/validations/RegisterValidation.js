@@ -6,8 +6,6 @@ export const validateEmail = (email) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(email)) {
     return "Invalid email address";
-  } else if (mockData.users.some((user) => user.email === email)) {
-    return "Email is already in use";
   }
   return "";
 };
@@ -17,8 +15,6 @@ export const validateUserName = (username) => {
     return "Username must be at least 3 characters long";
   } else if (username.length > 10) {
     return "Username must be at most 10 characters long";
-  } else if (mockData.users.some((user) => user.username === username)) {
-    return "Username is already in use";
   }
   return "";
 };
@@ -34,14 +30,6 @@ export const checkPasswordMatch = (id, password) => {
   const user = mockData.users.find((user) => user.id === id);
   if (user.password !== password) {
     return "Incorrect password";
-  }
-  return "";
-};
-
-export const validatePhonenumber = (phonenumber) => {
-  const phoneRegex = /^\d{10}$/;
-  if (!phoneRegex.test(phonenumber)) {
-    return "Invalid phone number";
   }
   return "";
 };

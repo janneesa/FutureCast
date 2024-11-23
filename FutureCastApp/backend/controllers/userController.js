@@ -28,12 +28,22 @@ const getAllUsers = async (req, res) => {
 const createUser = async (req, res) => {
   try {
     req.body.password = await hashPassword(req.body.password); // Hashing password before saving to database
-    const newUser = await User.create({ ...req.body });
-    res.status(201).json(newUser);
+    await User.create({ ...req.body });
+    res.status(201).json({ message: "User created successfully" });
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Failed to create user", error: error.message });
+    if (error.code === 11000) {
+      // Duplicate key error
+      const field = Object.keys(error.keyValue)[0];
+      const value = error.keyValue[field];
+      res.status(400).json({
+        message: `${field} with value '${value}' already exists.`,
+        error: `Duplicate key error. ${error.message}`,
+      });
+    } else {
+      res
+        .status(400)
+        .json({ message: "Failed to create user", error: error.message });
+    }
   }
 };
 
