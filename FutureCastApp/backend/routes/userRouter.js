@@ -5,6 +5,7 @@ const {
   getUserById,
   getUserByUsername,
   createUser,
+  loginUser,
   updateUser,
   deleteUser,
   // patchUser
@@ -15,6 +16,9 @@ router.get("/", getAllUsers);
 
 // POST /users
 router.post("/", createUser);
+
+// POST /users/login
+router.post("/login", loginUser);
 
 // GET /users/:userId
 router.get("/:userId", getUserById);

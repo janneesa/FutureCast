@@ -1,5 +1,18 @@
 const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel.js");
+const bcrypt = require("bcrypt");
+
+//Hashing Password
+async function hashPassword(password) {
+  try {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    return hashedPassword;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
 
 // GET /users
 const getAllUsers = async (req, res) => {
@@ -14,12 +27,43 @@ const getAllUsers = async (req, res) => {
 // POST /users
 const createUser = async (req, res) => {
   try {
+    req.body.password = await hashPassword(req.body.password); // Hashing password before saving to database
     const newUser = await User.create({ ...req.body });
     res.status(201).json(newUser);
   } catch (error) {
     res.status(400).json({ message: "Failed to create user", error: error.message });
   }
 };
+
+// POST /users/login
+const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!username) {
+    return res.status(400).json({ message: "Invalid username" });
+  }
+
+  try {
+    const user = await User.findOne({username}).select("+password");
+    //Checking if user exists
+    if (user) {
+      //Checking if password is correct
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        res.status(200).json({ message: "Login successful" });
+      } else {
+        res.status(401).json({ message: "Invalid password" });
+      }
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  }
+  catch (error) {
+    res.status(500).json({ message: "Failed to retrieve user" });
+  }
+};
+
+  
 
 // GET /users/:userId
 const getUserById = async (req, res) => {
@@ -111,6 +155,7 @@ module.exports = {
     getUserById,
     getUserByUsername,
     createUser,
+    loginUser,
     updateUser,
     deleteUser,
 };

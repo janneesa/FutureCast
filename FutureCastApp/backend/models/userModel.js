@@ -18,6 +18,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     phone_number: {
       type: String,
@@ -54,6 +55,24 @@ const userSchema = new Schema(
     avatar: {
       type: String,
       required: false,
+    },
+    settings: {
+      notifications: {
+        email: {
+          type: Boolean,
+          required: true,
+        },
+        push: {
+          type: Boolean,
+          required: true,
+        },
+      },
+      preferences: {
+        darkMode: {
+          type: Boolean,
+          required: true,
+        },
+      },
     },
   },
   { timestamps: true }
