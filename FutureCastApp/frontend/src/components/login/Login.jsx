@@ -5,15 +5,8 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
-import { mockData } from "../../data/MockData";
-
 function Login() {
   const { setUser } = useContext(UserContext);
-
-  const [loginData, setLoginData] = useState(() => {
-    const fetchedLogin = localStorage.getItem("user");
-    return fetchedLogin ? JSON.parse(fetchedLogin) : null;
-  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,29 +22,35 @@ function Login() {
       return;
     }
 
-    if (email && password) {
-      const users = mockData.users;
-      const fetchedUser = users.find(
-        (user) => user.email === email && user.password === password
-      );
-      if (fetchedUser) {
-        const { password, ...userData } = fetchedUser; // Exclude email and password
-        setUser(userData);
-        setEmail("");
-        setPassword("");
-        setError("");
-        navigate("/app");
-      } else {
-        setError("Invalid email or password");
-      }
-    }
+    await fetchUser(email, password);
   };
 
-  useEffect(() => {
-    if (loginData) {
-      navigate("/app");
+  const fetchUser = async (email, password) => {
+    try {
+      const response = await fetch("http://localhost:4000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+
+      if (response.ok) {
+        setUser(data);
+        setError("");
+        setEmail("");
+        setPassword("");
+        navigate("/app");
+      } else {
+        setError(data.message);
+      }
+    } catch (error) {
+      setError("Failed to login");
     }
-  }, [loginData]);
+  };
 
   return (
     <div className="flex-center min-h-screen p-4">

@@ -10,7 +10,7 @@ async function hashPassword(password) {
 
     return hashedPassword;
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
   }
 }
 
@@ -31,46 +31,44 @@ const createUser = async (req, res) => {
     const newUser = await User.create({ ...req.body });
     res.status(201).json(newUser);
   } catch (error) {
-    res.status(400).json({ message: "Failed to create user", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Failed to create user", error: error.message });
   }
 };
 
 // POST /users/login
 const loginUser = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username) {
-    return res.status(400).json({ message: "Invalid username" });
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
   }
 
   try {
-    const user = await User.findOne({username}).select("+password");
-    //Checking if user exists
-    if (user) {
-      //Checking if password is correct
-      const isMatch = await bcrypt.compare(password, user.password);
-      if (isMatch) {
-        res.status(200).json({ message: "Login successful" });
-      } else {
-        res.status(401).json({ message: "Invalid password" });
-      }
-    } else {
-      res.status(404).json({ message: "User not found" });
+    const user = await User.findOne({ email }).select("+password");
+    if (!user) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
-  }
-  catch (error) {
-    res.status(500).json({ message: "Failed to retrieve user" });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(`Error logging in user: ${error.message}`);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
-
-  
 
 // GET /users/:userId
 const getUserById = async (req, res) => {
   const { userId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
+    return res.status(400).json({ message: "Invalid user ID" });
   }
 
   try {
@@ -80,8 +78,7 @@ const getUserById = async (req, res) => {
     } else {
       res.status(404).json({ message: "User not found" });
     }
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ message: "Failed to retrieve user" });
   }
 };
@@ -90,18 +87,17 @@ const getUserById = async (req, res) => {
 const getUserByUsername = async (req, res) => {
   const { username } = req.params;
   if (!username) {
-      return res.status(400).json({ message: "Invalid username" });
+    return res.status(400).json({ message: "Invalid username" });
   }
 
   try {
-    const user = await User.findOne({username});
+    const user = await User.findOne({ username });
     if (user) {
       res.status(200).json(user);
     } else {
       res.status(404).json({ message: "User not found" });
     }
-  }
-  catch (error) {
+  } catch (error) {
     res.status(500).json({ message: "Failed to retrieve user" });
   }
 };
@@ -111,7 +107,7 @@ const updateUser = async (req, res) => {
   const { userId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
+    return res.status(400).json({ message: "Invalid user ID" });
   }
 
   try {
@@ -126,7 +122,9 @@ const updateUser = async (req, res) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to update user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to update user", error: error.message });
   }
 };
 
@@ -135,7 +133,7 @@ const deleteUser = async (req, res) => {
   const { userId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID" });
+    return res.status(400).json({ message: "Invalid user ID" });
   }
 
   try {
@@ -146,16 +144,18 @@ const deleteUser = async (req, res) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Failed to delete user", error: error.message });
   }
 };
 
 module.exports = {
-    getAllUsers,
-    getUserById,
-    getUserByUsername,
-    createUser,
-    loginUser,
-    updateUser,
-    deleteUser,
+  getAllUsers,
+  getUserById,
+  getUserByUsername,
+  createUser,
+  loginUser,
+  updateUser,
+  deleteUser,
 };

@@ -13,7 +13,7 @@ app.use(express.json()); // middleware to parse JSON bodies
 
 app.use(
   cors({
-    origin: `http://localhost:${process.env.PORT}`, // Allow requests from this origin
+    origin: `http://localhost:5173`, // Allow requests from this origin
   })
 );
 
