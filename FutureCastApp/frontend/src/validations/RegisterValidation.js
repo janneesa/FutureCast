@@ -26,14 +26,6 @@ export const validatePassword = (password) => {
   return "";
 };
 
-export const checkPasswordMatch = (id, password) => {
-  const user = mockData.users.find((user) => user.id === id);
-  if (user.password !== password) {
-    return "Incorrect password";
-  }
-  return "";
-};
-
 export const validateDateofbirth = (dateofbirth) => {
   if (!dateofbirth) {
     return "Date of birth is required";

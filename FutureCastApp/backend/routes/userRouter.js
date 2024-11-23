@@ -8,6 +8,7 @@ const {
   loginUser,
   updateUser,
   deleteUser,
+  updateUserPassword,
   // patchUser
 } = require("../controllers/userController");
 
@@ -28,6 +29,9 @@ router.get("/username/:username", getUserByUsername);
 
 // PUT /users/:userId
 router.put("/:userId", updateUser);
+
+// PUT /users/reset/:userId
+router.put("/reset/:userId", updateUserPassword);
 
 // DELETE /users/:userId
 router.delete("/:userId", deleteUser);

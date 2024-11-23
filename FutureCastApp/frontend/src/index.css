@@ -84,6 +84,14 @@ nav {
   @apply p-4 flex flex-wrap items-center justify-between gap-2;
 }
 
+.ok-text {
+  @apply text-green-600 dark:text-green-600 mt-4;
+}
+
+.error-text {
+  @apply text-red-600 dark:text-red-600 mt-4;
+}
+
 /* Flex utilities */
 .flex-center {
   @apply flex items-center justify-center;

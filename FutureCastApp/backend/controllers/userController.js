@@ -148,6 +148,35 @@ const updateUser = async (req, res) => {
   }
 };
 
+// PUT /users/reset/:userId
+const updateUserPassword = async (req, res) => {
+  const { userId } = req.params;
+  const { password, newPassword } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Invalid user ID" });
+  }
+
+  try {
+    const user = await User.findOne({ _id: userId }).select("+password");
+    if (!user) {
+      return res.status(401).json({ message: "Id error" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    user.password = await hashPassword(newPassword);
+    await user.save();
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error(`Error resetting password in user: ${error.message}`);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 // DELETE /users/:userId
 const deleteUser = async (req, res) => {
   const { userId } = req.params;
@@ -178,4 +207,5 @@ module.exports = {
   loginUser,
   updateUser,
   deleteUser,
+  updateUserPassword,
 };
