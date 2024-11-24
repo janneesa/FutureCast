@@ -6,48 +6,69 @@ import { useEffect, useState, useContext } from "react";
 import { useLocation } from "react-router-dom";
 
 import { UserContext } from "../context/UserContext";
-import { mockData } from "../../data/MockData";
+
+const API_URL = "http://localhost:4000/api/users/search/";
 
 function Search() {
   const { user } = useContext(UserContext);
   const location = useLocation();
-  let searchWord = location.state?.searchWord || "";
+  const searchWord = location.state?.searchWord || "";
 
   const [results, setResults] = useState([]);
   const [viewingProfile, setViewingProfile] = useState(false);
   const [profile, setProfile] = useState({});
 
-  // Fetch users based on search word
-  const fetchUsers = () => {
-    const filteredUsers = mockData.users.filter((u) =>
-      u.username.toLowerCase().includes(searchWord.toLowerCase())
-    );
-    // Remove current user from search results
-    const currentUserIndex = filteredUsers.findIndex((u) => u.id === user.id);
-    if (currentUserIndex > -1) {
-      filteredUsers.splice(currentUserIndex, 1);
+  useEffect(() => {
+    if (searchWord) {
+      console.log("");
+
+      fetchUserProfiles();
     }
-    setResults(filteredUsers);
+  }, [searchWord]);
+
+  const fetchUserProfiles = async () => {
+    try {
+      const response = await fetch(`${API_URL}${searchWord}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch users");
+      }
+
+      const filteredData = data.filter((profile) => profile._id !== user?._id);
+      setResults(filteredData);
+      console.log(data);
+    } catch (error) {
+      console.error(`Error fetching users: ${error.message}`);
+    }
   };
 
-  const showProfile = (id) => {
+  const showProfile = async (id) => {
     console.log(`Viewing profile of user with id: ${id}`);
-    const fetchedProfile = mockData.users.find((u) => u.id === id);
-    if (fetchedProfile) {
-      setProfile(fetchedProfile);
-      setViewingProfile(true);
+    try {
+      const response = await fetch(`http://localhost:4000/api/users/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const fetchedProfile = await response.json();
+
+      if (response.ok) {
+        setProfile(fetchedProfile);
+        setViewingProfile(true);
+      } else {
+        console.log(fetchedProfile.message);
+      }
+    } catch (error) {
+      console.error(`Error fetching user profile: ${error.message}`);
     }
   };
 
   const backToResults = () => {
     setViewingProfile(false);
   };
-
-  useEffect(() => {
-    if (user) {
-      fetchUsers();
-    }
-  }, [user, searchWord]);
 
   if (!user) {
     return (
@@ -63,11 +84,11 @@ function Search() {
         {!viewingProfile &&
           results.map((result) => (
             <SearchResult
-              key={result.id}
+              key={result._id}
               avatar={result.avatar}
               username={result.username}
               predictionScore={result.predictionScore}
-              id={result.id}
+              id={result._id}
               viewProfileFunction={showProfile}
             />
           ))}

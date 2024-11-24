@@ -7,6 +7,7 @@ const {
   createUser,
   loginUser,
   updateUser,
+  searchUsers,
   deleteUser,
   updateUserPassword,
   // patchUser
@@ -26,6 +27,9 @@ router.get("/:userId", getUserById);
 
 // GET /users/:username
 router.get("/username/:username", getUserByUsername);
+
+// GET /users/search/:searchWord
+router.get("/search/:searchWord", searchUsers);
 
 // PUT /users/:userId
 router.put("/:userId", updateUser);

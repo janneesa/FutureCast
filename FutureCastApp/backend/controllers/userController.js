@@ -112,6 +112,28 @@ const getUserByUsername = async (req, res) => {
   }
 };
 
+// GET /users/search/:searchWord
+const searchUsers = async (req, res) => {
+  const { searchWord } = req.params;
+  if (!searchWord) {
+    return res.status(400).json({ message: "Invalid search word" });
+  }
+
+  try {
+    const users = await User.find({
+      $or: [
+        { name: { $regex: searchWord, $options: "i" } },
+        { username: { $regex: searchWord, $options: "i" } },
+      ],
+    }).select("-email -settings -phone_number -date_of_birth");
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to search users" });
+  }
+};
+
+module.exports = { searchUsers };
+
 // PUT /users/:userId
 const updateUser = async (req, res) => {
   const { userId } = req.params;
@@ -206,6 +228,7 @@ module.exports = {
   createUser,
   loginUser,
   updateUser,
+  searchUsers,
   deleteUser,
   updateUserPassword,
 };
