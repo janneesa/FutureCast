@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from 'react';
 
 // Create UserContext
 export const UserContext = createContext();
@@ -9,7 +9,7 @@ export const UserProvider = ({ children }) => {
 
   // Load user data from localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -19,14 +19,14 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     if (user) {
       const { password, ...userData } = user; // Exclude password
-      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem('user', JSON.stringify(userData));
       if (user.settings.preferences.darkMode) {
-        document.documentElement.classList.add("dark");
+        document.documentElement.classList.add('dark');
       } else {
-        document.documentElement.classList.remove("dark");
+        document.documentElement.classList.remove('dark');
       }
     } else {
-      localStorage.removeItem("user");
+      localStorage.removeItem('user');
     }
   }, [user]);
 
