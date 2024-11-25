@@ -1,14 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Card from "../Card";
-import {
-  validateEmail,
-  validateUserName,
-  validatePassword,
-  validateDateofbirth,
-} from "../../validations/RegisterValidation";
+import { Link } from "react-router-dom";
+import { validateDateofbirth } from "../../validations/RegisterValidation";
 
-import { mockData } from "../../data/MockData";
+import Card from "../Card";
 
 function Register() {
   const [name, setName] = useState("");
@@ -19,8 +13,6 @@ function Register() {
   const [dateofbirth, setDateofbirth] = useState("");
   const [error, setError] = useState("");
   const [okMessage, setOkMessage] = useState("");
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -82,6 +74,7 @@ function Register() {
         setPhonenumber("");
         setDateofbirth("");
       } else {
+        setOkMessage("");
         setError(data.message);
       }
     } catch (error) {
