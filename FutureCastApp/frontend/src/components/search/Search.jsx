@@ -1,11 +1,10 @@
+import { useEffect, useState, useContext } from "react";
+import { useLocation } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
+
 import SearchResult from "./SearchResult";
 import Profile from "../profile/Profile";
 import Loading from "../Loading";
-
-import { useEffect, useState, useContext } from "react";
-import { useLocation } from "react-router-dom";
-
-import { UserContext } from "../context/UserContext";
 
 const API_URL = "http://localhost:4000/api/users/search/";
 

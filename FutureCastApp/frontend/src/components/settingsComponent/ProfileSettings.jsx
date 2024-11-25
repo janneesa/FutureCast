@@ -1,8 +1,8 @@
-import Card from "../Card";
-import Loading from "../Loading";
-
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
+
+import Card from "../Card";
+import Loading from "../Loading";
 
 function ProfileSettings() {
   const { user, setUser } = useContext(UserContext);

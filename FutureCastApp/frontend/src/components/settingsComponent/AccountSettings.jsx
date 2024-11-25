@@ -1,13 +1,8 @@
-import Card from "../Card";
-import Loading from "../Loading";
-
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
-import {
-  validateEmail,
-  validatePassword,
-} from "../../validations/RegisterValidation";
+import Card from "../Card";
+import Loading from "../Loading";
 
 function AccountSettings() {
   const { user, setUser } = useContext(UserContext);
@@ -36,13 +31,6 @@ function AccountSettings() {
     // Check if email has changed
     if (!email || email === user.email) {
       setEmailError("Please enter a new email");
-      setEmailOk("");
-      return;
-    }
-
-    const validationError = validateEmail(email);
-    if (validationError) {
-      setEmailError(validationError);
       setEmailOk("");
       return;
     }
@@ -85,17 +73,6 @@ function AccountSettings() {
   };
 
   const resetPassword = async () => {
-    const validationError = validatePassword(newPassword);
-    if (validationError) {
-      setPasswordError(validationError);
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setPasswordError("Passwords do not match");
-      return;
-    }
-
     // Reset password
     await uploadNewPassword();
   };
@@ -106,6 +83,7 @@ function AccountSettings() {
       userId: user._id,
       password: password,
       newPassword: newPassword,
+      confirmPassword: confirmPassword,
     };
 
     try {

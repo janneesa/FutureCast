@@ -49,12 +49,9 @@ function Register() {
       },
     };
 
-    const errors = [
-      validateEmail(newUser.email),
-      validateUserName(newUser.username),
-      validatePassword(newUser.password),
-      validateDateofbirth(newUser.date_of_birth),
-    ].filter((error) => error !== "");
+    const errors = [validateDateofbirth(newUser.date_of_birth)].filter(
+      (error) => error !== ""
+    );
 
     if (errors.length > 0) {
       setError(errors.join(", "));

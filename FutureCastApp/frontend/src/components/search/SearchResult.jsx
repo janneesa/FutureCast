@@ -1,6 +1,3 @@
-import React, { useState, useContext } from "react";
-import { UserContext } from "../context/UserContext";
-
 import Card from "../Card";
 
 function SearchResult({

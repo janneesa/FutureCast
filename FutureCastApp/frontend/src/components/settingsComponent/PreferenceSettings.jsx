@@ -1,9 +1,9 @@
+import { UserContext } from "../context/UserContext";
+
 import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card";
 import Switcher from "../utility/switcher";
 import Loading from "../Loading";
-
-import { UserContext } from "../context/UserContext";
 
 function PreferenceSettings() {
   const { user, setUser } = useContext(UserContext);

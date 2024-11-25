@@ -1,18 +1,19 @@
 const { default: mongoose } = require("mongoose");
 const User = require("../models/userModel.js");
-const bcrypt = require("bcrypt");
 
-//Hashing Password
-async function hashPassword(password) {
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    return hashedPassword;
-  } catch (error) {
-    console.error("Error:", error);
+// Handle user signup errors
+const handleDuplicateError = (error, res) => {
+  if (error.code === 11000) {
+    const field = Object.keys(error.keyValue)[0];
+    const value = error.keyValue[field];
+    res.status(400).json({
+      message: `${field} with value '${value}' already exists.`,
+      error: `Duplicate key error. ${error.message}`,
+    });
+  } else {
+    res.status(400).json({ message: error.message, error: error.message });
   }
-}
+};
 
 // GET /users
 const getAllUsers = async (req, res) => {
@@ -26,24 +27,48 @@ const getAllUsers = async (req, res) => {
 
 // POST /users
 const createUser = async (req, res) => {
+  const {
+    name,
+    email,
+    username,
+    password,
+    phone_number,
+    date_of_birth,
+    bio,
+    followers,
+    following,
+    predictions,
+    successfulPredictions,
+    predictionScore,
+    avatar,
+    settings,
+  } = req.body;
+
   try {
-    req.body.password = await hashPassword(req.body.password); // Hashing password before saving to database
-    await User.create({ ...req.body });
+    // Custom signup method in the User model
+    const user = await User.signup(
+      name,
+      email,
+      username,
+      password,
+      phone_number,
+      date_of_birth,
+      bio,
+      followers,
+      following,
+      predictions,
+      successfulPredictions,
+      predictionScore,
+      avatar,
+      settings
+    );
+
+    // Create token here
+    // const token = createToken(user._id)
+
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
-    if (error.code === 11000) {
-      // Duplicate key error
-      const field = Object.keys(error.keyValue)[0];
-      const value = error.keyValue[field];
-      res.status(400).json({
-        message: `${field} with value '${value}' already exists.`,
-        error: `Duplicate key error. ${error.message}`,
-      });
-    } else {
-      res
-        .status(400)
-        .json({ message: "Failed to create user", error: error.message });
-    }
+    handleDuplicateError(error, res);
   }
 };
 
@@ -51,25 +76,15 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
-  }
-
   try {
-    const user = await User.findOne({ email }).select("+password");
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
+    const user = await User.login(email, password);
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
+    // create a token here
+    // const token = createToken(user._id);
 
     res.status(200).json(user);
   } catch (error) {
-    console.error(`Error logging in user: ${error.message}`);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(400).json({ message: error.message });
   }
 };
 
@@ -132,8 +147,6 @@ const searchUsers = async (req, res) => {
   }
 };
 
-module.exports = { searchUsers };
-
 // PUT /users/:userId
 const updateUser = async (req, res) => {
   const { userId } = req.params;
@@ -154,48 +167,31 @@ const updateUser = async (req, res) => {
       res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
-    if (error.code === 11000) {
-      // Duplicate key error
-      const field = Object.keys(error.keyValue)[0];
-      const value = error.keyValue[field];
-      res.status(400).json({
-        message: `${field} with value '${value}' already exists.`,
-        error: `Duplicate key error. ${error.message}`,
-      });
-    } else {
-      res
-        .status(500)
-        .json({ message: "Failed to update user", error: error.message });
-    }
+    handleDuplicateError(error, res);
   }
 };
 
 // PUT /users/reset/:userId
 const updateUserPassword = async (req, res) => {
   const { userId } = req.params;
-  const { password, newPassword } = req.body;
+  const { password, newPassword, confirmPassword } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ message: "Invalid user ID" });
   }
 
   try {
-    const user = await User.findOne({ _id: userId }).select("+password");
-    if (!user) {
-      return res.status(401).json({ message: "Id error" });
-    }
+    const user = await User.resetPassword(
+      userId,
+      password,
+      newPassword,
+      confirmPassword
+    );
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-
-    user.password = await hashPassword(newPassword);
-    await user.save();
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
     console.error(`Error resetting password in user: ${error.message}`);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: error.message });
   }
 };
 

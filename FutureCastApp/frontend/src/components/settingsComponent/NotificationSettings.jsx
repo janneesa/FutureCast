@@ -1,8 +1,9 @@
+import { UserContext } from "../context/UserContext";
+
 import React, { useState, useContext, useEffect } from "react";
 import Card from "../Card";
 import Switcher from "../utility/switcher";
 import Loading from "../Loading";
-import { UserContext } from "../context/UserContext";
 
 function NotificationSettings() {
   const { user, setUser } = useContext(UserContext);

@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect } from "react";
-import Card from "../Card";
-
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+
+import Card from "../Card";
 
 function Login() {
   const { setUser } = useContext(UserContext);
