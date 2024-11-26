@@ -12,7 +12,7 @@ import Profile from "./components/profile/Profile";
 
 import Search from "./components/search/Search";
 
-import Messages from "./components/Messages";
+import Messages from "./components/messageComponent/Messages";
 import Settings from "./components/settingsComponent/Settings";
 
 import { UserProvider } from "./components/context/UserContext";
