@@ -22,10 +22,6 @@ function Login() {
       return;
     }
 
-    await fetchUser(email, password);
-  };
-
-  const fetchUser = async (email, password) => {
     try {
       const response = await fetch("http://localhost:4000/api/users/login", {
         method: "POST",
