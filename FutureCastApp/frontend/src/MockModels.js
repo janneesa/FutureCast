@@ -79,3 +79,17 @@ export const mockData = {
   user,
   prediction,
 };
+
+
+//messages
+const messages = {
+  id: 1,
+  senderId: 1,
+  receiverId: 2,
+  message: "Hello!",
+  date: "2022-01-01"
+};
+
+//get by senderId
+//get by receiverId
+//order by time

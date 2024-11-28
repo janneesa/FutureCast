@@ -6,6 +6,7 @@ const app = express();
 const userRouter = require("./routes/userRouter");
 const predRouter = require("./routes/predRouter");
 const commRouter = require("./routes/commRouter");
+const msgRouter = require("./routes/msgRouter");
 
 connectDB();
 
@@ -26,6 +27,8 @@ app.use("/api/users", userRouter);
 app.use("/api/predictions", predRouter);
 // Use the commRouter for all routes starting with /api/comments
 app.use("/api/comments", commRouter);
+// Use the msgRouter for all routes starting with /api/messages
+app.use("/api/messages", msgRouter);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () =>
