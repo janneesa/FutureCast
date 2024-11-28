@@ -4,6 +4,7 @@ import { useEffect } from "react";
 const API_URL = "http://localhost:4000/api/";
 
 function FriendsList() {
+    const [user, setUser] = useState(null);
     const [messages, setMessages] = useState([]);
     const [friends, setFriends] = useState([]);
     const [searchWord, setSearchWord] = useState("");
@@ -12,8 +13,16 @@ function FriendsList() {
         navigate("/app/search", { state: { searchWord } });
     };
 
+    //Doesnt work yet
     useEffect(() => {
-        fetchMessages("Roni"); // Hardcoded for now, should be user's own id
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
+    useEffect(() => {
+        fetchMessages("Roni"); // Hardcoded for now, should be user's own username
     }, []);
 
     useEffect(() => {
