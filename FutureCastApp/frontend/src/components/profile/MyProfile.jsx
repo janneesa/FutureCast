@@ -1,20 +1,43 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { useParams } from "react-router-dom";
+
 import ProfileCard from "./ProfileCard";
 import ScoreCard from "./ScoreCard";
 import ContentCard from "./ContentCard";
 import Loading from "../Loading";
 
-const Profile = ({ profile }) => {
+import useFetchProfile from "../../hooks/useFetchProfile";
+
+const MyProfile = () => {
+  const { userId } = useParams();
   const { user } = useContext(UserContext);
+  const [profile, setProfile] = useState(null);
   const [predictions, setPredictions] = useState([]);
 
-  const fetchPredictions = async (userId) => {};
+  const isMyProfile = !userId || userId === user?.id;
 
   useEffect(() => {
-    const userId = profile?.id || user?.id;
-    if (userId) fetchPredictions(userId);
-  }, [profile, user]);
+    if (!isMyProfile) {
+      try {
+        const fetchProfile = async () => {
+          const response = await fetch(
+            `http://localhost:4000/api/users/${userId}`
+          );
+          if (!response.ok) throw new Error("Failed to fetch profile");
+          const data = await response.json();
+          setProfile(data);
+        };
+        console.log(userId);
+
+        fetchProfile();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }, [userId]);
+
+  const fetchPredictions = async (userId) => {};
 
   if (!user && !profile) {
     return (
@@ -43,4 +66,4 @@ const Profile = ({ profile }) => {
   );
 };
 
-export default Profile;
+export default MyProfile;

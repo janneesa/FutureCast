@@ -8,9 +8,10 @@ import Register from "./components/login/Register";
 import ForgotPassword from "./components/login/ForgotPassword";
 
 import Home from "./components/Home";
-import Profile from "./components/profile/Profile";
+import MyProfile from "./components/profile/MyProfile";
 
 import Search from "./components/search/Search";
+import SearchProfile from "./components/search/SearchProfile";
 
 import Messages from "./components/Messages";
 import Settings from "./components/settingsComponent/Settings";
@@ -32,7 +33,7 @@ function App() {
             <Route path="/app" element={<MainScreen />}>
               <Route index element={<Home />} />
               <Route path="home" element={<Home />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="profile/:userId" element={<MyProfile />} />
               <Route path="search" element={<Search />} />
               <Route path="messages" element={<Messages />} />
               <Route path="settings" element={<Settings />} />

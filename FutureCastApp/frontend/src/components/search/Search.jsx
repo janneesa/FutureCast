@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 import SearchResult from "./SearchResult";
-import Profile from "../profile/Profile";
+import Profile from "../profile/MyProfile";
 import Loading from "../Loading";
 
 const API_URL = "http://localhost:4000/api/users/search/";
