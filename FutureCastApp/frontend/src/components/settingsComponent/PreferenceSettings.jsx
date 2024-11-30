@@ -1,16 +1,16 @@
 import { UserContext } from "../context/UserContext";
-
 import React, { useState, useEffect, useContext } from "react";
+
 import Card from "../Card";
 import Switcher from "../utility/switcher";
 import Loading from "../Loading";
 
+import useToast from "../../hooks/useToast";
+
 function PreferenceSettings() {
   const { user, setUser } = useContext(UserContext);
+  const { showSuccessToast, showErrorToast } = useToast();
   const [darkmode, setDarkmode] = useState(true);
-
-  const [error, setError] = useState("");
-  const [okMessage, setOkMessage] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -37,12 +37,12 @@ function PreferenceSettings() {
       if (response.ok) {
         const data = await response.json();
         setUser(data);
-        setOkMessage("Settings updated successfully");
-        setError("");
+        showSuccessToast("Settings updated");
+      } else {
+        showErrorToast("Something went wrong. Please try again");
       }
     } catch (error) {
-      setError("Failed to update settings");
-      setOkMessage("");
+      showErrorToast("Something went wrong. Please try again");
       console.error(error);
     }
   };
@@ -62,8 +62,6 @@ function PreferenceSettings() {
           <h5>Dark Mode</h5>
           <Switcher isChecked={darkmode} onChange={handleSwitch} />
         </div>
-        {error && <div className="error-text">{error}</div>}
-        {okMessage && <div className="ok-text">{okMessage}</div>}
       </div>
     </Card>
   );

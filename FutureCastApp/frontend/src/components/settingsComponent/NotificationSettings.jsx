@@ -1,17 +1,18 @@
 import { UserContext } from "../context/UserContext";
-
 import React, { useState, useContext, useEffect } from "react";
+
 import Card from "../Card";
 import Switcher from "../utility/switcher";
 import Loading from "../Loading";
+
+import useToast from "../../hooks/useToast";
 
 function NotificationSettings() {
   const { user, setUser } = useContext(UserContext);
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
 
-  const [error, setError] = useState("");
-  const [okMessage, setOkMessage] = useState("");
+  const { showSuccessToast, showErrorToast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -40,12 +41,10 @@ function NotificationSettings() {
       if (response.ok) {
         const data = await response.json();
         setUser(data);
-        setOkMessage("Settings updated successfully");
-        setError("");
+        showSuccessToast("Settings updated successfully");
       }
     } catch (error) {
-      setError("Failed to update settings");
-      setOkMessage("");
+      showErrorToast("Failed to update settings");
       console.error(error);
     }
   };
@@ -75,8 +74,6 @@ function NotificationSettings() {
             onChange={() => setPushNotifications(!pushNotifications)}
           />
         </div>
-        {error && <p className="error-text">{error}</p>}
-        {okMessage && <p className="ok-text">{okMessage}</p>}
         <div className="mt-4 w-32">
           <button className="button" onClick={saveChanges}>
             Save Changes

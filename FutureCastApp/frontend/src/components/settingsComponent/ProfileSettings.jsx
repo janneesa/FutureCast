@@ -4,16 +4,16 @@ import { UserContext } from "../context/UserContext";
 import Card from "../Card";
 import Loading from "../Loading";
 
+import useToast from "../../hooks/useToast";
+
 function ProfileSettings() {
   const { user, setUser } = useContext(UserContext);
+  const { showSuccessToast, showErrorToast } = useToast();
 
   const [avatar, setAvatar] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
-
-  const [error, setError] = useState("");
-  const [settingsOk, setSettingsOk] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -29,7 +29,7 @@ function ProfileSettings() {
   const saveChanges = async () => {
     // Check if any field is empty
     if (name === "" || username === "" || bio === "") {
-      setError("Please fill all fields");
+      showErrorToast("Please fill all fields");
       return;
     }
 
@@ -56,13 +56,13 @@ function ProfileSettings() {
       const data = await response.json();
 
       if (response.ok) {
-        setSettingsOk("Settings updated successfully");
+        showSuccessToast("Settings updated successfully");
         setUser(data);
       } else {
-        setError(data.message);
+        showErrorToast(data.message);
       }
     } catch (error) {
-      setError("Failed to update settings");
+      showErrorToast("Failed to update settings");
       console.log(error);
     }
   };
@@ -128,14 +128,6 @@ function ProfileSettings() {
           </div>
         </div>
         {/* Save Button */}
-        {error && (
-          <p className="text-red-600 dark:text-red-600 mt-4">{error}</p>
-        )}
-        {settingsOk && (
-          <p className="text-green-600 dark:text-green-600 mt-4">
-            {settingsOk}
-          </p>
-        )}
 
         <div className="mt-4 w-32">
           <button className="button" onClick={saveChanges}>
