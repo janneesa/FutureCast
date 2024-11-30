@@ -1,14 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import Card from "../Card";
 
-function SearchResult({
-  avatar,
-  username,
-  predictionScore,
-  id,
-  viewProfileFunction,
-}) {
+function SearchResult({ avatar, username, predictionScore, id }) {
+  const navigate = useNavigate();
+
   const showProfile = () => {
-    viewProfileFunction(id);
+    navigate(`/app/profile/${id}`); // Navigate to the user's profile
   };
 
   return (

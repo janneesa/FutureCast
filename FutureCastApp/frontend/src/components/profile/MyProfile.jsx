@@ -8,36 +8,24 @@ import ContentCard from "./ContentCard";
 import Loading from "../Loading";
 
 import useFetchProfile from "../../hooks/useFetchProfile";
+import useFetchPredictions from "../../hooks/useFetchPredictions";
+import useToast from "../../hooks/useToast";
 
 const MyProfile = () => {
   const { userId } = useParams();
   const { user } = useContext(UserContext);
-  const [profile, setProfile] = useState(null);
-  const [predictions, setPredictions] = useState([]);
-
-  const isMyProfile = !userId || userId === user?.id;
+  const { profile, error: profileError } = useFetchProfile(userId);
+  const { predictions, error: predictionsError } = useFetchPredictions(userId);
+  const { showErrorToast } = useToast();
 
   useEffect(() => {
-    if (!isMyProfile) {
-      try {
-        const fetchProfile = async () => {
-          const response = await fetch(
-            `http://localhost:4000/api/users/${userId}`
-          );
-          if (!response.ok) throw new Error("Failed to fetch profile");
-          const data = await response.json();
-          setProfile(data);
-        };
-        console.log(userId);
-
-        fetchProfile();
-      } catch (err) {
-        console.error(err);
-      }
+    if (profileError) {
+      showErrorToast(profileError);
     }
-  }, [userId]);
-
-  const fetchPredictions = async (userId) => {};
+    if (predictionsError) {
+      showErrorToast(predictionsError);
+    }
+  }, [profileError, predictionsError]);
 
   if (!user && !profile) {
     return (

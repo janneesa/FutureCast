@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import LoginScreen from "./layouts/LoginScreen";
 import MainScreen from "./layouts/MainScreen";
@@ -11,7 +12,6 @@ import Home from "./components/Home";
 import MyProfile from "./components/profile/MyProfile";
 
 import Search from "./components/search/Search";
-import SearchProfile from "./components/search/SearchProfile";
 
 import Messages from "./components/Messages";
 import Settings from "./components/settingsComponent/Settings";
@@ -22,6 +22,11 @@ function App() {
   return (
     <UserProvider>
       <div className="bg-background min-h-screen dark:bg-darkBackground">
+        <Toaster
+          containerStyle={{
+            top: 70,
+          }}
+        />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<LoginScreen />}>

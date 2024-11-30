@@ -117,7 +117,7 @@ function Navigation() {
               Home
             </Link>
             <Link
-              to="/app/profile"
+              to={profileLink}
               className="block nav-link"
               onClick={toggleMenu}
             >

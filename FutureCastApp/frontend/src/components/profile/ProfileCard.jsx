@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 import Card from "../Card";
@@ -10,11 +10,13 @@ const ProfileCard = ({ user }) => {
 
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(
-    currentUser.following.includes(user._id)
-  );
+  const [isFollowing, setIsFollowing] = useState(false);
 
   const isOwnProfile = currentUser._id === user._id;
+
+  useEffect(() => {
+    setIsFollowing(currentUser.following.includes(user._id));
+  }, [user]);
 
   // Helper to update followers/following in backend
   const updateUserList = async (targetUserId, listName, updatedList) => {
