@@ -1,5 +1,12 @@
 const { default: mongoose } = require("mongoose");
+const jwt = require("jsonwebtoken");
 const User = require("../models/userModel.js");
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.SECRET, {
+    expiresIn: "3d",
+  });
+};
 
 // Handle user signup errors
 const handleDuplicateError = (error, res) => {
@@ -63,9 +70,6 @@ const createUser = async (req, res) => {
       settings
     );
 
-    // Create token here
-    // const token = createToken(user._id)
-
     res.status(201).json({ message: "User created successfully" });
   } catch (error) {
     handleDuplicateError(error, res);
@@ -79,10 +83,12 @@ const loginUser = async (req, res) => {
   try {
     const user = await User.login(email, password);
 
-    // create a token here
-    // const token = createToken(user._id);
-
-    res.status(200).json(user);
+    if (user) {
+      const token = generateToken(user._id);
+      res.status(200).json({ user, token });
+    } else {
+      res.status(400).json({ message: "Invalid email or password" });
+    }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

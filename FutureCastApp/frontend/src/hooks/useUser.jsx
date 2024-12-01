@@ -10,8 +10,7 @@ const useUser = () => {
 
   useEffect(() => {
     if (user) {
-      const { password, ...userData } = user; // Exclude password
-      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(user));
       document.documentElement.classList.toggle(
         "dark",
         user.settings?.preferences?.darkMode

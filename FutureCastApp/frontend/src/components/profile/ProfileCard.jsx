@@ -36,6 +36,8 @@ const ProfileCard = ({ profile }) => {
   }, [profile]);
 
   const toggleFollow = async () => {
+    const token = user.token;
+
     try {
       const newFollowingState = !isFollowing;
       const userUpdateUrl = `/api/users/${user._id}`;
@@ -50,16 +52,22 @@ const ProfileCard = ({ profile }) => {
         ? [...profileFollowers, user._id]
         : profileFollowers.filter((id) => id !== user._id);
 
-      // Make API calls simultaneously
+      // Make API calls simultaneously with token authentication
       const [userResponse, profileResponse] = await Promise.all([
         fetch(userUpdateUrl, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include token here
+          },
           body: JSON.stringify({ following: updatedUserFollowing }),
         }),
         fetch(profileUpdateUrl, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include token here
+          },
           body: JSON.stringify({ followers: updatedProfileFollowers }),
         }),
       ]);
@@ -75,7 +83,7 @@ const ProfileCard = ({ profile }) => {
 
       if (!profileResponse.ok) {
         const profileError = await profileResponse.json();
-        showErrorToast(userError.message || "Unknown error");
+        showErrorToast(profileError.message || "Unknown error");
         throw new Error(
           `Profile update failed: ${profileError.message || "Unknown error"}`
         );
@@ -86,7 +94,7 @@ const ProfileCard = ({ profile }) => {
       const updatedProfile = await profileResponse.json();
 
       // Update states
-      setUser(updatedUser);
+      setUser({ ...updatedUser, token });
       setProfileFollowers(updatedProfile.followers);
       setIsFollowing(newFollowingState);
 

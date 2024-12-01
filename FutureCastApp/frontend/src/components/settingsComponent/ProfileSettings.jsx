@@ -1,13 +1,13 @@
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
-
 import Card from "../Card";
 import Loading from "../Loading";
-
 import useToast from "../../hooks/useToast";
+import useSettings from "../../hooks/useSettings";
 
 function ProfileSettings() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext); // Access user from the useSettings hook
+  const { updateSettings, error, okMessage } = useSettings(); // For updating settings
   const { showSuccessToast, showErrorToast } = useToast();
 
   const [avatar, setAvatar] = useState("");
@@ -15,60 +15,50 @@ function ProfileSettings() {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
 
+  // Populate user details into state
   useEffect(() => {
     if (user) {
-      setAvatar(user.avatar);
-      setName(user.name);
-      setUsername(user.username);
-      setBio(user.bio);
+      setAvatar(user.avatar || "");
+      setName(user.name || "");
+      setUsername(user.username || "");
+      setBio(user.bio || "");
     }
   }, [user]);
 
-  const changeAvatar = () => {};
+  const changeAvatar = () => {
+    // Logic for changing avatar (to be implemented as needed)
+  };
 
-  const saveChanges = async () => {
-    // Check if any field is empty
-    if (name === "" || username === "" || bio === "") {
+  const saveChanges = () => {
+    if (name.trim() === "" || username.trim() === "" || bio.trim() === "") {
       showErrorToast("Please fill all fields");
       return;
     }
 
-    // Save changes
-    const updatedUser = {
+    const updatedData = {
       userId: user._id,
-      name: name,
-      username: username,
-      bio: bio,
+      name,
+      username,
+      bio,
     };
 
-    try {
-      const response = await fetch(
-        `http://localhost:4000/api/users/${user._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedUser),
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.ok) {
-        showSuccessToast("Settings updated successfully");
-        setUser(data);
-      } else {
-        showErrorToast(data.message);
-      }
-    } catch (error) {
-      showErrorToast("Failed to update settings");
-      console.log(error);
-    }
+    updateSettings(updatedData); // Call the hook to update settings
   };
 
+  useEffect(() => {
+    if (okMessage) {
+      showSuccessToast(okMessage);
+    }
+  }, [okMessage]);
+
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
+    }
+  }, [error]);
+
   if (!user) {
-    return <Loading></Loading>; // Fallback UI while user data is being loaded
+    return <Loading />; // Show loading indicator while user data is unavailable
   }
 
   return (
@@ -78,7 +68,7 @@ function ProfileSettings() {
         <p>Update your profile details here</p>
       </div>
       <div className="card-content">
-        {/* Change Avatar */}
+        {/* Avatar Section */}
         <div className="flex items-center justify-evenly">
           <img
             src={avatar}
@@ -91,7 +81,8 @@ function ProfileSettings() {
             </button>
           </div>
         </div>
-        {/* Name, Username and Bio */}
+
+        {/* Input Fields */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2">
             <label htmlFor="name">Name</label>
@@ -118,7 +109,6 @@ function ProfileSettings() {
           <div className="flex flex-col gap-2">
             <label htmlFor="bio">Bio</label>
             <textarea
-              type="text"
               id="bio"
               value={bio}
               placeholder={user.bio}
@@ -127,8 +117,8 @@ function ProfileSettings() {
             />
           </div>
         </div>
-        {/* Save Button */}
 
+        {/* Save Changes Button */}
         <div className="mt-4 w-32">
           <button className="button" onClick={saveChanges}>
             Save Changes
@@ -138,4 +128,5 @@ function ProfileSettings() {
     </Card>
   );
 }
+
 export default ProfileSettings;

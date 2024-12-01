@@ -1,17 +1,17 @@
+import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import React, { useState, useContext, useEffect } from "react";
-
 import Card from "../Card";
 import Switcher from "../utility/switcher";
 import Loading from "../Loading";
-
 import useToast from "../../hooks/useToast";
+import useSettings from "../../hooks/useSettings";
 
 function NotificationSettings() {
-  const { user, setUser } = useContext(UserContext);
+  const { updateSettings, error, okMessage } = useSettings();
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
 
+  const { user } = useContext(UserContext); // Assuming user context provides user info
   const { showSuccessToast, showErrorToast } = useToast();
 
   useEffect(() => {
@@ -21,32 +21,24 @@ function NotificationSettings() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (okMessage) {
+      showSuccessToast(okMessage);
+    }
+  }, [okMessage]);
+
   const saveChanges = async () => {
     const updatedUser = { ...user };
     updatedUser.settings.notifications.email = emailNotifications;
     updatedUser.settings.notifications.push = pushNotifications;
 
-    try {
-      const response = await fetch(
-        `http://localhost:4000/api/users/${user._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedUser),
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data);
-        showSuccessToast("Settings updated successfully");
-      }
-    } catch (error) {
-      showErrorToast("Failed to update settings");
-      console.error(error);
-    }
+    await updateSettings(updatedUser);
   };
 
   if (!user) {

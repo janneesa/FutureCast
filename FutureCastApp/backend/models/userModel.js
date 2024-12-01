@@ -163,7 +163,10 @@ userSchema.statics.login = async function (email, password) {
     throw Error("Incorrect password");
   }
 
-  return user;
+  const userObject = user.toObject();
+  delete userObject.password; // Remove the password field
+
+  return userObject;
 };
 
 // static method to reset password
