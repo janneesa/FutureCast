@@ -58,7 +58,8 @@ function Prediction({
   };
 
   const handleAddComment = (newComment) => {
-    setPredictionComments([...predictionComments, newComment]);
+    setPredictionComments([...predictionComments, newComment._id]);
+    console.log(predictionComments);
   };
 
   if (!user) {
@@ -69,6 +70,8 @@ function Prediction({
     const currentDate = new Date().toISOString().split('T')[0];
     return currentDate > lastVoteDate || userId === user.id;
   };
+
+  const formattedLastVoteDate = new Date(lastVoteDate).toLocaleDateString();
 
   return (
     <Card>
@@ -101,7 +104,7 @@ function Prediction({
               />
             </svg>
             <span className='ml-2 dark:text-darkSecondaryText'>
-              Vote until: {lastVoteDate}
+              Vote until: {formattedLastVoteDate}
             </span>
           </div>
         </div>
@@ -174,7 +177,7 @@ function Prediction({
       <CommentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialComments={comments}
+        initialComments={predictionComments}
         predictionId={id}
         onAddComment={handleAddComment}
       />

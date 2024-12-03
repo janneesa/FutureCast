@@ -52,10 +52,11 @@ function Home() {
   return (
     <div className='p-4 flex flex-col gap-4 items-center'>
       <PredictionInput addPrediction={addPrediction} />
-      {predictions.map((prediction) => (
-        <Prediction key={prediction.id} {...prediction} />
+      {sortedPredictions.map((prediction, index) => (
+        <Prediction key={`${prediction.id}-${index}`} {...prediction} />
       ))}
     </div>
   );
 }
+
 export default Home;
