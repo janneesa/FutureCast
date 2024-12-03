@@ -9,7 +9,7 @@ function Comment({ comment, onLike }) {
   }
 
   const handleLike = () => {
-    onLike(comment.id);
+    onLike(comment._id);
   };
 
   return (

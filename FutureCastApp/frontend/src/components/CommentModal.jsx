@@ -37,25 +37,33 @@ function CommentModal({
 
   if (!isOpen) return null;
 
-  const handleLike = (commentId) => {
-    setComments((prevComments) =>
-      prevComments.map((comment) => {
-        if (comment.id === commentId) {
-          if (comment.likes.includes(user.id)) {
-            return {
-              ...comment,
-              likes: comment.likes.filter((userId) => userId !== user.id),
-            };
-          } else {
-            return {
-              ...comment,
-              likes: [...comment.likes, user.id],
-            };
-          }
+  const handleLike = async (commentId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/comments/${commentId}/like`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId: user.id }),
         }
-        return comment;
-      })
-    );
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to like comment');
+      }
+
+      const updatedComment = await response.json();
+
+      setComments((prevComments) =>
+        prevComments.map((comment) =>
+          comment._id === commentId ? updatedComment : comment
+        )
+      );
+    } catch (error) {
+      console.error('Error liking comment:', error);
+    }
   };
 
   const handleAddComment = async (newComment) => {
