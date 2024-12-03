@@ -23,7 +23,7 @@ function CommentInput({ predictionId, onAddComment, user }) {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/predictions/${predictionId}/comments`,
+        `http://localhost:4000/api/predictions/${predictionId}/comments`,
         {
           method: 'POST',
           headers: {

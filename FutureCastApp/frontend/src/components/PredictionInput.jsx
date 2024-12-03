@@ -59,25 +59,22 @@ function PredictionInput({ addPrediction }) {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/predictions`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: user.id.toString(),
-            username: user.username,
-            prediction: predictionText,
-            agrees: [],
-            disagrees: [],
-            lastVoteDate: lastVoteDate,
-            avatar: user.avatar,
-            comments: [],
-          }),
-        }
-      );
+      const response = await fetch(`http://localhost:4000/api/predictions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id.toString(),
+          username: user.username,
+          prediction: predictionText,
+          agrees: [],
+          disagrees: [],
+          lastVoteDate: lastVoteDate,
+          avatar: user.avatar,
+          comments: [],
+        }),
+      });
 
       if (!response.ok) {
         throw new Error('Failed to create prediction');
