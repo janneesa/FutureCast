@@ -8,6 +8,7 @@ const {
   updatePrediction,
   deletePrediction,
   addComment,
+  votePrediction,
   // patchPrediction
 } = require('../controllers/predController');
 
@@ -31,6 +32,9 @@ router.delete('/:predictionId', deletePrediction);
 
 // POST /predictions/:predictionId/comments
 router.post('/:predictionId/comments', addComment);
+
+// PUT /predictions/:predictionId/vote
+router.put('/:predictionId/vote', votePrediction);
 
 // Update prediction using PATCH
 // router.patch('/:predictionId', patchPrediction)

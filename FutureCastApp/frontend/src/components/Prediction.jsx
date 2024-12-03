@@ -34,27 +34,35 @@ function Prediction({
     }
   }, [user, agrees, disagrees]);
 
-  const handleVote = (type) => {
+  const handleVote = async (type) => {
     if (!user) return;
 
-    // Check if user has voted
-    if (userVote === type) {
-      if (type === 'agrees') {
-        agrees.splice(agrees.indexOf(user.id), 1);
-      } else if (type === 'disagrees') {
-        disagrees.splice(disagrees.indexOf(user.id), 1);
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/predictions/${id}/vote`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            voteType: userVote === type ? null : type,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to vote on prediction');
       }
-      setUserVote(null);
-      return;
-    }
 
-    if (type === 'agrees') {
-      agrees.push(user.id);
-    } else if (type === 'disagrees') {
-      disagrees.push(user.id);
-    }
+      const updatedPrediction = await response.json();
 
-    setUserVote(type);
+      setUserVote(userVote === type ? null : type);
+      setPredictionComments(updatedPrediction.comments);
+    } catch (error) {
+      console.error('Error voting on prediction:', error);
+    }
   };
 
   const handleAddComment = (newComment) => {

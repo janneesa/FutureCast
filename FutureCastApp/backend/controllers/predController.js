@@ -149,6 +149,39 @@ const addComment = async (req, res) => {
   }
 };
 
+// PUT /predictions/:predictionId/vote
+const votePrediction = async (req, res) => {
+  const { predictionId } = req.params;
+  const { userId, voteType } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(predictionId)) {
+    return res.status(400).json({ message: 'Invalid prediction ID' });
+  }
+
+  try {
+    const prediction = await Prediction.findById(predictionId);
+    if (!prediction) {
+      return res.status(404).json({ message: 'Prediction not found' });
+    }
+
+    // Remove user from both agrees and disagrees arrays
+    prediction.agrees = prediction.agrees.filter((id) => id !== userId);
+    prediction.disagrees = prediction.disagrees.filter((id) => id !== userId);
+
+    // Add user to the appropriate array based on voteType
+    if (voteType === 'agrees') {
+      prediction.agrees.push(userId);
+    } else if (voteType === 'disagrees') {
+      prediction.disagrees.push(userId);
+    }
+
+    await prediction.save();
+    res.status(200).json(prediction);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to vote on prediction' });
+  }
+};
+
 module.exports = {
   getAllPredictions,
   createPrediction,
@@ -157,4 +190,5 @@ module.exports = {
   updatePrediction,
   deletePrediction,
   addComment,
+  votePrediction,
 };
