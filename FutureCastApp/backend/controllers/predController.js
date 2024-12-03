@@ -154,6 +154,8 @@ const votePrediction = async (req, res) => {
   const { predictionId } = req.params;
   const { userId, voteType } = req.body;
 
+  console.log(userId);
+
   if (!mongoose.Types.ObjectId.isValid(predictionId)) {
     return res.status(400).json({ message: 'Invalid prediction ID' });
   }
@@ -164,19 +166,25 @@ const votePrediction = async (req, res) => {
       return res.status(404).json({ message: 'Prediction not found' });
     }
 
-    // Remove user from both agrees and disagrees arrays
-    prediction.agrees = prediction.agrees.filter((id) => id !== userId);
-    prediction.disagrees = prediction.disagrees.filter((id) => id !== userId);
+    prediction.agrees = prediction.agrees.filter(
+      (id) => String(id) !== String(userId)
+    );
+    prediction.disagrees = prediction.disagrees.filter(
+      (id) => String(id) !== String(userId)
+    );
 
     // Add user to the appropriate array based on voteType
     if (voteType === 'agrees') {
-      prediction.agrees.push(userId);
+      prediction.agrees = prediction.agrees.concat([userId]);
     } else if (voteType === 'disagrees') {
-      prediction.disagrees.push(userId);
+      prediction.disagrees = prediction.disagrees.concat([userId]);
     }
 
-    await prediction.save();
-    res.status(200).json(prediction);
+    prediction.markModified('agrees');
+    prediction.markModified('disagrees');
+
+    const savedPrediction = await prediction.save();
+    res.status(200).json(savedPrediction);
   } catch (error) {
     res.status(500).json({ message: 'Failed to vote on prediction' });
   }

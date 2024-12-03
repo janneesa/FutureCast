@@ -26,9 +26,9 @@ function Prediction({
 
   useEffect(() => {
     if (user) {
-      if (agrees.includes(user.id)) {
+      if (agrees.includes(user._id)) {
         setUserVote('agrees');
-      } else if (disagrees.includes(user.id)) {
+      } else if (disagrees.includes(user._id)) {
         setUserVote('disagrees');
       }
     }
@@ -46,7 +46,7 @@ function Prediction({
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: user.id,
+            userId: user._id,
             voteType: userVote === type ? null : type,
           }),
         }
@@ -67,7 +67,6 @@ function Prediction({
 
   const handleAddComment = (newComment) => {
     setPredictionComments([...predictionComments, newComment._id]);
-    console.log(predictionComments);
   };
 
   if (!user) {
@@ -76,7 +75,7 @@ function Prediction({
 
   const isVotingDisabled = () => {
     const currentDate = new Date().toISOString().split('T')[0];
-    return currentDate > lastVoteDate || userId === user.id;
+    return currentDate > lastVoteDate || userId === user._id;
   };
 
   const formattedLastVoteDate = new Date(lastVoteDate).toLocaleDateString();

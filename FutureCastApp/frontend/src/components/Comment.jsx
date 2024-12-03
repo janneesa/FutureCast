@@ -22,11 +22,11 @@ function Comment({ comment, onLike }) {
         <span>{comment.likes.length} likes</span>
         <button
           className={`ml-2 ${
-            comment.likes.includes(user.id) ? 'text-red-500' : 'text-green-500'
+            comment.likes.includes(user._id) ? 'text-red-500' : 'text-green-500'
           }`}
           onClick={handleLike}
         >
-          {comment.likes.includes(user.id) ? 'Unlike' : 'Like'}
+          {comment.likes.includes(user._id) ? 'Unlike' : 'Like'}
         </button>
       </div>
     </div>

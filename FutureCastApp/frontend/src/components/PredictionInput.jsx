@@ -9,23 +9,31 @@ function PredictionInput({ addPrediction }) {
   const [error, setError] = useState('');
 
   const addPredictionToUser = async (newPrediction) => {
-    if (!user || !user.id) return;
+    if (!user || !user._id) return;
 
     try {
       // Get current user predictions
       const userResponse = await fetch(
-        `http://localhost:4000/api/users/${user.id}`
+        `http://localhost:4000/api/users/${user._id}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`, // Include the token here
+          },
+        }
       );
       const userData = await userResponse.json();
       const currentPredictions = userData.predictions || [];
 
       // Update user with new prediction
       const response = await fetch(
-        `http://localhost:4000/api/users/${user.id}`,
+        `http://localhost:4000/api/users/${user._id}`,
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify({
             predictions: [...currentPredictions, newPrediction.id], // Use _id from MongoDB
@@ -53,7 +61,7 @@ function PredictionInput({ addPrediction }) {
 
     console.log('Current user:', user);
 
-    if (!user || !user.id) {
+    if (!user || !user._id) {
       setError('User not authenticated');
       return;
     }
@@ -65,7 +73,7 @@ function PredictionInput({ addPrediction }) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userId: user.id.toString(),
+          userId: user._id.toString(),
           username: user.username,
           prediction: predictionText,
           agrees: [],

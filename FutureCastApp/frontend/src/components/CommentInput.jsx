@@ -16,7 +16,7 @@ function CommentInput({ predictionId, onAddComment, user }) {
       return;
     }
 
-    if (!user.id) {
+    if (!user._id) {
       setError('User ID not found. Please try logging in again.');
       return;
     }
@@ -30,7 +30,7 @@ function CommentInput({ predictionId, onAddComment, user }) {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            userId: user.id,
+            userId: user._id,
             username: user.username,
             comment: commentText,
           }),
@@ -42,7 +42,6 @@ function CommentInput({ predictionId, onAddComment, user }) {
       }
 
       const newComment = await response.json();
-      console.log(newComment);
       onAddComment(newComment);
       setCommentText('');
       setError('');
