@@ -1,51 +1,51 @@
+import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
-
-import React, { useState, useEffect, useContext } from "react";
 import Card from "../Card";
 import Switcher from "../utility/switcher";
 import Loading from "../Loading";
+import useToast from "../../hooks/useToast";
+import useSettings from "../../hooks/useSettings";
 
 function PreferenceSettings() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext); // Access user data from useSettings hook
+  const { updateSettings, error, okMessage } = useSettings(); // Use the update logic from the hook
+  const { showSuccessToast, showErrorToast } = useToast();
+
   const [darkmode, setDarkmode] = useState(true);
 
-  const [error, setError] = useState("");
-  const [okMessage, setOkMessage] = useState("");
-
+  // Populate initial state for dark mode preference
   useEffect(() => {
     if (user) {
-      setDarkmode(user.settings.preferences.darkMode);
+      setDarkmode(user.settings?.preferences?.darkMode || false);
     }
   }, [user]);
 
-  const handleSwitch = async () => {
-    const updatedUser = { ...user };
-    updatedUser.settings.preferences.darkMode = !darkmode;
+  const handleSwitch = () => {
+    const updatedPreferences = {
+      ...user.settings.preferences,
+      darkMode: !darkmode,
+    };
 
-    try {
-      const response = await fetch(
-        `http://localhost:4000/api/users/${user._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedUser),
-        }
-      );
+    const updatedData = {
+      settings: {
+        ...user.settings,
+        preferences: updatedPreferences,
+      },
+    };
 
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data);
-        setOkMessage("Settings updated successfully");
-        setError("");
-      }
-    } catch (error) {
-      setError("Failed to update settings");
-      setOkMessage("");
-      console.error(error);
-    }
+    updateSettings(updatedData); // Call hook to update settings
+    setDarkmode(!darkmode); // Update local state for instant feedback
   };
+
+  // Handle success and error toasts
+  useEffect(() => {
+    if (okMessage) {
+      showSuccessToast(okMessage);
+    }
+    if (error) {
+      showErrorToast(error);
+    }
+  }, [okMessage, error]);
 
   if (!user) {
     return <Loading />;
@@ -62,8 +62,6 @@ function PreferenceSettings() {
           <h5>Dark Mode</h5>
           <Switcher isChecked={darkmode} onChange={handleSwitch} />
         </div>
-        {error && <div className="error-text">{error}</div>}
-        {okMessage && <div className="ok-text">{okMessage}</div>}
       </div>
     </Card>
   );

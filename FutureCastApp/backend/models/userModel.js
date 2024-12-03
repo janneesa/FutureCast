@@ -163,7 +163,10 @@ userSchema.statics.login = async function (email, password) {
     throw Error("Incorrect password");
   }
 
-  return user;
+  const userObject = user.toObject();
+  delete userObject.password; // Remove the password field
+
+  return userObject;
 };
 
 // static method to reset password
@@ -193,7 +196,7 @@ userSchema.statics.resetPassword = async function (
 
   const match = await bcrypt.compare(currentPassword, user.password);
   if (!match) {
-    throw Error("currentPassword is incorrect");
+    throw Error("Current password is incorrect");
   }
 
   try {

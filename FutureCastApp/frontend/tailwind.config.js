@@ -20,6 +20,10 @@ export default {
         darkMutedText: "#718096",
         darkPrimaryButton: "#4A5568",
         darkSecondaryButton: "#2D3748",
+
+        toastSuccess: "#10B981", // Success green
+        toastError: "#EF4444", // Error red
+        darkToastBackground: "#2D3748", // Dark mode background
       },
     },
   },

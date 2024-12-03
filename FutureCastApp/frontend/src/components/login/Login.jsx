@@ -1,59 +1,25 @@
-import { useState, useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
-
 import Card from "../Card";
+
+import useLogin from "../../hooks/useLogin";
+import useToast from "../../hooks/useToast";
 
 function Login() {
   const { setUser } = useContext(UserContext);
+  const { email, setEmail, password, setPassword, error, handleLogin } =
+    useLogin(setUser);
+  const { showErrorToast } = useToast();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    // Mock Login
-    e.preventDefault();
-    // Check if email and password are empty
-    if (!email || !password) {
-      setError("Please enter email and password");
-      return;
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
     }
-
-    await fetchUser(email, password);
-  };
-
-  const fetchUser = async (email, password) => {
-    try {
-      const response = await fetch("http://localhost:4000/api/users/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        setUser(data);
-        setError("");
-        setEmail("");
-        setPassword("");
-        navigate("/app");
-      } else {
-        setError(data.message);
-      }
-    } catch (error) {
-      setError("Failed to login");
-    }
-  };
+  }, [error]);
 
   return (
     <div className="flex-center min-h-screen p-4">
-      {/* Card Title and description */}
       <Card>
         <div className="card-header">
           <h2>Login to FutureCast</h2>
@@ -62,13 +28,10 @@ function Login() {
           <p>m@example.com password</p>
         </div>
 
-        {/* Card Content */}
         <div className="card-content">
-          {/* Login Form */}
           <form>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                {error && <p className="text-red-600">{error}</p>}
                 <label htmlFor="email">Email</label>
                 <input
                   id="email"
@@ -97,13 +60,11 @@ function Login() {
               </button>
             </div>
           </form>
-          {/* Forgot password */}
           <div className="mt-4 text-center">
             <Link to="/forgot-password" className="link">
               Forgot password?
             </Link>
           </div>
-          {/* Divider */}
           <div className="relative my-4">
             <div className="border-t border-gray-300"></div>
             <div className="absolute-center">
@@ -112,7 +73,6 @@ function Login() {
               </span>
             </div>
           </div>
-          {/* Social login buttons */}
           <div className="flex gap-4">
             <button className="w-full p-2 border border-gray-300 rounded flex items-center justify-center hover:bg-gray-100 text-primaryText dark:text-darkPrimaryText">
               <svg
@@ -135,7 +95,6 @@ function Login() {
               Twitter
             </button>
           </div>
-          {/* Create Account */}
           <div className="card-footer">
             <div className="text-sm text-primaryText dark:text-darkPrimaryText">
               Don't have an account?

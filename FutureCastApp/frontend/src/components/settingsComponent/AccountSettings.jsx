@@ -1,22 +1,19 @@
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 
+import useToast from "../../hooks/useToast";
+
 import Card from "../Card";
 import Loading from "../Loading";
 
 function AccountSettings() {
   const { user, setUser } = useContext(UserContext);
+  const { showErrorToast, showSuccessToast } = useToast();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  const [emailOk, setEmailOk] = useState("");
-  const [passwordOk, setPasswordOk] = useState("");
 
   useEffect(() => {
     if (user) {
@@ -30,8 +27,7 @@ function AccountSettings() {
   const saveChangesEmail = async () => {
     // Check if email has changed
     if (!email || email === user.email) {
-      setEmailError("Please enter a new email");
-      setEmailOk("");
+      showErrorToast("Please enter a new email");
       return;
     }
 
@@ -59,15 +55,13 @@ function AccountSettings() {
       const data = await response.json();
 
       if (response.ok) {
-        setEmailOk("Settings updated successfully");
-        setEmailError("");
+        showSuccessToast("Settings updated successfully");
         setUser(data);
       } else {
-        setEmailError(data.message);
-        setEmailOk("");
+        showErrorToast(data.message);
       }
     } catch (error) {
-      setEmailError("Failed to update settings");
+      showErrorToast("Failed to update settings");
       console.log(error);
     }
   };
@@ -101,11 +95,9 @@ function AccountSettings() {
       const data = await response.json();
 
       if (response.ok) {
-        setPasswordOk("Password updated successfully");
-        setPasswordError("");
+        showSuccessToast("Settings updated successfully");
       } else {
-        setPasswordError(data.message);
-        setPasswordOk("");
+        showErrorToast(data.message);
       }
     } catch (error) {}
   };
@@ -138,8 +130,6 @@ function AccountSettings() {
             </div>
           </div>
           {/* Save Button */}
-          {emailError && <p className="error-text">{emailError}</p>}
-          {emailOk && <p className="ok-text">{emailOk}</p>}
           <div className="mt-4 w-32">
             <button className="button" onClick={saveChangesEmail}>
               Save Changes
@@ -190,8 +180,6 @@ function AccountSettings() {
             </div>
           </div>
           {/* Save Button */}
-          {passwordError && <p className="error-text">{passwordError}</p>}
-          {passwordOk && <p className="ok-text">{passwordOk}</p>}
           <div className="mt-4 w-32">
             <button className="button" onClick={resetPassword}>
               Save Changes
