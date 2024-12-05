@@ -1,29 +1,24 @@
 import React, { useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:4000/api/";
 
-function FriendsList() {
-    const [user, setUser] = useState(null);
+function FriendsList({ selectedFriend, setSelectedFriend }) {
+    const { user } = useContext(UserContext);
     const [messages, setMessages] = useState([]);
     const [friends, setFriends] = useState([]);
     const [searchWord, setSearchWord] = useState("");
+    const navigate = useNavigate();
 
     const handleSearch = () => {
         navigate("/app/search", { state: { searchWord } });
     };
 
-    //Doesnt work yet
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchMessages("Roni"); // Hardcoded for now, should be user's own username
-    }, []);
+        fetchMessages(user.username);
+    }, [user]);
 
     useEffect(() => {
         if (messages.length > 0) {
@@ -31,9 +26,12 @@ function FriendsList() {
           }
     }, [messages]);
 
-    const fetchMessages = async (senderId) => {
+    const fetchMessages = async (username) => {
+        const fetchedMessages = new Set();
+
+        // Fetch messages FROM the logged in user
         try {
-            const response = await fetch(`${API_URL}messages/sender/${senderId}`, {
+            const response = await fetch(`${API_URL}messages/sender/${username}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -42,37 +40,67 @@ function FriendsList() {
 
             if (response.ok) {
                 const message = await response.json();
-                setMessages(...messages, message);
+                message.forEach(msg => fetchedMessages.add(msg));
             } else {
-                throw new Error("Failed to fetch messages");
+                throw new Error("Failed to fetch sended messages");
             }
         } catch (error) {
             console.error("messages fetch error:", error);
         }
+
+        //Fetch messages where user is receiver
+        try {
+            const response = await fetch(`${API_URL}messages/receiver/${username}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.ok) {
+                const message = await response.json();
+                message.forEach(msg => fetchedMessages.add(msg));
+            } else {
+                throw new Error("Failed to fetch received messages");
+            }
+        } catch (error) {
+            console.error("messages fetch error:", error);
+        }
+
+        setMessages(Array.from(fetchedMessages));
     }
 
     const fetchFriends = async (messages) => {
         try {
-            for (let i = 0; i < messages.length; i++) {     
-                const response = await fetch(`${API_URL}users/username/${messages[i].receiver}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-                
-                if (response.ok) {
-                    const friend = await response.json();
-                    if (!friends.includes(friend)) {
-                        setFriends([...friends, friend]);
+            const fetchedFriends = [];
+            for (let i = 0; i < messages.length; i++) {   
+                if (messages[i].receiver !== user.username) { 
+                    const response = await fetch(`${API_URL}users/username/${messages[i].receiver}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    
+                    if (response.ok) {
+                        const friend = await response.json();
+                        if (!friends.some(f => f.username === friend.username) && !fetchedFriends.some(f => f.username === friend.username)) {
+                            fetchedFriends.push(friend);
+                        }
+                    } else {
+                        throw new Error("Failed to fetch friends");
                     }
-            } else {
-                throw new Error("Failed to fetch friends");
-            }}
+                }
+            }
+            setFriends([...friends, ...fetchedFriends]);
         } catch (error) {
             console.error("Friends fetch error:", error);
         }
     }
+
+    const selectContact = (username) => {
+        setSelectedFriend(username);
+    };
 
     return (
         <div className="card h-full p-2">
@@ -97,7 +125,7 @@ function FriendsList() {
             <div className="card">
                 <ul className="max-h-[calc(100vh-20rem)] overflow-y-auto">
                     {friends.map((friend) => (
-                        <li className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-500" key={friend.username}>
+                        <li onClick={() => selectContact(friend.username)} className={"flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-500 "+ (friend.username === selectedFriend ? 'bg-gray-100 dark:bg-gray-600' : '')} key={friend.username}>
                             <img
                                 src={friend.avatar}
                                 alt="avatar"
@@ -109,72 +137,6 @@ function FriendsList() {
                             </div>
                         </li>
                     ))}
-                    <li className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-500">
-                        <img
-                            src="https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b"
-                            alt="avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                        <div className="ml-2">
-                            <h4 className="font-semibold">Friend 2</h4>
-                            <p className="text-sm">Last message</p>
-                        </div>
-                    </li>
-                    <li className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-500">
-                        <img
-                            src="https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b"
-                            alt="avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                        <div className="ml-2">
-                            <h4 className="font-semibold">Friend 3</h4>
-                            <p className="text-sm">Last message</p>
-                        </div>
-                    </li>
-                    <li className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-500">
-                        <img
-                            src="https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b"
-                            alt="avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                        <div className="ml-2">
-                            <h4 className="font-semibold">Friend 4</h4>
-                            <p className="text-sm">Last message</p>
-                        </div>
-                    </li>
-                    <li className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-500">
-                        <img
-                            src="https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b"
-                            alt="avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                        <div className="ml-2">
-                            <h4 className="font-semibold">Friend 5</h4>
-                            <p className="text-sm">Last message</p>
-                        </div>
-                    </li>
-                    <li className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-500">
-                        <img
-                            src="https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b"
-                            alt="avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                        <div className="ml-2">
-                            <h4 className="font-semibold">Friend 6</h4>
-                            <p className="text-sm">Last message</p>
-                        </div>
-                    </li>
-                    <li className="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-500">
-                        <img
-                            src="https://preview.redd.it/rwl5o5xm2tv71.jpg?width=640&crop=smart&auto=webp&s=ed06c6952948f95b91e09bdc4988ea1e1fab449b"
-                            alt="avatar"
-                            className="w-10 h-10 rounded-full"
-                        />
-                        <div className="ml-2">
-                            <h4 className="font-semibold">Friend 7</h4>
-                            <p className="text-sm">Last message</p>
-                        </div>
-                    </li>
                 </ul>
             </div>
         </div>

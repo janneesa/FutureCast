@@ -1,8 +1,19 @@
-function OpenChat() {
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useState } from "react";
+import { useEffect } from "react";
+
+function OpenChat( { selectedFriend }) {
+    const { user } = useContext(UserContext);
+
+    useEffect(() => {
+        console.log(selectedFriend);
+    }, []);
+
     return (
         <div className="card flex flex-col p-2 h-[calc(100vh-8rem)]">
             <div className="card flex-grow p-2">
-                Your messages will appear here
+                {!selectedFriend ? ("No selected Friend") : (selectedFriend)}
             </div>
             <div className="flex gap-2 p-2">
                 <input type="text" 
