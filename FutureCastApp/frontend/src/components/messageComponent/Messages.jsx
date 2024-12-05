@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 function Messages() {
   const [selectedFriend, setSelectedFriend] = useState("");
+  const [messages, setMessages] = useState([]);
 
   return (
   <div>
@@ -11,10 +12,10 @@ function Messages() {
     {/* Grid layout for large screens */}
       <div className="hidden lg:grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
         <div className="flex justify-between items-start">
-          <FriendsList selectedFriend={selectedFriend} setSelectedFriend={setSelectedFriend} />
+          <FriendsList selectedFriend={selectedFriend} setSelectedFriend={setSelectedFriend} messages={messages} setMessages={setMessages} />
         </div>
         <div className="flex justify-between items-start">
-          <OpenChat selectedFriend={selectedFriend} />
+          <OpenChat selectedFriend={selectedFriend} messages={messages} setMessages={setMessages} />
         </div>
       </div>
     </main>

@@ -5,9 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:4000/api/";
 
-function FriendsList({ selectedFriend, setSelectedFriend }) {
+function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages }) {
     const { user } = useContext(UserContext);
-    const [messages, setMessages] = useState([]);
     const [friends, setFriends] = useState([]);
     const [searchWord, setSearchWord] = useState("");
     const navigate = useNavigate();
@@ -23,7 +22,7 @@ function FriendsList({ selectedFriend, setSelectedFriend }) {
     useEffect(() => {
         if (messages.length > 0) {
             fetchFriends(messages);
-          }
+        }
     }, [messages]);
 
     const fetchMessages = async (username) => {
@@ -39,8 +38,8 @@ function FriendsList({ selectedFriend, setSelectedFriend }) {
             });
 
             if (response.ok) {
-                const message = await response.json();
-                message.forEach(msg => fetchedMessages.add(msg));
+                const messages = await response.json();
+                messages.forEach(msg => fetchedMessages.add(msg));
             } else {
                 throw new Error("Failed to fetch sended messages");
             }
@@ -58,8 +57,8 @@ function FriendsList({ selectedFriend, setSelectedFriend }) {
             });
 
             if (response.ok) {
-                const message = await response.json();
-                message.forEach(msg => fetchedMessages.add(msg));
+                const messages = await response.json();
+                messages.forEach(msg => fetchedMessages.add(msg));
             } else {
                 throw new Error("Failed to fetch received messages");
             }
@@ -67,13 +66,13 @@ function FriendsList({ selectedFriend, setSelectedFriend }) {
             console.error("messages fetch error:", error);
         }
 
-        setMessages(Array.from(fetchedMessages));
+        setMessages(Array.from(fetchedMessages).sort((a, b) => new Date(b.time) - new Date(a.time)));
     }
 
     const fetchFriends = async (messages) => {
-        try {
-            const fetchedFriends = [];
-            for (let i = 0; i < messages.length; i++) {   
+        const fetchedFriends = [];
+        for (let i = 0; i < messages.length; i++) {  
+            try { 
                 if (messages[i].receiver !== user.username) { 
                     const response = await fetch(`${API_URL}users/username/${messages[i].receiver}`, {
                         method: "GET",
@@ -90,12 +89,28 @@ function FriendsList({ selectedFriend, setSelectedFriend }) {
                     } else {
                         throw new Error("Failed to fetch friends");
                     }
+                } else {
+                    const response = await fetch(`${API_URL}users/username/${messages[i].sender}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    
+                    if (response.ok) {
+                        const friend = await response.json();
+                        if (!friends.some(f => f.username === friend.username) && !fetchedFriends.some(f => f.username === friend.username)) {
+                            fetchedFriends.push(friend);
+                        }
+                    } else {
+                        throw new Error("Failed to fetch friends");
+                    }
                 }
+            } catch (error) {
+                console.error("Friends fetch error:", error);
             }
-            setFriends([...friends, ...fetchedFriends]);
-        } catch (error) {
-            console.error("Friends fetch error:", error);
         }
+        setFriends([...friends, ...fetchedFriends]);
     }
 
     const selectContact = (username) => {
@@ -132,8 +147,8 @@ function FriendsList({ selectedFriend, setSelectedFriend }) {
                                 className="w-10 h-10 rounded-full"
                             />
                             <div className="ml-2">
-                                <h4 className="font-semibold">{friend.username}</h4>
-                                <p className="text-sm">Last message</p>
+                                <h4 className="font-semibold m-0">{friend.name}</h4>
+                                <p>{friend.username}</p>
                             </div>
                         </li>
                     ))}
