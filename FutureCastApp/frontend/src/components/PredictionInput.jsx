@@ -90,6 +90,7 @@ function PredictionInput({ addPrediction }) {
       });
 
       if (!response.ok) {
+        showErrorToast("Failed to create prediction");
         throw new Error("Failed to create prediction");
       }
 
@@ -99,7 +100,6 @@ function PredictionInput({ addPrediction }) {
       setPredictionText("");
       setLastVoteDate("");
     } catch (error) {
-      setError("Failed to create prediction: " + error.message);
       console.error("Error creating prediction:", error);
     }
   };

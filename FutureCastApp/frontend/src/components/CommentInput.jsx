@@ -1,23 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+
+import useToast from "../hooks/useToast";
 
 // components/CommentInput.jsx
 function CommentInput({ predictionId, onAddComment, user }) {
-  const [commentText, setCommentText] = useState('');
-  const [error, setError] = useState('');
+  const { showErrorToast } = useToast();
+  const [commentText, setCommentText] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
+    }
+  }, [error]);
 
   const handleAddComment = async () => {
     if (!commentText) {
-      setError('Comment cannot be empty.');
+      setError("Comment cannot be empty.");
       return;
     }
 
     if (!user) {
-      setError('You must be logged in to comment.');
+      setError("You must be logged in to comment.");
       return;
     }
 
-    if (!user._id) {
-      setError('User ID not found. Please try logging in again.');
+    if (!user.id) {
+      setError("User ID not found. Please try logging in again.");
       return;
     }
 
@@ -25,12 +34,13 @@ function CommentInput({ predictionId, onAddComment, user }) {
       const response = await fetch(
         `http://localhost:4000/api/predictions/${predictionId}/comments`,
         {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
+            authorization: `Bearer ${user.token}`,
           },
           body: JSON.stringify({
-            userId: user._id,
+            userId: user.id,
             username: user.username,
             comment: commentText,
           }),
@@ -38,31 +48,30 @@ function CommentInput({ predictionId, onAddComment, user }) {
       );
 
       if (!response.ok) {
-        throw new Error('Failed to post comment');
+        throw new Error("Failed to post comment");
       }
 
       const newComment = await response.json();
       onAddComment(newComment);
-      setCommentText('');
-      setError('');
+      setCommentText("");
+      setError("");
     } catch (error) {
-      setError('Failed to add comment');
-      console.error('Error adding comment:', error);
+      setError("Failed to add comment");
+      console.error("Error adding comment:", error);
     }
   };
 
   return (
-    <div className='mt-4'>
+    <div className="mt-4">
       <textarea
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
-        placeholder='Add a comment...'
-        className='input w-full resize-none'
+        placeholder="Add a comment..."
+        className="input w-full resize-none"
       />
-      <button onClick={handleAddComment} className='button mt-2'>
+      <button onClick={handleAddComment} className="button mt-2">
         Post Comment
       </button>
-      {error && <p className='text-red-600 mt-2'>{error}</p>}
     </div>
   );
 }
