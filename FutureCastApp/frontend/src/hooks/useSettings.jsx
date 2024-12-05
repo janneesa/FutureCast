@@ -28,7 +28,7 @@ const useSettings = () => {
         setOkMessage("Settings updated successfully");
       } else {
         const errorData = await response.json();
-        setError(errorData.message || "Failed to update settings");
+        setError(errorData.error || "Failed to update settings");
         setOkMessage(false);
       }
     } catch (err) {
