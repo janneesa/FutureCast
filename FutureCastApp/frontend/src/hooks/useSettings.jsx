@@ -13,7 +13,7 @@ const useSettings = () => {
     const token = user.token;
 
     try {
-      const response = await fetch(`/api/users/${user._id}`, {
+      const response = await fetch(`/api/users/${user.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

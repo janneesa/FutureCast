@@ -12,7 +12,7 @@ function Navigation() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchWord, setSearchWord] = useState("");
 
-  const profileLink = user ? `/app/profile/${user._id}` : null;
+  const profileLink = user ? `/app/profile/${user.id}` : null;
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);

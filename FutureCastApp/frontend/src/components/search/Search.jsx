@@ -31,7 +31,7 @@ function Search() {
       }
 
       // Exclude the current user from search results
-      const filteredData = data.filter((profile) => profile._id !== user?._id);
+      const filteredData = data.filter((profile) => profile.id !== user?.id);
       setResults(filteredData);
     } catch (error) {
       console.error(`Error fetching users: ${error.message}`);
@@ -54,11 +54,11 @@ function Search() {
       {!loading &&
         results.map((result) => (
           <SearchResult
-            key={result._id}
+            key={result.id}
             avatar={result.avatar}
             username={result.username}
             predictionScore={result.predictionScore}
-            id={result._id}
+            id={result.id}
           />
         ))}
       {!loading && results.length === 0 && (

@@ -49,9 +49,9 @@ const FollowModal = ({ list = [], onClose }) => {
             users.map((user) => (
               // On click take user to profile page
               <div
-                key={user._id}
+                key={user.id}
                 className="flex items-center my-4"
-                onClick={() => handleClick(user._id)} // Wrap with an anonymous function
+                onClick={() => handleClick(user.id)} // Wrap with an anonymous function
               >
                 <img
                   src={user.avatar}

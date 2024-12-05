@@ -18,15 +18,15 @@ const ProfileCard = ({ profile }) => {
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
   const [isFollowing, setIsFollowing] = useState(
-    user.following.includes(profile._id)
+    user.following.includes(profile.id)
   );
   const navigate = useNavigate();
   const { showErrorToast, showSuccessToast } = useToast();
-  const isOwnProfile = user._id === profile._id;
+  const isOwnProfile = user.id === profile.id;
 
   // Update isFollowing when user or profile changes
   useEffect(() => {
-    setIsFollowing(user.following.includes(profile._id));
+    setIsFollowing(user.following.includes(profile.id));
   }, [user, profile]);
 
   // Sync profileFollowers and profileFollowing when profile changes
@@ -40,17 +40,17 @@ const ProfileCard = ({ profile }) => {
 
     try {
       const newFollowingState = !isFollowing;
-      const userUpdateUrl = `/api/users/${user._id}`;
-      const profileUpdateUrl = `/api/users/${profile._id}`;
+      const userUpdateUrl = `/api/users/${user.id}`;
+      const profileUpdateUrl = `/api/users/${profile.id}`;
 
       // Prepare request bodies
       const updatedUserFollowing = newFollowingState
-        ? [...user.following, profile._id]
-        : user.following.filter((id) => id !== profile._id);
+        ? [...user.following, profile.id]
+        : user.following.filter((id) => id !== profile.id);
 
       const updatedProfileFollowers = newFollowingState
-        ? [...profileFollowers, user._id]
-        : profileFollowers.filter((id) => id !== user._id);
+        ? [...profileFollowers, user.id]
+        : profileFollowers.filter((id) => id !== user.id);
 
       // Make API calls simultaneously with token authentication
       const [userResponse, profileResponse] = await Promise.all([
