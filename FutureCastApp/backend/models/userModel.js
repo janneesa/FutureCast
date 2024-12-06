@@ -47,10 +47,12 @@ const userSchema = new Schema(
       type: [String],
       required: false,
     },
-    predictions: {
-      type: [String],
-      required: false,
-    },
+    predictions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Prediction",
+      },
+    ],
     successfulPredictions: {
       type: [String],
       required: false,
@@ -82,7 +84,18 @@ const userSchema = new Schema(
       },
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+      transform: function (doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
 );
 
 // static signup method
@@ -163,7 +176,10 @@ userSchema.statics.login = async function (email, password) {
     throw Error("Incorrect password");
   }
 
-  return user;
+  const userObject = user.toJSON();
+  delete userObject.password; // Remove the password field
+
+  return userObject;
 };
 
 // static method to reset password

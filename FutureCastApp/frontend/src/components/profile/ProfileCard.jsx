@@ -1,100 +1,112 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+
 import Card from "../Card";
+import FollowModal from "./FollowModal";
 
-/**
- * ProfileCard component renders a user's profile card with actions to follow/unfollow or edit the profile.
- *
- * @param {Object} props - Component props
- * @param {Object} props.user - User data to display in the profile card
- */
-const ProfileCard = ({ user }) => {
-  const { user: currentUser, setUser } = useContext(UserContext);
-  const navigate = useNavigate();
+import useToast from "../../hooks/useToast";
 
-  const isOwnProfile = currentUser._id === user._id;
-  const [isFollowing, setIsFollowing] = useState(
-    currentUser.following.includes(user._id)
+const ProfileCard = ({ profile }) => {
+  const { user, setUser } = useContext(UserContext);
+  const [profileFollowers, setProfileFollowers] = useState(
+    profile.followers || []
   );
+  const [profileFollowing, setProfileFollowing] = useState(
+    profile.following || []
+  );
+  const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
+  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(
+    user.following.includes(profile.id)
+  );
+  const navigate = useNavigate();
+  const { showErrorToast, showSuccessToast } = useToast();
+  const isOwnProfile = user.id === profile.id;
 
-  // Navigate to profile editing page
-  const handleEditProfile = () => navigate("/app/settings");
+  // Update isFollowing when user or profile changes
+  useEffect(() => {
+    setIsFollowing(user.following.includes(profile.id));
+  }, [user, profile]);
 
-  /**
-   * Helper to update followers/following lists in the backend.
-   * @param {string} targetUserId - The ID of the user to follow/unfollow.
-   * @param {string} listName - The list to update ('followers' or 'following').
-   * @param {Array<string>} updatedList - The updated list of user IDs.
-   */
-  const updateUserList = async (targetUserId, listName, updatedList) => {
+  // Sync profileFollowers and profileFollowing when profile changes
+  useEffect(() => {
+    setProfileFollowers(profile.followers || []);
+    setProfileFollowing(profile.following || []);
+  }, [profile]);
+
+  const toggleFollow = async () => {
+    const token = user.token;
+
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/users/${targetUserId}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ [listName]: updatedList }),
-        }
-      );
+      const newFollowingState = !isFollowing;
+      const userUpdateUrl = `/api/users/${user.id}`;
+      const profileUpdateUrl = `/api/users/${profile.id}`;
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error(`Failed to update ${listName}: ${errorData.message}`);
-        return null;
+      // Prepare request bodies
+      const updatedUserFollowing = newFollowingState
+        ? [...user.following, profile.id]
+        : user.following.filter((id) => id !== profile.id);
+
+      const updatedProfileFollowers = newFollowingState
+        ? [...profileFollowers, user.id]
+        : profileFollowers.filter((id) => id !== user.id);
+
+      // Make API calls simultaneously with token authentication
+      const [userResponse, profileResponse] = await Promise.all([
+        fetch(userUpdateUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include token here
+          },
+          body: JSON.stringify({ following: updatedUserFollowing }),
+        }),
+        fetch(profileUpdateUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include token here
+          },
+          body: JSON.stringify({ followers: updatedProfileFollowers }),
+        }),
+      ]);
+
+      // Check responses
+      if (!userResponse.ok) {
+        const userError = await userResponse.json();
+        showErrorToast(userError.message || "Unknown error");
+        throw new Error(
+          `User update failed: ${userError.message || "Unknown error"}`
+        );
       }
 
-      return await response.json();
+      if (!profileResponse.ok) {
+        const profileError = await profileResponse.json();
+        showErrorToast(profileError.message || "Unknown error");
+        throw new Error(
+          `Profile update failed: ${profileError.message || "Unknown error"}`
+        );
+      }
+
+      // Parse responses
+      const updatedUser = await userResponse.json();
+      const updatedProfile = await profileResponse.json();
+
+      // Update states
+      setUser({ ...updatedUser, token });
+      setProfileFollowers(updatedProfile.followers);
+      setIsFollowing(newFollowingState);
+
+      // Show success message
+      showSuccessToast(
+        newFollowingState
+          ? `You are now following ${profile.name}.`
+          : `You have unfollowed ${profile.name}.`
+      );
     } catch (error) {
-      console.error(`Error updating ${listName}: ${error.message}`);
-      return null;
-    }
-  };
-
-  // Follow the user
-  const handleFollow = async () => {
-    const newFollowers = [...user.followers, currentUser._id];
-    const updatedUser = await updateUserList(
-      user._id,
-      "followers",
-      newFollowers
-    );
-
-    if (updatedUser) {
-      setIsFollowing(true);
-      const newFollowing = [...currentUser.following, user._id];
-      const updatedCurrentUser = await updateUserList(
-        currentUser._id,
-        "following",
-        newFollowing
-      );
-
-      if (updatedCurrentUser) setUser(updatedCurrentUser);
-    }
-  };
-
-  const handleUnfollow = async () => {
-    const newFollowers = user.followers.filter(
-      (followerId) => followerId !== currentUser._id
-    );
-    const updatedUser = await updateUserList(
-      user._id,
-      "followers",
-      newFollowers
-    );
-
-    if (updatedUser) {
-      setIsFollowing(false);
-      const newFollowing = currentUser.following.filter(
-        (followingId) => followingId !== user._id
-      );
-      const updatedCurrentUser = await updateUserList(
-        currentUser._id,
-        "following",
-        newFollowing
-      );
-
-      if (updatedCurrentUser) setUser(updatedCurrentUser);
+      console.error(`Error toggling follow: ${error.message}`);
+      showErrorToast(`An error occurred: ${error.message}`);
     }
   };
 
@@ -103,45 +115,72 @@ const ProfileCard = ({ user }) => {
       <div className="card-content flex flex-col items-center p-4">
         {/* Profile Image */}
         <img
-          src={user?.avatar}
-          alt={`${user?.name}'s avatar`}
+          src={profile.avatar}
+          alt={`${profile.name}'s avatar`}
           className="w-24 h-24 rounded-full mb-4"
         />
-
         {/* Name and Username */}
-        <h2 className="text-2xl font-bold">{user?.name}</h2>
-        <p className="text-muted-foreground">@{user?.username}</p>
-        <p className="text-center mt-4">{user?.bio}</p>
+        <h2 className="text-2xl font-bold">{profile.name}</h2>
+        <p className="text-muted-foreground">@{profile.username}</p>
+        <p className="text-center mt-4">{profile.bio}</p>
 
         {/* Stats */}
         <div className="flex justify-between w-full mt-6">
           {[
-            { label: "Followers", value: user?.followers.length },
-            { label: "Following", value: user?.following.length },
-            { label: "Predictions", value: user?.predictions.length },
-          ].map((stat, index) => (
-            <div key={index} className="text-center">
-              <p className="font-bold">{stat.value}</p>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
+            {
+              label: "Followers",
+              value: profileFollowers.length,
+              onClick: () => setIsFollowersModalOpen(true),
+            },
+            {
+              label: "Following",
+              value: profileFollowing.length,
+              onClick: () => setIsFollowingModalOpen(true),
+            },
+            { label: "Predictions", value: profile.predictions.length },
+          ].map(({ label, value, onClick }, index) => (
+            <div
+              key={index}
+              className="text-center cursor-pointer"
+              onClick={onClick}
+            >
+              <p className="font-bold">{value}</p>
+              <p className="text-sm text-muted-foreground">{label}</p>
             </div>
           ))}
         </div>
 
         {/* Action Buttons */}
         {isOwnProfile ? (
-          <button className="button mt-4" onClick={handleEditProfile}>
+          <button
+            className="button mt-4"
+            onClick={() => navigate("/app/settings")}
+          >
             Edit Profile
           </button>
-        ) : isFollowing ? (
-          <button className="button-secondary mt-4" onClick={handleUnfollow}>
-            Unfollow
-          </button>
         ) : (
-          <button className="button mt-4" onClick={handleFollow}>
-            Follow
+          <button
+            className={`button mt-4 ${isFollowing ? "button-secondary" : ""}`}
+            onClick={toggleFollow}
+          >
+            {isFollowing ? "Unfollow" : "Follow"}
           </button>
         )}
       </div>
+
+      {/* Modals */}
+      {isFollowersModalOpen && (
+        <FollowModal
+          list={profileFollowers}
+          onClose={() => setIsFollowersModalOpen(false)}
+        />
+      )}
+      {isFollowingModalOpen && (
+        <FollowModal
+          list={profileFollowing}
+          onClose={() => setIsFollowingModalOpen(false)}
+        />
+      )}
     </Card>
   );
 };

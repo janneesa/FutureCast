@@ -5,12 +5,14 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "./context/UserContext";
 
 function Navigation() {
-  const { setUser } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchWord, setSearchWord] = useState("");
+
+  const profileLink = user ? `/app/profile/${user.id}` : null;
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -53,11 +55,8 @@ function Navigation() {
             <Link to="/app/home" className="nav-link">
               Home
             </Link>
-            <Link to="/app/profile" className="nav-link">
+            <Link to={profileLink} className="nav-link">
               Profile
-            </Link>
-            <Link to="/app/search" className="nav-link">
-              Search
             </Link>
             <Link to="/app/messages" className="nav-link">
               Messages
@@ -118,7 +117,7 @@ function Navigation() {
               Home
             </Link>
             <Link
-              to="/app/profile"
+              to={profileLink}
               className="block nav-link"
               onClick={toggleMenu}
             >

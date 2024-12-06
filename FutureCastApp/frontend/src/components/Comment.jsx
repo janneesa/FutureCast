@@ -1,11 +1,15 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { UserContext } from "./context/UserContext";
 
 function Comment({ comment, onLike }) {
   const { user } = useContext(UserContext);
 
+  if (!comment || !comment.likes) {
+    return null;
+  }
+
   const handleLike = () => {
-    onLike(comment.id);
+    onLike(comment._id);
   };
 
   return (

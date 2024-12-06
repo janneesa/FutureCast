@@ -1,86 +1,42 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { validateDateofbirth } from "../../validations/RegisterValidation";
 
 import Card from "../Card";
 
+import useRegister from "../../hooks/useRegister";
+import useToast from "../../hooks/useToast";
+import { useEffect } from "react";
+
 function Register() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
-  const [dateofbirth, setDateofbirth] = useState("");
-  const [error, setError] = useState("");
-  const [okMessage, setOkMessage] = useState("");
+  const {
+    name,
+    setName,
+    email,
+    setEmail,
+    username,
+    setUsername,
+    password,
+    setPassword,
+    phonenumber,
+    setPhonenumber,
+    dateofbirth,
+    setDateofbirth,
+    error,
+    okMessage,
+    handleSubmit,
+  } = useRegister();
+  const { showErrorToast, showSuccessToast } = useToast();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const newUser = {
-      name: name,
-      email: email,
-      username: username,
-      password: password,
-      phone_number: phonenumber,
-      date_of_birth: dateofbirth,
-      bio: "",
-      followers: [],
-      following: [],
-      predictions: [],
-      successfulPredictions: [],
-      predictionScore: 0,
-      avatar: "",
-      settings: {
-        notifications: {
-          email: true,
-          push: true,
-        },
-        preferences: {
-          darkMode: true,
-        },
-      },
-    };
-
-    const errors = [validateDateofbirth(newUser.date_of_birth)].filter(
-      (error) => error !== ""
-    );
-
-    if (errors.length > 0) {
-      setError(errors.join(", "));
-      return;
+  useEffect(() => {
+    if (okMessage) {
+      showSuccessToast(okMessage);
     }
+  }, [okMessage]);
 
-    await registerUser(newUser);
-  };
-
-  const registerUser = async (newUser) => {
-    try {
-      const response = await fetch("http://localhost:4000/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setOkMessage("User registered successfully");
-        setError("");
-        setName("");
-        setEmail("");
-        setUsername("");
-        setPassword("");
-        setPhonenumber("");
-        setDateofbirth("");
-      } else {
-        setOkMessage("");
-        setError(data.message);
-      }
-    } catch (error) {
-      console.log("Failed to register user", error);
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
     }
-  };
+  }, [error]);
 
   return (
     <div className="flex-center min-h-screen p-4">
@@ -163,15 +119,12 @@ function Register() {
                   required
                 />
               </div>
-              {okMessage && <p className="text-green-600">{okMessage}</p>}
-              {error && <p className="text-red-600">{error}</p>}
-              <button type="submit" className="button" onClick={handleSubmit}>
+              <button type="submit" className="button">
                 Register
               </button>
             </div>
           </form>
 
-          {/* Divider */}
           <div className="relative my-4">
             <div className="border-t border-gray-300"></div>
             <div className="absolute-center">
@@ -181,7 +134,6 @@ function Register() {
             </div>
           </div>
 
-          {/* Sign in */}
           <div className="flex-center">
             <Link to="/" className="button-secondary text-center">
               Sign In

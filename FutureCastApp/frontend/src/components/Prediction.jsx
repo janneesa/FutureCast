@@ -26,39 +26,47 @@ function Prediction({
 
   useEffect(() => {
     if (user) {
-      if (agrees.includes(user.id)) {
+      if (agrees.includes(user._id)) {
         setUserVote('agrees');
-      } else if (disagrees.includes(user.id)) {
+      } else if (disagrees.includes(user._id)) {
         setUserVote('disagrees');
       }
     }
   }, [user, agrees, disagrees]);
 
-  const handleVote = (type) => {
+  const handleVote = async (type) => {
     if (!user) return;
 
-    // Check if user has voted
-    if (userVote === type) {
-      if (type === 'agrees') {
-        agrees.splice(agrees.indexOf(user.id), 1);
-      } else if (type === 'disagrees') {
-        disagrees.splice(disagrees.indexOf(user.id), 1);
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/predictions/${id}/vote`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user._id,
+            voteType: userVote === type ? null : type,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to vote on prediction');
       }
-      setUserVote(null);
-      return;
-    }
 
-    if (type === 'agrees') {
-      agrees.push(user.id);
-    } else if (type === 'disagrees') {
-      disagrees.push(user.id);
-    }
+      const updatedPrediction = await response.json();
 
-    setUserVote(type);
+      setUserVote(userVote === type ? null : type);
+      setPredictionComments(updatedPrediction.comments);
+    } catch (error) {
+      console.error('Error voting on prediction:', error);
+    }
   };
 
   const handleAddComment = (newComment) => {
-    setPredictionComments([...predictionComments, newComment]);
+    setPredictionComments([...predictionComments, newComment._id]);
   };
 
   if (!user) {
@@ -67,8 +75,10 @@ function Prediction({
 
   const isVotingDisabled = () => {
     const currentDate = new Date().toISOString().split('T')[0];
-    return currentDate > lastVoteDate || userId === user.id;
+    return currentDate > lastVoteDate || userId === user._id;
   };
+
+  const formattedLastVoteDate = new Date(lastVoteDate).toLocaleDateString();
 
   return (
     <Card>
@@ -101,7 +111,7 @@ function Prediction({
               />
             </svg>
             <span className='ml-2 dark:text-darkSecondaryText'>
-              Vote until: {lastVoteDate}
+              Vote until: {formattedLastVoteDate}
             </span>
           </div>
         </div>
@@ -174,7 +184,7 @@ function Prediction({
       <CommentModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        initialComments={comments}
+        initialComments={predictionComments}
         predictionId={id}
         onAddComment={handleAddComment}
       />

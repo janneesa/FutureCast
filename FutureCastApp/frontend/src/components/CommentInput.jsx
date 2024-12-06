@@ -1,27 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
+import useToast from "../hooks/useToast";
+
+// components/CommentInput.jsx
 function CommentInput({ predictionId, onAddComment, user }) {
+  const { showErrorToast } = useToast();
   const [commentText, setCommentText] = useState("");
   const [error, setError] = useState("");
 
-  const handleAddComment = () => {
+  useEffect(() => {
+    if (error) {
+      showErrorToast(error);
+    }
+  }, [error]);
+
+  const handleAddComment = async () => {
     if (!commentText) {
       setError("Comment cannot be empty.");
       return;
     }
 
-    const newComment = {
-      id: Date.now(), // Temporary solution to id without having to access the MockData
-      username: user.username,
-      userId: user.id,
-      comment: commentText,
-      likes: [],
-      predictionId: predictionId,
-    };
+    if (!user) {
+      setError("You must be logged in to comment.");
+      return;
+    }
 
-    onAddComment(newComment);
-    setCommentText("");
-    setError("");
+    if (!user.id) {
+      setError("User ID not found. Please try logging in again.");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:4000/api/predictions/${predictionId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `Bearer ${user.token}`,
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            username: user.username,
+            comment: commentText,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to post comment");
+      }
+
+      const newComment = await response.json();
+      onAddComment(newComment);
+      setCommentText("");
+      setError("");
+    } catch (error) {
+      setError("Failed to add comment");
+      console.error("Error adding comment:", error);
+    }
   };
 
   return (
@@ -35,7 +72,6 @@ function CommentInput({ predictionId, onAddComment, user }) {
       <button onClick={handleAddComment} className="button mt-2">
         Post Comment
       </button>
-      {error && <p className="text-red-600 mt-2">{error}</p>}
     </div>
   );
 }

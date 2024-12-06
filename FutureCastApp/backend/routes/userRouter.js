@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const requireAuth = require("../middlewares/requireAuth");
 const {
   getAllUsers,
   getUserById,
@@ -30,6 +31,8 @@ router.get("/username/:username", getUserByUsername);
 
 // GET /users/search/:searchWord
 router.get("/search/:searchWord", searchUsers);
+
+router.use(requireAuth);
 
 // PUT /users/:userId
 router.put("/:userId", updateUser);
