@@ -8,21 +8,27 @@ const useFetchPredictions = (userId) => {
   useEffect(() => {
     if (!userId) return;
 
-    const fetchPredictions = async () => {
+    const fetchPredictions = async (userId) => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/predictions/${userId}`);
-        if (!response.ok) throw new Error("Failed to fetch predictions");
+        const response = await fetch(
+          `http://localhost:4000/api/predictions/byUserId/${userId}`
+        );
+        if (!response.ok) {
+          const data = await response.json();
+          setError(data.error);
+          return;
+        }
         const data = await response.json();
         setPredictions(data);
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        console.error("Failed to fetch predictions:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPredictions();
+    fetchPredictions(userId);
   }, [userId]);
 
   return { predictions, loading, error };

@@ -5,7 +5,7 @@ const {
   getAllPredictions,
   createPrediction,
   getPredictionById,
-  getPredictionByUsername,
+  getPredictionsByUserId,
   updatePrediction,
   deletePrediction,
   addComment,
@@ -20,7 +20,7 @@ router.get("/", getAllPredictions);
 router.get("/:predictionId", getPredictionById);
 
 // GET /predictions/:username
-router.get("/username/:username", getPredictionByUsername);
+router.get("/byUserId/:userId", getPredictionsByUserId);
 
 router.use(requireAuth);
 

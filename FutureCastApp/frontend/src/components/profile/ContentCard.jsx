@@ -83,8 +83,8 @@ const PredictionItem = ({ prediction }) => (
 
 const ReactionSummary = ({ prediction }) => (
   <div className="flex mt-1 justify-around">
-    <Reaction type="Agree" count={prediction.agrees} />
-    <Reaction type="Disagree" count={prediction.disagrees} />
+    <Reaction type="Agree" count={prediction.agrees.length} />
+    <Reaction type="Disagree" count={prediction.disagrees.length} />
     <Reaction type="Comments" count={prediction.comments.length} />
   </div>
 );

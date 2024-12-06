@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const bcrypt = require("bcrypt");
-const app = require("../app"); // Your Express app
+const app = require("../App"); // Your Express app
 const User = require("../models/userModel");
 
 const api = supertest(app);
