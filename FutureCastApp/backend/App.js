@@ -6,16 +6,13 @@ const app = express();
 const userRouter = require("./routes/userRouter");
 const predRouter = require("./routes/predRouter");
 const commRouter = require("./routes/commRouter");
-<<<<<<< HEAD
 const {
   unknownEndpoint,
   errorHandler,
   requestLogger,
 } = require("./middlewares/customMiddleware");
 const path = require("path");
-=======
 const msgRouter = require("./routes/msgRouter");
->>>>>>> 3cd065468fc918578975a418309edf0e8ed4634c
 
 // Middleware to parse JSON bodies
 app.use(express.json());
