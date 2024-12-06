@@ -87,10 +87,10 @@ const loginUser = async (req, res) => {
       const token = generateToken(user._id);
       res.status(200).json({ user, token });
     } else {
-      res.status(400).json({ message: "Invalid email or password" });
+      res.status(400).json({ error: "Invalid email or password" });
     }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
