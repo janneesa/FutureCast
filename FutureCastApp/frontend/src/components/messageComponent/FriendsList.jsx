@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:4000/api/";
 
@@ -9,10 +8,11 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
     const { user } = useContext(UserContext);
     const [friends, setFriends] = useState([]);
     const [searchWord, setSearchWord] = useState("");
-    const navigate = useNavigate();
+    const [searchResults, setSearchResults] = useState([]);
 
-    const handleSearch = () => {
-        navigate("/app/search", { state: { searchWord } });
+    const handleSearchChange = (value) => {
+        setSearchWord(value);
+        fetchSearchResults(value);
     };
 
     useEffect(() => {
@@ -117,23 +117,62 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         setSelectedFriend(username);
     };
 
+    const fetchSearchResults = async (searchWord) => {
+        if (searchWord === "") {
+            setSearchResults([]);
+            return;
+        }
+        try {
+            const response = await fetch(`${API_URL}users/search/${searchWord}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.ok) {
+                const users = await response.json();
+                //remove the logged in user and friends from the search results
+                setSearchResults(users.filter(u => u.username !== user.username && !friends.some(f => f.username === u.username)));
+            } else {
+                throw new Error("Failed to fetch search results");
+            }
+        } catch (error) {
+            console.error("Search error:", error);
+        }
+    };
+
+    const addConversation = (username) => {
+        if (!friends.some(f => f.username === username)) {
+            const friend = searchResults.find(u => u.username === username);
+            setFriends([friend, ...friends]);
+        }
+        selectContact(username);
+        setSearchWord("");
+        setSearchResults([]);
+    }
+
     return (
         <div className="card h-full p-2">
             <div>
                 <h2 className="card-header">Messages</h2>
-                <div className="hidden lg:flex p-2">
+                <div className="hidden lg:flex p-2 relative flex-col">
                     <input
-                    type="text"
-                    placeholder="Search users..."
-                    className="input flex-grow"
-                    value={searchWord}
-                    onChange={(e) => setSearchWord(e.target.value)}
+                        type="text"
+                        placeholder="Search users..."
+                        className="input flex-grow"
+                        value={searchWord}
+                        onChange={(e) => handleSearchChange(e.target.value)}
                     ></input>
-                    <div className="ml-2">
-                    <button className="button" onClick={handleSearch}>
-                        Search
-                    </button>
-                    </div>
+                    {searchResults && searchResults.length > 0 && (
+                        <ul className="bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10">
+                            {searchResults.map((user) => (
+                                <li key={user.username} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => addConversation(user.username)}>
+                                    <p>{user.name} ({user.username})</p>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>      
             </div>
             <h3 className="card-header">Your conversations</h3>
