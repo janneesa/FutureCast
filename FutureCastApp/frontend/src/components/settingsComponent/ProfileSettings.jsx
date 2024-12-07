@@ -9,8 +9,11 @@ function ProfileSettings() {
   const { user } = useContext(UserContext); // Access user from the useSettings hook
   const { updateSettings, error, okMessage } = useSettings(); // For updating settings
   const { showSuccessToast, showErrorToast } = useToast();
+  const [showAvatarInput, setShowAvatarInput] = useState(false);
 
   const [avatar, setAvatar] = useState("");
+  const [avatarInput, setAvatarInput] = useState("");
+
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
@@ -19,6 +22,7 @@ function ProfileSettings() {
   useEffect(() => {
     if (user) {
       setAvatar(user.avatar || "");
+      setAvatarInput(user.avatar || "");
       setName(user.name || "");
       setUsername(user.username || "");
       setBio(user.bio || "");
@@ -26,7 +30,7 @@ function ProfileSettings() {
   }, [user]);
 
   const changeAvatar = () => {
-    // Logic for changing avatar (to be implemented as needed)
+    setShowAvatarInput(!showAvatarInput);
   };
 
   const saveChanges = () => {
@@ -40,6 +44,7 @@ function ProfileSettings() {
       name,
       username,
       bio,
+      avatar: avatarInput,
     };
 
     updateSettings(updatedData); // Call the hook to update settings
@@ -77,45 +82,60 @@ function ProfileSettings() {
           />
           <div>
             <button className="button" onClick={changeAvatar}>
-              Change Avatar
+              {showAvatarInput ? "Change Profile" : "Change Avatar"}
             </button>
           </div>
         </div>
 
         {/* Input Fields */}
         <div className="flex flex-col gap-4">
-          <div className="flex flex-col gap-2">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              placeholder={user.name}
-              onChange={(e) => setName(e.target.value)}
-              className="input"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              value={username}
-              placeholder={user.username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="input"
-            />
-          </div>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="bio">Bio</label>
-            <textarea
-              id="bio"
-              value={bio}
-              placeholder={user.bio}
-              onChange={(e) => setBio(e.target.value)}
-              className="input h-24 resize-none"
-            />
-          </div>
+          {!showAvatarInput ? (
+            <>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="name">Name</label>
+                <input
+                  type="text"
+                  id="name"
+                  value={name}
+                  placeholder={user.name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="input"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="username">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  value={username}
+                  placeholder={user.username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="input"
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label htmlFor="bio">Bio</label>
+                <textarea
+                  id="bio"
+                  value={bio}
+                  placeholder={user.bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  className="input h-24 resize-none"
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <label htmlFor="bio">Avatar URL</label>
+              <textarea
+                id="avatarURL"
+                value={avatarInput}
+                placeholder={user.avatar}
+                onChange={(e) => setAvatarInput(e.target.value)}
+                className="input h-24 resize-none"
+              />
+            </div>
+          )}
         </div>
 
         {/* Save Changes Button */}

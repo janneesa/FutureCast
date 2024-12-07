@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel.js");
 
 const badgeChecker = require("../utils/badgeChecker.js");
+const scoreChecker = require("../utils/scoreChecker.js");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET, {
@@ -175,7 +176,10 @@ const updateUser = async (req, res) => {
 
     // Check and update badges
     const updatedBadges = badgeChecker(user);
+    const updatedScore = scoreChecker(user);
+
     user.badges = updatedBadges;
+    user.predictionScore = updatedScore;
 
     // Save the updated user
     const updatedUser = await user.save();
