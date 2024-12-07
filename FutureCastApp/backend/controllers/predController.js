@@ -67,6 +67,25 @@ const getPredictionsByUserId = async (req, res) => {
   }
 };
 
+// GET /predictions/byCategory/:category
+const getPredictionsByCategory = async (req, res) => {
+  const { category } = req.params;
+  if (!category) {
+    return res.status(400).json({ message: "Invalid category" });
+  }
+
+  try {
+    const predictions = await Prediction.find({ category });
+    if (predictions.length >= 0) {
+      res.status(200).json(predictions);
+    } else {
+      res.status(404).json({ error: "No predictions found for this category" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to retrieve predictions" });
+  }
+};
+
 //PUT /predictions/:predictionId
 const updatePrediction = async (req, res) => {
   const { predictionId } = req.params;
@@ -195,6 +214,7 @@ module.exports = {
   createPrediction,
   getPredictionById,
   getPredictionsByUserId,
+  getPredictionsByCategory,
   updatePrediction,
   deletePrediction,
   addComment,
