@@ -19,6 +19,19 @@ const useRegister = (onSuccess) => {
 
   const registerUser = async (newUser) => {
     try {
+      const response = await fetch("https://randomuser.me/api/");
+      const data = await response.json();
+      const avatarUrl = data.results[0].picture.large;
+      if (!avatarUrl) {
+        setError("Failed to fetch avatar");
+        throw new Error("Failed to fetch avatar");
+      }
+      newUser.avatar = avatarUrl;
+    } catch (error) {
+      console.error("Failed to fetch avatar:", error);
+    }
+
+    try {
       const response = await fetch("http://localhost:4000/api/users", {
         method: "POST",
         headers: {
@@ -71,7 +84,7 @@ const useRegister = (onSuccess) => {
           push: true,
         },
         preferences: {
-          darkMode: true,
+          darkMode: false,
         },
       },
     };
