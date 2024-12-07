@@ -6,6 +6,7 @@ const {
   createPrediction,
   getPredictionById,
   getPredictionsByUserId,
+  getPredictionsByCategory,
   updatePrediction,
   deletePrediction,
   addComment,
@@ -21,6 +22,9 @@ router.get("/:predictionId", getPredictionById);
 
 // GET /predictions/:username
 router.get("/byUserId/:userId", getPredictionsByUserId);
+
+// GET /predictions/category/:category
+router.get("/search/:category", getPredictionsByCategory);
 
 router.use(requireAuth);
 

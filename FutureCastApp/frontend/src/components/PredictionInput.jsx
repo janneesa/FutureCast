@@ -11,6 +11,7 @@ function PredictionInput({ addPrediction }) {
   const { showErrorToast, showSuccessToast } = useToast();
   const { updateSettings, error, okMessage } = useSettings();
   const [predictionText, setPredictionText] = useState("");
+  const [category, setCategory] = useState("");
   const [lastVoteDate, setLastVoteDate] = useState("");
 
   useEffect(() => {
@@ -86,6 +87,7 @@ function PredictionInput({ addPrediction }) {
           lastVoteDate: lastVoteDate,
           avatar: user.avatar,
           comments: [],
+          category: category,
         }),
       });
 
@@ -98,6 +100,7 @@ function PredictionInput({ addPrediction }) {
       addPrediction(newPrediction);
       await addPredictionToUser(newPrediction);
       setPredictionText("");
+      setCategory("");
       setLastVoteDate("");
     } catch (error) {
       console.error("Error creating prediction:", error);
@@ -121,6 +124,20 @@ function PredictionInput({ addPrediction }) {
           placeholder="I predict that..."
           className="input w-full resize-none"
         />
+        <label htmlFor="category">Category</label>
+        <select
+          id="category"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="input w-full"
+        >
+          <option value="">Select a category</option>
+          <option value="Technology">Technology</option>
+          <option value="Science">Science</option>
+          <option value="Politics">Politics</option>
+          <option value="Sports">Sports</option>
+          <option value="Entertainment">Entertainment</option>
+        </select>
         <label htmlFor="lastVoteDay">Vote until</label>
         <input
           id="lastVoteDay"

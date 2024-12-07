@@ -18,6 +18,7 @@ function Prediction({
   agrees,
   disagrees,
   comments,
+  category,
 }) {
   const { user } = useContext(UserContext);
   const [userVote, setUserVote] = useState(null);
@@ -117,6 +118,14 @@ function Prediction({
         <div>
           <p className="text-primaryText my-2">{prediction}</p>
         </div>
+        {/* Category */}
+        {category && (
+          <div className="flex items-center text-xs text-secondaryText dark:text-darkSecondaryText">
+            <span className="ml-0 dark:text-darkSecondaryText bg-gray-200 dark:bg-gray-700 rounded-full px-2 py-1">
+              {category}
+            </span>
+          </div>
+        )}
         {/* Agree vs Disagree */}
         <div className="relative pt-1">
           <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-background">
