@@ -71,7 +71,7 @@ function PredictionInput({ addPrediction }) {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/api/predictions`, {
+      const response = await fetch(`/api/predictions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

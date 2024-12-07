@@ -4,7 +4,7 @@ import { UserContext } from "../context/UserContext";
 import SearchResult from "./SearchResult";
 import Loading from "../Loading";
 
-const API_URL = "http://localhost:4000/api/users/search/";
+const API_URL = "/api/users/search/";
 
 function Search() {
   const { user } = useContext(UserContext);

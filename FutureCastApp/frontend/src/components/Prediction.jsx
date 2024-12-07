@@ -38,20 +38,17 @@ function Prediction({
     if (!user) return;
 
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/predictions/${id}/vote`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${user.token}`,
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            voteType: userVote === type ? null : type,
-          }),
-        }
-      );
+      const response = await fetch(`/api/predictions/${id}/vote`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          voteType: userVote === type ? null : type,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to vote on prediction");
