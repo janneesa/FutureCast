@@ -11,9 +11,7 @@ const useFetchProfile = (userId) => {
     const fetchProfile = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-          `http://localhost:4000/api/users/${userId}`
-        );
+        const response = await fetch(`/api/users/${userId}`);
         if (!response.ok) throw new Error("Failed to fetch profile");
         const data = await response.json();
         setProfile(data);

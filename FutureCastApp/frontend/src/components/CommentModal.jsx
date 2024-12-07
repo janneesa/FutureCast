@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { UserContext } from './context/UserContext';
-import Comment from './Comment';
-import CommentInput from './CommentInput';
+import React, { useContext, useState, useEffect } from "react";
+import { UserContext } from "./context/UserContext";
+import Comment from "./Comment";
+import CommentInput from "./CommentInput";
 
 function CommentModal({
   isOpen,
@@ -25,13 +25,11 @@ function CommentModal({
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/predictions/${predictionId}`
-      );
+      const response = await fetch(`/api/predictions/${predictionId}`);
       const data = await response.json();
       setComments(data.comments);
     } catch (error) {
-      console.error('Error fetching comments:', error);
+      console.error("Error fetching comments:", error);
     }
   };
 
@@ -42,16 +40,16 @@ function CommentModal({
       const response = await fetch(
         `http://localhost:4000/api/comments/${commentId}/like`,
         {
-          method: 'PUT',
+          method: "PUT",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({ userId: user._id }),
         }
       );
 
       if (!response.ok) {
-        throw new Error('Failed to like comment');
+        throw new Error("Failed to like comment");
       }
 
       const updatedComment = await response.json();
@@ -62,7 +60,7 @@ function CommentModal({
         )
       );
     } catch (error) {
-      console.error('Error liking comment:', error);
+      console.error("Error liking comment:", error);
     }
   };
 
@@ -74,18 +72,18 @@ function CommentModal({
   if (!isOpen) return null;
 
   return (
-    <div className='fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4'>
-      <div className='bg-card dark:bg-darkCard rounded-lg shadow-lg p-4 w-full max-w-lg max-h-full flex flex-col'>
-        <div className='flex justify-between items-center mb-4'>
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-card dark:bg-darkCard rounded-lg shadow-lg p-4 w-full max-w-lg max-h-full flex flex-col">
+        <div className="flex justify-between items-center mb-4">
           <h2>Comments</h2>
           <button
             onClick={onClose}
-            className='text-gray-600 hover:text-gray-900'
+            className="text-gray-600 hover:text-gray-900"
           >
             &times;
           </button>
         </div>
-        <div className='flex-1 overflow-y-auto space-y-4'>
+        <div className="flex-1 overflow-y-auto space-y-4">
           {comments.map((comment) => (
             <Comment
               key={comment.id || Math.random()}

@@ -32,7 +32,7 @@ function CommentInput({ predictionId, onAddComment, user }) {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/predictions/${predictionId}/comments`,
+        `/api/predictions/${predictionId}/comments`,
         {
           method: "POST",
           headers: {

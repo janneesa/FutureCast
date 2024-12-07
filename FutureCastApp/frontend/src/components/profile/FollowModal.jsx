@@ -12,10 +12,10 @@ const FollowModal = ({ list = [], onClose }) => {
       try {
         const userProfiles = await Promise.all(
           list.map(async (id) => {
-            const response = await fetch(
-              `http://localhost:4000/api/users/${id}`,
-              { method: "GET", headers: { "Content-Type": "application/json" } }
-            );
+            const response = await fetch(`/api/users/${id}`, {
+              method: "GET",
+              headers: { "Content-Type": "application/json" },
+            });
             if (response.ok) return response.json();
             console.error(`Failed to fetch user with id: ${id}`);
             return null;

@@ -68,17 +68,14 @@ function AccountSettings() {
     };
 
     try {
-      const response = await fetch(
-        `http://localhost:4000/api/users/reset/${user.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Assuming token-based authentication
-          },
-          body: JSON.stringify(updatedUser),
-        }
-      );
+      const response = await fetch(`/api/users/reset/${user.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Assuming token-based authentication
+        },
+        body: JSON.stringify(updatedUser),
+      });
 
       const data = await response.json();
 

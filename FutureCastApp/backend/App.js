@@ -18,21 +18,7 @@ const msgRouter = require("./routes/msgRouter");
 app.use(express.json());
 
 // Enable CORS
-const allowedOrigins = ["http://localhost:5173", "http://localhost:4000"];
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
-);
+app.use(cors());
 
 // Connect to MongoDB
 connectDB();
@@ -50,11 +36,13 @@ app.use("/api/comments", commRouter);
 // Use the msgRouter for all routes starting with /api/messages
 app.use("/api/messages", msgRouter);
 
+console.log(__dirname);
+
 // Serve the static files from the React app
-app.use(express.static(path.join(__dirname, "client/dist")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // Middleware to handle unknown endpoints and errors

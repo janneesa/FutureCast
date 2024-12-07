@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import Card from "../Card";
-import Switcher from "../utility/switcher";
+import Switcher from "../utility/Switcher";
 import Loading from "../Loading";
 import useToast from "../../hooks/useToast";
 import useSettings from "../../hooks/useSettings";

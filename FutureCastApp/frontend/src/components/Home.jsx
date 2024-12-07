@@ -20,7 +20,7 @@ function Home() {
   const fetchPredictions = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/api/predictions");
+      const response = await fetch("/api/predictions");
       if (!response.ok) {
         showErrorToast("Failed to fetch predictions");
         return;
