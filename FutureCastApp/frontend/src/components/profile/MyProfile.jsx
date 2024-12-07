@@ -42,7 +42,7 @@ const MyProfile = () => {
             <ScoreCard user={profile} />
           </div>
           <div className="flex justify-center">
-            <ContentCard predictions={predictions} />
+            <ContentCard predictions={predictions} badges={profile.badges} />
           </div>
         </div>
       </main>

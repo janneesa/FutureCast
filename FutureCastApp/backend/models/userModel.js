@@ -53,6 +53,15 @@ const userSchema = new Schema(
         ref: "Prediction",
       },
     ],
+    badges: {
+      type: [
+        {
+          name: { type: String, required: true },
+          description: { type: String, required: true },
+        },
+      ],
+      default: [],
+    },
     successfulPredictions: {
       type: [String],
       required: false,

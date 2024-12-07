@@ -2,6 +2,8 @@ const { default: mongoose } = require("mongoose");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel.js");
 
+const badgeChecker = require("../utils/badgeChecker.js");
+
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET, {
     expiresIn: "3d",
@@ -162,16 +164,23 @@ const updateUser = async (req, res) => {
   }
 
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: userId },
-      { ...req.body },
-      { new: true, runValidators: true, context: "query" }
-    );
-    if (updatedUser) {
-      res.status(200).json(updatedUser);
-    } else {
-      res.status(404).json({ message: "User not found" });
+    // Fetch the user from the database
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    // Update user fields with req.body
+    Object.assign(user, req.body);
+
+    // Check and update badges
+    const updatedBadges = badgeChecker(user);
+    user.badges = updatedBadges;
+
+    // Save the updated user
+    const updatedUser = await user.save();
+
+    res.status(200).json(updatedUser);
   } catch (error) {
     handleDuplicateError(error, res);
   }
