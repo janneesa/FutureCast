@@ -24,12 +24,13 @@ const ContentCard = ({ predictions, badges }) => {
           Badges
         </button>
       </div>
+      <div className="max-w-xl flex flex-col mx-auto justify-center">
+        {activeTab === "predictions" && (
+          <PredictionList predictions={predictions} />
+        )}
 
-      {activeTab === "predictions" && (
-        <PredictionList predictions={predictions} />
-      )}
-
-      {activeTab === "badges" && <BadgeList badges={badges} />}
+        {activeTab === "badges" && <BadgeList badges={badges} />}
+      </div>
     </div>
   );
 };
@@ -39,20 +40,22 @@ const PredictionList = ({ predictions }) => (
     <h2 className="card-header text-primaryText dark:text-darkPrimaryText">
       Predictions
     </h2>
-    {predictions.map((prediction) => (
-      <Prediction
-        key={prediction.id}
-        id={prediction.id}
-        username={prediction.username}
-        userId={prediction.userId}
-        avatar={prediction.avatar}
-        lastVoteDate={prediction.lastVoteDate}
-        prediction={prediction.prediction}
-        agrees={prediction.agrees}
-        disagrees={prediction.disagrees}
-        comments={prediction.comments}
-      />
-    ))}
+    <div className="flex flex-col gap-2">
+      {predictions.map((prediction) => (
+        <Prediction
+          key={prediction.id}
+          id={prediction.id}
+          username={prediction.username}
+          userId={prediction.userId}
+          avatar={prediction.avatar}
+          lastVoteDate={prediction.lastVoteDate}
+          prediction={prediction.prediction}
+          agrees={prediction.agrees}
+          disagrees={prediction.disagrees}
+          comments={prediction.comments}
+        />
+      ))}
+    </div>
   </div>
 );
 

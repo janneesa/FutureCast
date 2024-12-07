@@ -36,11 +36,13 @@ app.use("/api/comments", commRouter);
 // Use the msgRouter for all routes starting with /api/messages
 app.use("/api/messages", msgRouter);
 
+console.log(__dirname);
+
 // Serve the static files from the React app
-app.use(express.static(path.join(__dirname, "client/dist")));
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
 });
 
 // Middleware to handle unknown endpoints and errors
