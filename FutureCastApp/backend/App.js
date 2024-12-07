@@ -18,7 +18,11 @@ const msgRouter = require("./routes/msgRouter");
 app.use(express.json());
 
 // Enable CORS
-const allowedOrigins = ["http://localhost:5173", "http://localhost:4000"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4000",
+  "https://futurecast.onrender.com/",
+];
 
 app.use(
   cors({
