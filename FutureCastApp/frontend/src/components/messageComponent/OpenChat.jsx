@@ -22,7 +22,7 @@ function OpenChat( { selectedFriend, messages, setMessages }) {
         };
 
         try {
-            const response = await fetch("http://localhost:4000/api/messages", {
+            const response = await fetch("/api/messages", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -2,8 +2,6 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useEffect } from "react";
 
-const API_URL = "http://localhost:4000/api/";
-
 function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages }) {
     const { user } = useContext(UserContext);
     const [friends, setFriends] = useState([]);
@@ -30,7 +28,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
 
         // Fetch messages FROM the logged in user
         try {
-            const response = await fetch(`${API_URL}messages/sender/${username}`, {
+            const response = await fetch(`/api/messages/sender/${username}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -49,7 +47,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
 
         //Fetch messages where user is receiver
         try {
-            const response = await fetch(`${API_URL}messages/receiver/${username}`, {
+            const response = await fetch(`/api/messages/receiver/${username}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -74,7 +72,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         for (let i = 0; i < messages.length; i++) {  
             try { 
                 if (messages[i].receiver !== user.username) { 
-                    const response = await fetch(`${API_URL}users/username/${messages[i].receiver}`, {
+                    const response = await fetch(`/api/users/username/${messages[i].receiver}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -90,7 +88,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
                         throw new Error("Failed to fetch friends");
                     }
                 } else {
-                    const response = await fetch(`${API_URL}users/username/${messages[i].sender}`, {
+                    const response = await fetch(`/api/users/username/${messages[i].sender}`, {
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
@@ -123,7 +121,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
             return;
         }
         try {
-            const response = await fetch(`${API_URL}users/search/${searchWord}`, {
+            const response = await fetch(`/api/users/search/${searchWord}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
