@@ -6,7 +6,10 @@ const User = require("../models/userModel");
 
 const api = supertest(app);
 
-describe("User Authentication for Auth", () => {
+describe("User Authentication and Management", () => {
+  let validToken = "";
+  let existingUserId = "";
+
   beforeAll(async () => {
     await mongoose.connect(process.env.TEST_MONGO_URI, {
       useNewUrlParser: true,
@@ -15,6 +18,40 @@ describe("User Authentication for Auth", () => {
 
   beforeEach(async () => {
     await User.deleteMany({});
+
+    // Create a user and generate a valid token for tests
+    const hashedPassword = await bcrypt.hash("password123", 10);
+    const user = await User.create({
+      name: "Test User",
+      email: "testuser@example.com",
+      username: "testuser",
+      password: hashedPassword,
+      phone_number: "555-555-5555",
+      date_of_birth: "1990-01-01",
+      bio: "A test user bio",
+      followers: [],
+      following: [],
+      predictions: [],
+      successfulPredictions: [],
+      predictionScore: 0,
+      avatar: "",
+      settings: {
+        notifications: {
+          email: true,
+          push: true,
+        },
+        preferences: {
+          darkMode: false,
+        },
+      },
+    });
+
+    validToken = `Bearer ${require("jsonwebtoken").sign(
+      { id: user._id },
+      process.env.SECRET,
+      { expiresIn: "3d" }
+    )}`;
+    existingUserId = user._id.toString();
   });
 
   afterAll(async () => {
@@ -24,13 +61,13 @@ describe("User Authentication for Auth", () => {
   describe("User Signup", () => {
     it("should register a new user successfully", async () => {
       const newUser = {
-        name: "Testi Mies",
-        email: "testaaja@example.com",
-        username: "testaaja",
-        password: "password",
+        name: "New User",
+        email: "newuser@example.com",
+        username: "newuser",
+        password: "password123",
         phone_number: "555-555-5555",
         date_of_birth: "1990-01-01",
-        bio: "",
+        bio: "A test user bio",
         followers: [],
         following: [],
         predictions: [],
@@ -56,13 +93,13 @@ describe("User Authentication for Auth", () => {
 
       expect(response.body.message).toBe("User created successfully");
 
-      const userInDb = await User.findOne({ username: newUser.username });
+      const userInDb = await User.findOne({ email: newUser.email });
       expect(userInDb).not.toBeNull();
     });
 
     it("should not register a user with missing fields", async () => {
       const incompleteUser = {
-        username: "johndoe",
+        username: "incompleteuser",
         password: "password123",
       };
 
@@ -74,15 +111,15 @@ describe("User Authentication for Auth", () => {
       expect(response.body.error).toBe("All fields must be filled");
     });
 
-    it("should not register a user with a duplicate username or email", async () => {
-      const user = {
-        name: "Testi Mies",
-        email: "testaaja@example.com",
-        username: "testaaja",
-        password: "password",
+    it("should not register a user with invalid email format", async () => {
+      const newUser = {
+        name: "Test User",
+        email: "invalidemail",
+        username: "testuser",
+        password: "password123",
         phone_number: "555-555-5555",
         date_of_birth: "1990-01-01",
-        bio: "",
+        bio: "A test user bio",
         followers: [],
         following: [],
         predictions: [],
@@ -100,27 +137,20 @@ describe("User Authentication for Auth", () => {
         },
       };
 
-      await User.create(user);
+      const response = await api.post("/api/users").send(newUser).expect(400);
 
-      const response = await api.post("/api/users").send(user).expect(400);
-
-      expect(response.body.error).toBe(
-        'Duplicate key error. E11000 duplicate key error collection: futurecast.users index: email_1 dup key: { email: "testaaja@example.com" }'
-      );
+      expect(response.body.error).toContain("Email not valid");
     });
-  });
 
-  describe("User Login", () => {
-    beforeEach(async () => {
-      const hashedPassword = await bcrypt.hash("password123", 10);
-      await User.create({
-        name: "Testi Mies",
-        email: "testaaja@example.com",
-        username: "testaaja",
-        password: hashedPassword,
+    it("should not register a user with a duplicate username or email", async () => {
+      const duplicateUser = {
+        name: "Test User",
+        email: "newuser@example.com",
+        username: "testuser",
+        password: "password123",
         phone_number: "555-555-5555",
         date_of_birth: "1990-01-01",
-        bio: "",
+        bio: "A test user bio",
         followers: [],
         following: [],
         predictions: [],
@@ -136,12 +166,21 @@ describe("User Authentication for Auth", () => {
             darkMode: false,
           },
         },
-      });
-    });
+      };
 
-    it("should login a user successfully with valid credentials", async () => {
+      const response = await api
+        .post("/api/users")
+        .send(duplicateUser)
+        .expect(400);
+
+      expect(response.body.error).toContain("Duplicate key error");
+    });
+  });
+
+  describe("User Login", () => {
+    it("should login successfully with valid credentials", async () => {
       const loginData = {
-        email: "testaaja@example.com",
+        email: "testuser@example.com",
         password: "password123",
       };
 
@@ -151,13 +190,13 @@ describe("User Authentication for Auth", () => {
         .expect(200)
         .expect("Content-Type", /application\/json/);
 
-      expect(response.body.username).toBe(loginData.username);
+      expect(response.body.user.username).toBe("testuser");
       expect(response.body.token).toBeDefined();
     });
 
-    it("should not login with invalid password", async () => {
+    it("should not login with an invalid password", async () => {
       const loginData = {
-        email: "testaaja@example.com",
+        email: "testuser@example.com",
         password: "wrongpassword",
       };
 
@@ -169,9 +208,9 @@ describe("User Authentication for Auth", () => {
       expect(response.body.error).toBe("Incorrect password");
     });
 
-    it("should not login with non-existent email", async () => {
+    it("should not login with a non-existent email", async () => {
       const loginData = {
-        email: "nonexistentemail@email.com",
+        email: "nonexistent@example.com",
         password: "password123",
       };
 
@@ -181,6 +220,65 @@ describe("User Authentication for Auth", () => {
         .expect(400);
 
       expect(response.body.error).toBe("Incorrect email");
+    });
+  });
+
+  describe("User Update", () => {
+    it("should update user details successfully", async () => {
+      const updatedData = { name: "Updated Name", bio: "Updated Bio" };
+
+      const response = await api
+        .put(`/api/users/${existingUserId}`)
+        .set("Authorization", validToken)
+        .send(updatedData)
+        .expect(200);
+
+      expect(response.body.name).toBe(updatedData.name);
+      expect(response.body.bio).toBe(updatedData.bio);
+    });
+
+    it("should not update with invalid user ID", async () => {
+      const response = await api
+        .put("/api/users/invalidId")
+        .set("Authorization", validToken)
+        .send({ name: "Updated Name" })
+        .expect(400);
+
+      expect(response.body.message).toBe("Invalid user ID");
+    });
+
+    it("should not update without authorization", async () => {
+      const updatedData = { name: "Updated Name" };
+
+      const response = await api
+        .put(`/api/users/${existingUserId}`)
+        .send(updatedData)
+        .expect(401);
+
+      expect(response.body.error).toBe("Authorization token required");
+    });
+  });
+
+  describe("User Deletion", () => {
+    it("should delete a user successfully", async () => {
+      const response = await api
+        .delete(`/api/users/${existingUserId}`)
+        .set("Authorization", validToken)
+        .expect(200);
+
+      expect(response.body.message).toBe("User deleted successfully");
+
+      const userInDb = await User.findById(existingUserId);
+      expect(userInDb).toBeNull();
+    });
+
+    it("should not delete with an invalid user ID", async () => {
+      const response = await api
+        .delete("/api/users/invalidId")
+        .set("Authorization", validToken)
+        .expect(400);
+
+      expect(response.body.message).toBe("Invalid user ID");
     });
   });
 });
