@@ -6,13 +6,16 @@ const app = express();
 const userRouter = require("./routes/userRouter");
 const predRouter = require("./routes/predRouter");
 const commRouter = require("./routes/commRouter");
+const msgRouter = require("./routes/msgRouter");
 const {
   unknownEndpoint,
   errorHandler,
   requestLogger,
 } = require("./middlewares/customMiddleware");
 const path = require("path");
-const msgRouter = require("./routes/msgRouter");
+
+const swaggerUI = require("swagger-ui-express");
+const swaggerSpec = require("./swagger.json");
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -36,7 +39,8 @@ app.use("/api/comments", commRouter);
 // Use the msgRouter for all routes starting with /api/messages
 app.use("/api/messages", msgRouter);
 
-console.log(__dirname);
+// Swagger UI
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, "../frontend/dist")));
