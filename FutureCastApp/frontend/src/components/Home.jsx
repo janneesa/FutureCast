@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "./context/UserContext";
-
 import useToast from "../hooks/useToast";
-
 import Prediction from "./Prediction";
 import PredictionInput from "./PredictionInput";
 import Loading from "./Loading";
@@ -60,7 +58,10 @@ function Home() {
 
   return (
     <div className="p-4 flex flex-col gap-4 items-center">
-      <PredictionInput addPrediction={addPrediction} />
+      <PredictionInput
+        addPrediction={addPrediction}
+        fetchPredictions={fetchPredictions}
+      />
       {sortedPredictions.map((prediction, index) => (
         <Prediction key={`${prediction.id}-${index}`} {...prediction} />
       ))}
