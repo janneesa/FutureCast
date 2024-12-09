@@ -1,22 +1,17 @@
-import { useContext, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
 import Card from "../Card";
-
 import useLogin from "../../hooks/useLogin";
-import useToast from "../../hooks/useToast";
 
 function Login() {
-  const { setUser } = useContext(UserContext);
-  const { email, setEmail, password, setPassword, error, handleLogin } =
-    useLogin(setUser);
-  const { showErrorToast } = useToast();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { handleLogin } = useLogin();
 
-  useEffect(() => {
-    if (error) {
-      showErrorToast(error);
-    }
-  }, [error]);
+  const handleClick = (e) => {
+    e.preventDefault();
+    handleLogin(email, password); // Pass email and password to the hook
+  };
 
   return (
     <div className="flex-center min-h-screen p-4">
@@ -55,7 +50,7 @@ function Login() {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-              <button type="submit" className="button" onClick={handleLogin}>
+              <button type="submit" className="button" onClick={handleClick}>
                 Sign In
               </button>
             </div>
