@@ -10,6 +10,7 @@ function OpenChat( { selectedFriend, setSelectedFriend, messages, setMessages })
     const [correctMessages, setCorrectMessages] = useState([]);
     const divUnderMessages = useRef();
 
+    // Function to send a message
     const sendMessage = async (e) => {
         e.preventDefault();
         if (newMessageText === "") {
@@ -26,6 +27,7 @@ function OpenChat( { selectedFriend, setSelectedFriend, messages, setMessages })
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${user.token}`,
                 },
                 body: JSON.stringify(message),
             });
@@ -41,6 +43,7 @@ function OpenChat( { selectedFriend, setSelectedFriend, messages, setMessages })
         }
     };
 
+    // Fetch messages when conversation changes
     useEffect(() => {
         setCorrectMessages([]);
         if (selectedFriend) {
@@ -51,6 +54,7 @@ function OpenChat( { selectedFriend, setSelectedFriend, messages, setMessages })
         }
     }, [selectedFriend, messages]);
 
+    // Scroll to the bottom of the messages
     useEffect(() => {
         const div = divUnderMessages.current;
         if (div) {
