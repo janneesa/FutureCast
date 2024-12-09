@@ -11,7 +11,7 @@ const FollowModal = ({ list = [], onClose }) => {
   // Fetch user profiles
   useEffect(() => {
     const fetchUserProfiles = async () => {
-      setIsLoading(true);
+      setIsLoading(true); // Show loading state
       try {
         const userProfiles = await Promise.all(
           list.map(async (id) => {
@@ -21,14 +21,14 @@ const FollowModal = ({ list = [], onClose }) => {
             });
             if (response.ok) return response.json();
             console.error(`Failed to fetch user with id: ${id}`);
-            return null;
+            return null; // Handle fetch failure
           })
         );
-        setUsers(userProfiles.filter(Boolean)); // Filter out null values in case of failed fetches
+        setUsers(userProfiles.filter(Boolean)); // Filter out null values
       } catch (error) {
         console.error(`Error fetching users: ${error.message}`);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); // Hide loading state
       }
     };
 
@@ -49,30 +49,30 @@ const FollowModal = ({ list = [], onClose }) => {
             Close
           </button>
 
-          {/* User List */}
-          {users.length > 0 ? (
-            isLoading ? (
+          {/* Loading Indicator */}
+          {isLoading ? (
+            <div className="flex justify-center items-center h-48">
               <Loading />
-            ) : (
-              users.map((user) => (
-                // On click take user to profile page
-                <div
-                  key={user.id}
-                  className="flex items-center my-4"
-                  onClick={() => handleClick(user.id)} // Wrap with an anonymous function
-                >
-                  <img
-                    src={user.avatar}
-                    alt={`${user.username}'s avatar`}
-                    className="w-16 h-16 rounded-full"
-                  />
-                  <div className="ml-4">
-                    <h3 className="font-semibold">{user.username}</h3>
-                    <p>Prediction Score: {user.predictionScore}</p>
-                  </div>
+            </div>
+          ) : users.length > 0 ? (
+            /* User List */
+            users.map((user) => (
+              <div
+                key={user.id}
+                className="flex items-center my-4 cursor-pointer"
+                onClick={() => handleClick(user.id)}
+              >
+                <img
+                  src={user.avatar}
+                  alt={`${user.username}'s avatar`}
+                  className="w-16 h-16 rounded-full"
+                />
+                <div className="ml-4">
+                  <h3 className="font-semibold">{user.username}</h3>
+                  <p>Prediction Score: {user.predictionScore}</p>
                 </div>
-              ))
-            )
+              </div>
+            ))
           ) : (
             <p className="text-center text-muted-foreground mt-4">
               No users found.
