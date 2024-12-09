@@ -111,8 +111,8 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         setFriends([...friends, ...fetchedFriends]);
     }
 
-    const selectContact = (username) => {
-        setSelectedFriend(username);
+    const selectContact = (user) => {
+        setSelectedFriend(user);
     };
 
     const fetchSearchResults = async (searchWord) => {
@@ -140,12 +140,12 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         }
     };
 
-    const addConversation = (username) => {
-        if (!friends.some(f => f.username === username)) {
-            const friend = searchResults.find(u => u.username === username);
+    const addConversation = (user) => {
+        if (!friends.some(f => f.username === user.username)) {
+            const friend = searchResults.find(u => u.username === user.username);
             setFriends([friend, ...friends]);
         }
-        selectContact(username);
+        selectContact(user);
         setSearchWord("");
         setSearchResults([]);
     }
@@ -154,7 +154,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         <div className="card h-full p-2">
             <div>
                 <h2 className="card-header">Messages</h2>
-                <div className="hidden lg:flex p-2 relative flex-col">
+                <div className="flex p-2 relative flex-col">
                     <input
                         type="text"
                         placeholder="Search users..."
@@ -165,7 +165,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
                     {searchResults && searchResults.length > 0 && (
                         <ul className="bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10">
                             {searchResults.map((user) => (
-                                <li key={user.username} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => addConversation(user.username)}>
+                                <li key={user.username} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => addConversation(user)}>
                                     <p>{user.name} ({user.username})</p>
                                 </li>
                             ))}
@@ -177,7 +177,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
             <div className="card">
                 <ul className="max-h-[calc(100vh-20rem)] overflow-y-auto">
                     {friends.map((friend) => (
-                        <li onClick={() => selectContact(friend.username)} className={"flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-500 "+ (friend.username === selectedFriend ? 'bg-gray-100 dark:bg-gray-600' : '')} key={friend.username}>
+                        <li onClick={() => selectContact(friend)} className={"flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-500 "+ (selectedFriend && friend.username === selectedFriend.username ? 'bg-gray-100 dark:bg-gray-600' : '')} key={friend.username}>
                             <img
                                 src={friend.avatar}
                                 alt="avatar"
