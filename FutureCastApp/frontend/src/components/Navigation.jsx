@@ -19,6 +19,7 @@ function Navigation() {
     const handleOutsideClick = (event) => {
       if (!event.target.closest(".relative")) {
         setSearchResults([]);
+        setSearchOpen(false);
       }
     };
     document.addEventListener("mousedown", handleOutsideClick);
@@ -130,7 +131,7 @@ function Navigation() {
             </form>
 
             {searchResults && searchResults.length > 0 && (
-              <ul className="hidden lg:block -ml-28 absolute bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+              <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 absolute bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
                 {searchResults.map((user) => (
                   <li
                     key={user.username}
@@ -215,26 +216,40 @@ function Navigation() {
         </div>
       )}
       {searchOpen && (
-        <div className="lg:hidden">
-          <div>
-            <form
-              onSubmit={handleSearch}
-              className="py-2 px-4 flex items-center"
-            >
-              <input
-                type="text"
-                placeholder="Search users"
-                className="input w-full"
-                value={searchWord}
-                onChange={(e) => setSearchWord(e.target.value)}
-              ></input>
-              <div className="ml-2">
-                <button type="submit" className="button">
-                  Search
-                </button>
-              </div>
-            </form>
-          </div>
+        <div className="lg:hidden relative px-4 py-2">
+          <form onSubmit={handleSearch} className="flex items-center">
+            <input
+              type="text"
+              placeholder="Search users"
+              className="input w-full"
+              value={searchWord}
+              onChange={(e) => {
+                setSearchWord(e.target.value);
+                handleChange(e.target.value);
+              }}
+            />
+            <button type="submit" className="button ml-2 max-w-fit">
+              Search
+            </button>
+          </form>
+          {searchResults && searchResults.length > 0 && (
+            <ul className="absolute max-w-fit min-w-fit bg-white dark:bg-gray-800 w-full mt-2 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+              {searchResults.map((user) => (
+                <li
+                  key={user.username}
+                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
+                  onClick={() => {
+                    navigate(`/app/profile/${user.id}`);
+                    setSearchResults([]);
+                  }}
+                >
+                  <p>
+                    {user.name} ({user.username})
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </nav>
