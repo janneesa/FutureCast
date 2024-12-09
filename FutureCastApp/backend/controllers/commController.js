@@ -100,15 +100,19 @@ const likeComment = async (req, res) => {
       return res.status(404).json({ message: 'Comment not found' });
     }
 
-    if (comment.likes.includes(userId)) {
-      comment.likes = comment.likes.filter((id) => id !== userId);
+    const likeIndex = comment.likes.indexOf(userId);
+    if (likeIndex > -1) {
+      comment.likes.splice(likeIndex, 1);
     } else {
       comment.likes.push(userId);
     }
 
+    comment.markModified('likes');
     await comment.save();
+
     res.status(200).json(comment);
   } catch (error) {
+    console.error('Error in likeComment:', error);
     res.status(500).json({ message: 'Failed to like comment' });
   }
 };
