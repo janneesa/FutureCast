@@ -17,8 +17,8 @@ const handleDuplicateError = (error, res) => {
     const field = Object.keys(error.keyValue)[0];
     const value = error.keyValue[field];
     res.status(400).json({
-      message: `${field} with value '${value}' already exists.`,
-      error: `Duplicate key error. ${error.message}`,
+      error: `${field} with value '${value}' already exists.`,
+      message: `Duplicate key error. ${error.message}`,
     });
   } else {
     res.status(400).json({ message: error.message, error: error.message });
@@ -73,7 +73,12 @@ const createUser = async (req, res) => {
       settings
     );
 
-    res.status(201).json({ message: "User created successfully" });
+    if (user) {
+      const token = generateToken(user._id);
+      res.status(201).json({ user, token });
+    } else {
+      res.status(400).json({ error: "Invalid email or password" });
+    }
   } catch (error) {
     handleDuplicateError(error, res);
   }

@@ -1,42 +1,57 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-
 import Card from "../Card";
-
 import useRegister from "../../hooks/useRegister";
-import useToast from "../../hooks/useToast";
-import { useEffect } from "react";
 
 function Register() {
-  const {
-    name,
-    setName,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    phonenumber,
-    setPhonenumber,
-    dateofbirth,
-    setDateofbirth,
-    error,
-    okMessage,
-    handleSubmit,
-  } = useRegister();
-  const { showErrorToast, showSuccessToast } = useToast();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [phonenumber, setPhonenumber] = useState("");
+  const [dateofbirth, setDateofbirth] = useState("");
+  const { handleRegister } = useRegister();
 
-  useEffect(() => {
-    if (okMessage) {
-      showSuccessToast(okMessage);
-    }
-  }, [okMessage]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    if (error) {
-      showErrorToast(error);
-    }
-  }, [error]);
+    const newUser = {
+      name,
+      email,
+      username,
+      password,
+      phone_number: phonenumber,
+      date_of_birth: dateofbirth,
+      bio: "",
+      followers: [],
+      following: [],
+      predictions: [],
+      successfulPredictions: [],
+      predictionScore: 0,
+      avatar: "",
+      settings: {
+        notifications: {
+          email: true,
+          push: true,
+        },
+        preferences: {
+          darkMode: false,
+        },
+      },
+    };
+
+    handleRegister(newUser)
+      .then(() => {
+        // Reset form fields after successful registration
+        // setName("");
+        // setEmail("");
+        // setUsername("");
+        // setPassword("");
+        // setPhonenumber("");
+        // setDateofbirth("");
+      })
+      .catch((error) => console.error("Registration error:", error));
+  };
 
   return (
     <div className="flex-center min-h-screen p-4">
