@@ -3,16 +3,14 @@ import { UserContext } from "../context/UserContext";
 import Card from "../Card";
 import Switcher from "../utility/Switcher";
 import Loading from "../Loading";
-import useToast from "../../hooks/useToast";
 import useSettings from "../../hooks/useSettings";
 
 function NotificationSettings() {
-  const { updateSettings, error, okMessage } = useSettings();
+  const { updateSettings } = useSettings();
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
 
   const { user } = useContext(UserContext); // Assuming user context provides user info
-  const { showSuccessToast, showErrorToast } = useToast();
 
   useEffect(() => {
     if (user) {
@@ -20,18 +18,6 @@ function NotificationSettings() {
       setPushNotifications(user.settings.notifications.push);
     }
   }, [user]);
-
-  useEffect(() => {
-    if (error) {
-      showErrorToast(error);
-    }
-  }, [error]);
-
-  useEffect(() => {
-    if (okMessage) {
-      showSuccessToast(okMessage);
-    }
-  }, [okMessage]);
 
   const saveChanges = async () => {
     const updatedUser = { ...user };

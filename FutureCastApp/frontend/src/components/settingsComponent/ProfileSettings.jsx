@@ -6,64 +6,50 @@ import useToast from "../../hooks/useToast";
 import useSettings from "../../hooks/useSettings";
 
 function ProfileSettings() {
-  const { user } = useContext(UserContext); // Access user from the useSettings hook
-  const { updateSettings, error, okMessage } = useSettings(); // For updating settings
-  const { showSuccessToast, showErrorToast } = useToast();
+  const { user } = useContext(UserContext); // Access user from context
+  const { updateSettings } = useSettings(); // Call updateSettings to save data
+  const { showErrorToast } = useToast();
+
   const [showAvatarInput, setShowAvatarInput] = useState(false);
+  const [formData, setFormData] = useState({
+    avatar: "",
+    name: "",
+    username: "",
+    bio: "",
+  });
 
-  const [avatar, setAvatar] = useState("");
-  const [avatarInput, setAvatarInput] = useState("");
-
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
-  const [bio, setBio] = useState("");
-
-  // Populate user details into state
+  // Populate user details into state on mount
   useEffect(() => {
     if (user) {
-      setAvatar(user.avatar || "");
-      setAvatarInput(user.avatar || "");
-      setName(user.name || "");
-      setUsername(user.username || "");
-      setBio(user.bio || "");
+      setFormData({
+        avatar: user.avatar || "",
+        name: user.name || "",
+        username: user.username || "",
+        bio: user.bio || "",
+      });
     }
   }, [user]);
 
-  const changeAvatar = () => {
-    setShowAvatarInput(!showAvatarInput);
+  const handleChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const saveChanges = () => {
-    if (name.trim() === "" || username.trim() === "" || bio.trim() === "") {
+  const handleSave = () => {
+    if (
+      !formData.name.trim() ||
+      !formData.username.trim() ||
+      !formData.bio.trim()
+    ) {
       showErrorToast("Please fill all fields");
       return;
     }
 
-    const updatedData = {
-      userId: user._id,
-      name,
-      username,
-      bio,
-      avatar: avatarInput,
-    };
-
-    updateSettings(updatedData); // Call the hook to update settings
+    // Call the updateSettings hook
+    updateSettings(formData);
   };
 
-  useEffect(() => {
-    if (okMessage) {
-      showSuccessToast(okMessage);
-    }
-  }, [okMessage]);
-
-  useEffect(() => {
-    if (error) {
-      showErrorToast(error);
-    }
-  }, [error]);
-
   if (!user) {
-    return <Loading />; // Show loading indicator while user data is unavailable
+    return <Loading />; // Show loading while user is unavailable
   }
 
   return (
@@ -76,71 +62,55 @@ function ProfileSettings() {
         {/* Avatar Section */}
         <div className="flex items-center justify-evenly">
           <img
-            src={avatar}
-            alt={name}
+            src={formData.avatar}
+            alt={formData.name}
             className="w-24 h-24 rounded-full mb-4"
           />
           <div>
-            <button className="button" onClick={changeAvatar}>
+            <button
+              className="button"
+              onClick={() => setShowAvatarInput(!showAvatarInput)}
+            >
               {showAvatarInput ? "Change Profile" : "Change Avatar"}
             </button>
           </div>
         </div>
 
         {/* Input Fields */}
-        <div className="flex flex-col gap-4">
-          {!showAvatarInput ? (
-            <>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="name">Name</label>
+        {!showAvatarInput ? (
+          <>
+            {["name", "username", "bio"].map((field) => (
+              <div key={field} className="flex flex-col gap-2">
+                <label htmlFor={field}>
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
                 <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  placeholder={user.name}
-                  onChange={(e) => setName(e.target.value)}
+                  type={field === "bio" ? "textarea" : "text"}
+                  id={field}
+                  value={formData[field]}
+                  placeholder={`Enter your ${field}`}
+                  onChange={(e) => handleChange(field, e.target.value)}
                   className="input"
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  value={username}
-                  placeholder={user.username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="input"
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="bio">Bio</label>
-                <textarea
-                  id="bio"
-                  value={bio}
-                  placeholder={user.bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="input h-24 resize-none"
-                />
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-col gap-2">
-              <label htmlFor="bio">Avatar URL</label>
-              <textarea
-                id="avatarURL"
-                value={avatarInput}
-                placeholder={user.avatar}
-                onChange={(e) => setAvatarInput(e.target.value)}
-                className="input h-24 resize-none"
-              />
-            </div>
-          )}
-        </div>
+            ))}
+          </>
+        ) : (
+          <div className="flex flex-col gap-2">
+            <label htmlFor="avatar">Avatar URL</label>
+            <textarea
+              id="avatar"
+              value={formData.avatar}
+              placeholder="Enter Avatar URL"
+              onChange={(e) => handleChange("avatar", e.target.value)}
+              className="input h-24 resize-none"
+            />
+          </div>
+        )}
 
         {/* Save Changes Button */}
         <div className="mt-4 w-32">
-          <button className="button" onClick={saveChanges}>
+          <button className="button" onClick={handleSave}>
             Save Changes
           </button>
         </div>

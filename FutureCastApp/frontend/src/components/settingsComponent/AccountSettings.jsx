@@ -10,7 +10,7 @@ import Loading from "../Loading";
 function AccountSettings() {
   const { user, setUser } = useContext(UserContext);
   const { showErrorToast, showSuccessToast } = useToast();
-  const { updateSettings, error, okMessage } = useSettings();
+  const { updateSettings } = useSettings();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,16 +25,6 @@ function AccountSettings() {
       setConfirmPassword("");
     }
   }, [user]);
-
-  // Handle success and error toasts
-  useEffect(() => {
-    if (okMessage) {
-      showSuccessToast(okMessage);
-    }
-    if (error) {
-      showErrorToast(error);
-    }
-  }, [okMessage, error]);
 
   const saveChangesEmail = async () => {
     // Check if email has changed
