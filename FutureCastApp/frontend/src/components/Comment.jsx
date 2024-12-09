@@ -7,9 +7,6 @@ function Comment({ comment, onLike }) {
   const [likeCount, setLikeCount] = useState(comment?.likes?.length || 0);
 
   useEffect(() => {
-    console.log('User ID:', user.id);
-    console.log('Comment likes:', comment?.likes);
-
     const hasLiked = comment?.likes?.some(
       (likeId) => likeId.toString() === user.id.toString()
     );
