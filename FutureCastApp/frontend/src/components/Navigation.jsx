@@ -90,18 +90,15 @@ function Navigation() {
         <div className="flex-between h-16">
           <div className="flex items-center">
             <div
-              className="text-2xl font-bold text-primaryText dark:text-darkPrimaryText"
+              className="text-2xl font-bold text-primaryText dark:text-darkPrimaryText cursor-pointer"
               onClick={handleNavigate}
             >
               FutureCast
             </div>
           </div>
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4 ml-14">
             <Link to="/app/home" className="nav-link">
               Home
-            </Link>
-            <Link to={profileLink} className="nav-link">
-              Profile
             </Link>
             <Link to="/app/messages" className="nav-link">
               Messages
@@ -113,8 +110,11 @@ function Navigation() {
               Logout
             </Link>
           </div>
-          <div className="relative">
-            <form className="hidden lg:flex -ml-28" onSubmit={handleSearch}>
+          <div className="relative flex">
+            <form
+              className="max-h-10 self-center hidden lg:flex -ml-28 text-primaryText dark:text-darkPrimaryText"
+              onSubmit={handleSearch}
+            >
               <input
                 type="text"
                 placeholder="Search on FutureCast"
@@ -125,13 +125,10 @@ function Navigation() {
                   handleChange(e.target.value);
                 }}
               />
-              <button type="submit" className="button ml-4">
-                Search
-              </button>
             </form>
 
             {searchResults && searchResults.length > 0 && (
-              <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 absolute bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+              <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 mt-14 absolute bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
                 {searchResults.map((user) => (
                   <li
                     key={user.username}
@@ -148,6 +145,15 @@ function Navigation() {
                 ))}
               </ul>
             )}
+            <div className="ml-4 hidden lg:block">
+              <Link to={profileLink} className="">
+                <img
+                  src={user.avatar}
+                  alt={user.avatar}
+                  className="h-12 w-12 rounded-full mr-2 border-2 border-primaryButton dark:border-darkPrimaryButton transition transform hover:scale-105 hover:border-secondaryButton dark:hover:border-darkSecondaryButton"
+                />
+              </Link>
+            </div>
           </div>
 
           <div className="lg:hidden">
@@ -155,22 +161,13 @@ function Navigation() {
               onClick={toggleMenu}
               className="text-primaryText hover:text-secondaryText focus:outline-none dark:text-darkPrimaryText"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={
-                    isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
-                  }
-                ></path>
-              </svg>
+              <div className="mt-2">
+                <img
+                  src={user.avatar}
+                  alt={user.avatar}
+                  className="h-12 w-12 rounded-full mr-2 border-2 border-primaryButton dark:border-darkPrimaryButton transition transform hover:scale-105 hover:border-secondaryButton dark:hover:border-darkSecondaryButton"
+                />
+              </div>
             </button>
           </div>
         </div>
