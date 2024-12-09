@@ -3,13 +3,11 @@ import { UserContext } from "../context/UserContext";
 import Card from "../Card";
 import Switcher from "../utility/Switcher";
 import Loading from "../Loading";
-import useToast from "../../hooks/useToast";
 import useSettings from "../../hooks/useSettings";
 
 function PreferenceSettings() {
   const { user } = useContext(UserContext); // Access user data from useSettings hook
-  const { updateSettings, error, okMessage } = useSettings(); // Use the update logic from the hook
-  const { showSuccessToast, showErrorToast } = useToast();
+  const { updateSettings } = useSettings(); // Use the update logic from the hook
 
   const [darkmode, setDarkmode] = useState(true);
 
@@ -36,16 +34,6 @@ function PreferenceSettings() {
     updateSettings(updatedData); // Call hook to update settings
     setDarkmode(!darkmode); // Update local state for instant feedback
   };
-
-  // Handle success and error toasts
-  useEffect(() => {
-    if (okMessage) {
-      showSuccessToast(okMessage);
-    }
-    if (error) {
-      showErrorToast(error);
-    }
-  }, [okMessage, error]);
 
   if (!user) {
     return <Loading />;

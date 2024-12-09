@@ -19,6 +19,7 @@ const FollowModal = ({ list = [], onClose }) => {
               method: "GET",
               headers: { "Content-Type": "application/json" },
             });
+
             if (response.ok) return response.json();
             console.error(`Failed to fetch user with id: ${id}`);
             return null; // Handle fetch failure

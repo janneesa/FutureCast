@@ -218,7 +218,7 @@ userSchema.statics.resetPassword = async function (
 
   const match = await bcrypt.compare(currentPassword, user.password);
   if (!match) {
-    throw Error("currentPassword is incorrect");
+    throw Error("current Password is incorrect");
   }
 
   try {
