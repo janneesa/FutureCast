@@ -10,15 +10,21 @@ const ContentCard = ({ predictions, badges }) => {
     <div className="w-full md:max-w-xl lg:max-w-2xl overflow-hidden">
       <div className="flex">
         <button
-          className={`button-ghost ${
-            activeTab === "predictions" ? "active" : ""
+          className={`w-full p-2 rounded transition text-center ${
+            activeTab === "predictions"
+              ? "bg-primaryButton dark:bg-darkPrimaryButton text-white dark:text-darkPrimaryText"
+              : "text-primaryText dark:text-darkPrimaryText"
           }`}
           onClick={() => setActiveTab("predictions")}
         >
           Predictions
         </button>
         <button
-          className={`button-ghost ${activeTab === "badges" ? "active" : ""}`}
+          className={`w-full p-2 rounded transition text-center ${
+            activeTab === "badges"
+              ? "bg-primaryButton dark:bg-darkPrimaryButton text-white dark:text-darkPrimaryText"
+              : "text-primaryText dark:text-darkPrimaryText"
+          }`}
           onClick={() => setActiveTab("badges")}
         >
           Badges
