@@ -3,7 +3,7 @@
   "info": {
     "title": "FutureCast API",
     "version": "1.0.0",
-    "description": "API for managing users in FutureCast."
+    "description": "API for managing users in FutureCast. To use this API, you must first register and login to get an access token. The access token must be included in the Authorization header as a Bearer token for all protected routes."
   },
   "servers": [
     {
@@ -215,6 +215,35 @@
           }
         },
         "required": ["prediction"]
+      },
+      "Comment": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "ID of the user who created the comment",
+            "example": "6741de86599e1effd466f99d"
+          },
+          "username": {
+            "type": "string",
+            "description": "Username of the user who created the comment",
+            "example": "johndoe"
+          },
+          "comment": {
+            "type": "string",
+            "description": "Content of the comment",
+            "example": "I agree with this prediction"
+          },
+          "likes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of users who liked the comment",
+            "example": []
+          }
+        },
+        "required": ["content"]
       }
     }
   },
@@ -570,6 +599,147 @@
           },
           "404": {
             "description": "Prediction not found"
+          }
+        }
+      }
+    },
+    "/comments": {
+      "get": {
+        "summary": "Get all comments",
+        "operationId": "getAllComments",
+        "tags": ["Comments"],
+        "responses": {
+          "200": {
+            "description": "A list of comments",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Comment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new comment",
+        "operationId": "createComment",
+        "tags": ["Comments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created comment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comments/{commentId}": {
+      "get": {
+        "summary": "Get a comment by ID",
+        "operationId": "getCommentById",
+        "tags": ["Comments"],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The requested comment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Comment not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a comment",
+        "operationId": "updateComment",
+        "tags": ["Comments"],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Comment"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated comment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Comment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a comment",
+        "operationId": "deleteComment",
+        "tags": ["Comments"],
+        "parameters": [
+          {
+            "name": "commentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted comment"
+          },
+          "404": {
+            "description": "Comment not found"
           }
         }
       }
