@@ -4,7 +4,7 @@ import useToast from "../hooks/useToast";
 import useSettings from "../hooks/useSettings";
 import Card from "./Card";
 
-function PredictionInput({ addPrediction, fetchPredictions }) {
+function PredictionInput({ addPrediction }) {
   const { user } = useContext(UserContext);
   const { showErrorToast, showPromiseToast } = useToast();
   const { updateSettings } = useSettings();
