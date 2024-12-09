@@ -90,7 +90,7 @@ function ProfileSettings() {
                   value={formData[field]}
                   placeholder={`Enter your ${field}`}
                   onChange={(e) => handleChange(field, e.target.value)}
-                  className="input"
+                  className="input mb-2"
                 />
               </div>
             ))}
