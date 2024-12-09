@@ -17,6 +17,7 @@ import Messages from "./components/messageComponent/Messages";
 import Settings from "./components/settingsComponent/Settings";
 
 import { UserProvider } from "./components/context/UserContext";
+import RouteGuard from "./components/RouteGuard";
 
 function App() {
   return (
@@ -35,7 +36,14 @@ function App() {
               <Route path="forgot-password" element={<ForgotPassword />} />
             </Route>
 
-            <Route path="/app" element={<MainScreen />}>
+            <Route
+              path="/app"
+              element={
+                <RouteGuard>
+                  <MainScreen />
+                </RouteGuard>
+              }
+            >
               <Route index element={<Home />} />
               <Route path="home" element={<Home />} />
               <Route path="profile/:userId" element={<MyProfile />} />
