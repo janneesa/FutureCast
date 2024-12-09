@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
 
-function OpenChat( { selectedFriend, messages, setMessages }) {
+function OpenChat( { selectedFriend, setSelectedFriend, messages, setMessages }) {
     const { user } = useContext(UserContext);
     const [newMessageText, setNewMessageText] = useState("");
     const [correctMessages, setCorrectMessages] = useState([]);
@@ -17,7 +17,7 @@ function OpenChat( { selectedFriend, messages, setMessages }) {
         }
         const message = {
             sender: user.username,
-            receiver: selectedFriend,
+            receiver: selectedFriend.username,
             message: newMessageText,
         };
 
@@ -45,7 +45,7 @@ function OpenChat( { selectedFriend, messages, setMessages }) {
         setCorrectMessages([]);
         if (selectedFriend) {
             const correctMessages = messages
-                .filter(msg => (msg.sender === selectedFriend || msg.receiver === selectedFriend))
+                .filter(msg => (msg.sender === selectedFriend.username || msg.receiver === selectedFriend.username))
                 .sort((a, b) => new Date(a.time) - new Date(b.time));
             setCorrectMessages(correctMessages);
         }
@@ -59,14 +59,27 @@ function OpenChat( { selectedFriend, messages, setMessages }) {
       }, [selectedFriend, correctMessages]);
 
     return (
-        <div className="card flex flex-col p-2 h-[calc(100vh-8rem)]">
-            <div className="card flex-grow p-2">
-                {!selectedFriend && 
-                <div className="flex h-full items-center justify-center">
-                    <div className="text-gray-400">&larr; Select a person</div>
+        <div className="card flex flex-col p-2 h-[calc(100vh-8rem)] w-full md:w-full">
+            {Object.keys(selectedFriend).length !== 0 && (
+                <div className="flex flex-row">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-10 h-10 cursor-pointer flex items-center m-2" onClick={() => setSelectedFriend({})}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <img
+                        src={selectedFriend.avatar}
+                        alt="avatar"
+                        className="w-10 h-10 rounded-full m-2"
+                    />
+                    <h4 className="ml-2 w-full flex items-center">{selectedFriend.name}</h4>
                 </div>
+            )}
+            <div className="card flex-grow p-2">
+                {Object.keys(selectedFriend).length === 0 && 
+                    <div className="flex h-full items-center justify-center">
+                        <div className="text-gray-400">&larr; Select a person</div>
+                    </div>
                 }
-                {!!selectedFriend && (
+                {Object.keys(selectedFriend).length !== 0 && (
                     <div className="relative h-full">
                         <div className="flex flex-col h-full overflow-y-auto absolute top-0 left-0 right-0 bottom-2">
                         {correctMessages.map((msg, index) => (
@@ -84,7 +97,7 @@ function OpenChat( { selectedFriend, messages, setMessages }) {
                     </div>
                 )}
             </div>
-            {!!selectedFriend && (
+            {Object.keys(selectedFriend).length !== 0 && (
                 <form className="flex gap-2 p-2" onSubmit={sendMessage}>
                 <input type="text" 
                 value={newMessageText}
