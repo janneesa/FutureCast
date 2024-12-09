@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { UserContext } from "../components/context/UserContext";
+import { useNavigate } from "react-router-dom";
 import Card from "./Card";
 import CommentModal from "./CommentModal";
 
@@ -24,6 +25,7 @@ function Prediction({
   const [userVote, setUserVote] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [predictionComments, setPredictionComments] = useState(comments);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
@@ -68,6 +70,10 @@ function Prediction({
     setPredictionComments([...predictionComments, newComment._id]);
   };
 
+  const handleNavigate = () => {
+    navigate(`/app/profile/${userId}`);
+  };
+
   if (!user) {
     return null;
   }
@@ -84,7 +90,10 @@ function Prediction({
       <div className="card-content">
         {/* Profile img, Username, Vote Date */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center">
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={handleNavigate}
+          >
             <img
               src={avatar}
               alt={username}
@@ -119,20 +128,20 @@ function Prediction({
           <p className="text-primaryText my-2">{prediction}</p>
         </div>
         {/* Category */}
-{category && (
-  <div
-    className="flex items-center text-xs text-secondaryText dark:text-darkSecondaryText cursor-pointer"
-    onClick={() => handleCategoryClick(category)}
-  >
-    <span className="ml-0 dark:text-darkSecondaryText bg-gray-200 dark:bg-gray-700 rounded-full px-2 py-1">
-      {category}
-    </span>
-  </div>
-)}
+        {category && (
+          <div
+            className="flex items-center text-xs mb-2 text-secondaryText dark:text-darkSecondaryText cursor-pointer"
+            onClick={() => handleCategoryClick(category)}
+          >
+            <span className="ml-0 dark:text-darkSecondaryText bg-background dark:bg-darkBackground rounded-full px-2 py-1">
+              {category}
+            </span>
+          </div>
+        )}
 
         {/* Agree vs Disagree */}
         <div className="relative pt-1">
-          <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-background">
+          <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-background dark:bg-darkSecondaryText">
             <div
               style={{
                 width: `${calculateAgreementPercentage(agrees, disagrees)}%`,

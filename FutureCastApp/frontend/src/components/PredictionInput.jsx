@@ -129,7 +129,7 @@ function PredictionInput({ addPrediction }) {
           id="category"
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="input w-full"
+          className="input w-full mb-2"
         >
           <option value="">Select a category</option>
           <option value="Technology">Technology</option>
