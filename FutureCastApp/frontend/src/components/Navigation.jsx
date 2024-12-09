@@ -128,7 +128,7 @@ function Navigation() {
             </form>
 
             {searchResults && searchResults.length > 0 && (
-              <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 mt-14 absolute bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+              <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 mt-14 absolute bg-white dark:bg-gray-800 w-full rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
                 {searchResults.map((user) => (
                   <li
                     key={user.username}
