@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -11,8 +11,20 @@ function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchWord, setSearchWord] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const profileLink = user ? `/app/profile/${user.id}` : null;
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest(".relative")) {
+        setSearchResults([]);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -31,12 +43,44 @@ function Navigation() {
     setSearchOpen(!searchOpen);
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchResults([]);
     navigate("/app/search", { state: { searchWord } });
+  };
+
+  const handleChange = (value) => {
+    fetchSearchResults(value);
+    console.log(searchResults);
   };
 
   const handleNavigate = () => {
     navigate("/app/home");
+  };
+
+  const fetchSearchResults = async (searchWord) => {
+    if (searchWord === "") {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const response = await fetch(`/api/users/search/${searchWord}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const users = await response.json();
+        //remove the logged in user and friends from the search results
+        setSearchResults(users);
+      } else {
+        throw new Error("Failed to fetch search results");
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+    }
   };
 
   return (
@@ -68,17 +112,41 @@ function Navigation() {
               Logout
             </Link>
           </div>
-          <div className="hidden lg:flex -ml-28">
-            <input
-              type="text"
-              placeholder="Search on FutureCast"
-              className="input"
-              value={searchWord}
-              onChange={(e) => setSearchWord(e.target.value)}
-            />
-            <button className="button ml-4" onClick={handleSearch}>
-              Search
-            </button>
+          <div className="relative">
+            <form className="hidden lg:flex -ml-28" onSubmit={handleSearch}>
+              <input
+                type="text"
+                placeholder="Search on FutureCast"
+                className="input"
+                value={searchWord}
+                onChange={(e) => {
+                  setSearchWord(e.target.value);
+                  handleChange(e.target.value);
+                }}
+              />
+              <button type="submit" className="button ml-4">
+                Search
+              </button>
+            </form>
+
+            {searchResults && searchResults.length > 0 && (
+              <ul className="hidden lg:block -ml-28 absolute bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+                {searchResults.map((user) => (
+                  <li
+                    key={user.username}
+                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
+                    onClick={() => {
+                      navigate(`/app/profile/${user.id}`);
+                      setSearchResults([]);
+                    }}
+                  >
+                    <p>
+                      {user.name} ({user.username})
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           <div className="lg:hidden">
@@ -148,19 +216,24 @@ function Navigation() {
       )}
       {searchOpen && (
         <div className="lg:hidden">
-          <div className=" py-2 px-4 flex items-center">
-            <input
-              type="text"
-              placeholder="Search users"
-              className="input w-full"
-              value={searchWord}
-              onChange={(e) => setSearchWord(e.target.value)}
-            ></input>
-            <div className="ml-2">
-              <button className="button" onClick={handleSearch}>
-                Search
-              </button>
-            </div>
+          <div>
+            <form
+              onSubmit={handleSearch}
+              className="py-2 px-4 flex items-center"
+            >
+              <input
+                type="text"
+                placeholder="Search users"
+                className="input w-full"
+                value={searchWord}
+                onChange={(e) => setSearchWord(e.target.value)}
+              ></input>
+              <div className="ml-2">
+                <button type="submit" className="button">
+                  Search
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

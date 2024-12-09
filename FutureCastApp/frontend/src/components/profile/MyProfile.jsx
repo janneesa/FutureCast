@@ -12,8 +12,16 @@ import useToast from "../../hooks/useToast";
 
 const MyProfile = () => {
   const { userId } = useParams();
-  const { profile, error: profileError } = useFetchProfile(userId);
-  const { predictions, error: predictionsError } = useFetchPredictions(userId);
+  const {
+    profile,
+    error: profileError,
+    loading: isLoadingProfile,
+  } = useFetchProfile(userId);
+  const {
+    predictions,
+    error: predictionsError,
+    loading: isLoadingPredictions,
+  } = useFetchPredictions(userId);
   const { showErrorToast } = useToast();
 
   useEffect(() => {
@@ -26,6 +34,14 @@ const MyProfile = () => {
   }, [profileError, predictionsError]);
 
   if (!profile) {
+    return (
+      <div className="p-4 flex flex-col gap-4 items-center">
+        <Loading />
+      </div>
+    );
+  }
+
+  if (isLoadingProfile || isLoadingPredictions) {
     return (
       <div className="p-4 flex flex-col gap-4 items-center">
         <Loading />

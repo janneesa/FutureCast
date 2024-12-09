@@ -21,7 +21,7 @@ const ProfileCard = ({ profile }) => {
     user.following.includes(profile.id)
   );
   const navigate = useNavigate();
-  const { showErrorToast, showSuccessToast } = useToast();
+  const { showPromiseToast } = useToast();
   const isOwnProfile = user.id === profile.id;
 
   // Update isFollowing when user or profile changes
@@ -38,76 +38,81 @@ const ProfileCard = ({ profile }) => {
   const toggleFollow = async () => {
     const token = user.token;
 
-    try {
-      const newFollowingState = !isFollowing;
-      const userUpdateUrl = `/api/users/${user.id}`;
-      const profileUpdateUrl = `/api/users/${profile.id}`;
+    const toggleFollowPromise = new Promise(async (resolve, reject) => {
+      try {
+        const newFollowingState = !isFollowing;
+        const userUpdateUrl = `/api/users/${user.id}`;
+        const profileUpdateUrl = `/api/users/${profile.id}`;
 
-      // Prepare request bodies
-      const updatedUserFollowing = newFollowingState
-        ? [...user.following, profile.id]
-        : user.following.filter((id) => id !== profile.id);
+        // Prepare request bodies
+        const updatedUserFollowing = newFollowingState
+          ? [...user.following, profile.id]
+          : user.following.filter((id) => id !== profile.id);
 
-      const updatedProfileFollowers = newFollowingState
-        ? [...profileFollowers, user.id]
-        : profileFollowers.filter((id) => id !== user.id);
+        const updatedProfileFollowers = newFollowingState
+          ? [...profileFollowers, user.id]
+          : profileFollowers.filter((id) => id !== user.id);
 
-      // Make API calls simultaneously with token authentication
-      const [userResponse, profileResponse] = await Promise.all([
-        fetch(userUpdateUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include token here
-          },
-          body: JSON.stringify({ following: updatedUserFollowing }),
-        }),
-        fetch(profileUpdateUrl, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include token here
-          },
-          body: JSON.stringify({ followers: updatedProfileFollowers }),
-        }),
-      ]);
+        // Make API calls simultaneously with token authentication
+        const [userResponse, profileResponse] = await Promise.all([
+          fetch(userUpdateUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Include token here
+            },
+            body: JSON.stringify({ following: updatedUserFollowing }),
+          }),
+          fetch(profileUpdateUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Include token here
+            },
+            body: JSON.stringify({ followers: updatedProfileFollowers }),
+          }),
+        ]);
 
-      // Check responses
-      if (!userResponse.ok) {
-        const userError = await userResponse.json();
-        showErrorToast(userError.message || "Unknown error");
-        throw new Error(
-          `User update failed: ${userError.message || "Unknown error"}`
+        // Check responses
+        if (!userResponse.ok || !profileResponse.ok) {
+          const userError = !userResponse.ok ? await userResponse.json() : null;
+          const profileError = !profileResponse.ok
+            ? await profileResponse.json()
+            : null;
+
+          const errorMessage =
+            userError?.message ||
+            profileError?.message ||
+            "Unknown error occurred.";
+          reject(new Error(errorMessage));
+          return;
+        }
+
+        // Parse responses
+        const updatedUser = await userResponse.json();
+        const updatedProfile = await profileResponse.json();
+
+        // Update states
+        setUser({ ...updatedUser, token });
+        setProfileFollowers(updatedProfile.followers);
+        setIsFollowing(newFollowingState);
+
+        resolve(
+          newFollowingState
+            ? `You are now following ${profile.name}.`
+            : `You have unfollowed ${profile.name}.`
         );
+      } catch (error) {
+        reject(new Error(`Error toggling follow: ${error.message}`));
       }
+    });
 
-      if (!profileResponse.ok) {
-        const profileError = await profileResponse.json();
-        showErrorToast(profileError.message || "Unknown error");
-        throw new Error(
-          `Profile update failed: ${profileError.message || "Unknown error"}`
-        );
-      }
-
-      // Parse responses
-      const updatedUser = await userResponse.json();
-      const updatedProfile = await profileResponse.json();
-
-      // Update states
-      setUser({ ...updatedUser, token });
-      setProfileFollowers(updatedProfile.followers);
-      setIsFollowing(newFollowingState);
-
-      // Show success message
-      showSuccessToast(
-        newFollowingState
-          ? `You are now following ${profile.name}.`
-          : `You have unfollowed ${profile.name}.`
-      );
-    } catch (error) {
-      console.error(`Error toggling follow: ${error.message}`);
-      showErrorToast(`An error occurred: ${error.message}`);
-    }
+    // Display promise toast
+    showPromiseToast(toggleFollowPromise, {
+      loading: "Updating follow status...",
+      success: (message) => message,
+      error: (error) => error.message,
+    });
   };
 
   return (
