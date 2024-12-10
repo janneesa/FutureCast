@@ -109,6 +109,7 @@ function PastPrediction({
               userVote === 'true' ? 'button-agree' : 'button-neutral'
             }`}
             onClick={() => handleVote('true')}
+            disabled={userId === user.id}
           >
             True
           </button>
@@ -117,6 +118,7 @@ function PastPrediction({
               userVote === 'false' ? 'button-disagree' : 'button-neutral'
             }`}
             onClick={() => handleVote('false')}
+            disabled={userId === user.id}
           >
             False
           </button>
