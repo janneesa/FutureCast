@@ -1,12 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
 import { UserContext } from "./context/UserContext";
+import useNotifications from "../hooks/useNotifications";
 
 function Navigation() {
   const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const { notifications, clearNotifications } = useNotifications();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -26,6 +28,8 @@ function Navigation() {
 
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, []);
+
+  useEffect(() => {}, [user]);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -53,6 +57,10 @@ function Navigation() {
   const handleChange = (value) => {
     fetchSearchResults(value);
     console.log(searchResults);
+  };
+
+  const showNotifications = () => {
+    setNotificationsOpen(!notificationsOpen);
   };
 
   const handleNavigate = () => {
@@ -126,6 +134,45 @@ function Navigation() {
                 }}
               />
             </form>
+            <button
+              onClick={showNotifications}
+              className="hidden lg:block text-secondaryText dark:text-darkSecondaryText ml-4 transition transform hover:scale-105 hover:border-secondaryButton dark:hover:border-darkSecondaryButton"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+                />
+              </svg>
+              {notifications?.length > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 bg-red-600 rounded-full">
+                  {notifications.length}
+                </span>
+              )}
+            </button>
+            {notificationsOpen && notifications?.length > 0 && (
+              <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 mt-14 absolute bg-white dark:bg-gray-800 w-full rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+                <li
+                  className="p-2 bg-toastError text-primaryText dark:text-darkPrimaryText hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
+                  onClick={clearNotifications}
+                >
+                  Clear Notifications
+                </li>
+                {notifications?.map((notification, index) => (
+                  <li key={index} className="p-2">
+                    <p>{notification}</p>
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {searchResults && searchResults.length > 0 && (
               <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 mt-14 absolute bg-white dark:bg-gray-800 w-full rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">

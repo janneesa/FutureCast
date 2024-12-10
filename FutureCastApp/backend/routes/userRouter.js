@@ -10,6 +10,8 @@ const {
   updateUser,
   searchUsers,
   deleteUser,
+  addNotificationToUser,
+  clearUserNotifications,
   updateUserPassword,
   // patchUser
 } = require("../controllers/userController");
@@ -39,6 +41,12 @@ router.put("/:userId", updateUser);
 
 // PUT /users/reset/:userId
 router.put("/reset/:userId", updateUserPassword);
+
+// PUT /users/addNotification/:userId
+router.put("/addNotification/:userId", addNotificationToUser);
+
+// PUT /users/clearNotifications/:userId
+router.put("/clearNotifications/:userId", clearUserNotifications);
 
 // DELETE /users/:userId
 router.delete("/:userId", deleteUser);

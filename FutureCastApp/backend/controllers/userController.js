@@ -4,6 +4,10 @@ const User = require("../models/userModel.js");
 
 const badgeChecker = require("../utils/badgeChecker.js");
 const scoreChecker = require("../utils/scoreChecker.js");
+const {
+  addNotification,
+  clearNotifications,
+} = require("../utils/notificationHandler.js");
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET, {
@@ -219,6 +223,29 @@ const updateUserPassword = async (req, res) => {
   }
 };
 
+// PUT /users/addNotification/:userId
+const addNotificationToUser = async (req, res) => {
+  const { userId } = req.params;
+  const { message } = req.body;
+
+  const response = await addNotification(userId, message);
+  if (response.error) {
+    return res.status(response.status).json({ message: response.error });
+  }
+  return res.status(response.status).json({ message: response.message });
+};
+
+// PUT /users/clearNotifications/:userId
+const clearUserNotifications = async (req, res) => {
+  const { userId } = req.params;
+
+  const response = await clearNotifications(userId);
+  if (response.error) {
+    return res.status(response.status).json({ message: response.error });
+  }
+  return res.status(response.status).json({ message: response.message });
+};
+
 // DELETE /users/:userId
 const deleteUser = async (req, res) => {
   const { userId } = req.params;
@@ -250,5 +277,7 @@ module.exports = {
   updateUser,
   searchUsers,
   deleteUser,
+  addNotificationToUser,
+  clearUserNotifications,
   updateUserPassword,
 };

@@ -113,7 +113,7 @@ const getActivePredictions = async (req, res) => {
     // Calculate popularity and sort predictions
     const sortedPredictions = activePredictions
       .map((prediction) => ({
-        ...prediction.toObject(),
+        ...prediction.toJSON(),
         popularity: prediction.agrees.length + prediction.disagrees.length,
       }))
       .sort((a, b) => b.popularity - a.popularity);
@@ -144,7 +144,7 @@ const getFollowingPredictions = async (req, res) => {
     // Calculate popularity and sort predictions
     const sortedPredictions = predictions
       .map((prediction) => ({
-        ...prediction.toObject(),
+        ...prediction.toJSON(),
         popularity: prediction.agrees.length + prediction.disagrees.length,
       }))
       .sort((a, b) => b.popularity - a.popularity);

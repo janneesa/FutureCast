@@ -92,6 +92,11 @@ const userSchema = new Schema(
         },
       },
     },
+    notifications: {
+      type: [String],
+      required: false,
+      default: [],
+    },
   },
   {
     timestamps: true,
