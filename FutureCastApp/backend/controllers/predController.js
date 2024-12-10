@@ -1,16 +1,16 @@
-const { default: mongoose } = require("mongoose");
-const Prediction = require("../models/predModel.js");
-const Comment = require("../models/commModel.js");
+const { default: mongoose } = require('mongoose');
+const Prediction = require('../models/predModel.js');
+const Comment = require('../models/commModel.js');
 
 // GET /predictions
 const getAllPredictions = async (req, res) => {
   try {
     const predictions = await Prediction.find({})
-      .populate("comments")
+      .populate('comments')
       .sort({ createdAt: -1 });
     res.status(200).json(predictions);
   } catch (error) {
-    res.status(404).json({ message: "Failed to retrieve predictions" });
+    res.status(404).json({ message: 'Failed to retrieve predictions' });
   }
 };
 
@@ -22,7 +22,7 @@ const createPrediction = async (req, res) => {
   } catch (error) {
     res
       .status(400)
-      .json({ message: "Failed to create prediction", error: error.message });
+      .json({ message: 'Failed to create prediction', error: error.message });
   }
 };
 
@@ -31,20 +31,20 @@ const getPredictionById = async (req, res) => {
   const { predictionId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(predictionId)) {
-    return res.status(400).json({ message: "Invalid prediction ID" });
+    return res.status(400).json({ message: 'Invalid prediction ID' });
   }
 
   try {
     const prediction = await Prediction.findById(predictionId).populate(
-      "comments"
+      'comments'
     );
     if (prediction) {
       res.status(200).json(prediction);
     } else {
-      res.status(404).json({ message: "Prediction not found" });
+      res.status(404).json({ message: 'Prediction not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to retrieve prediction" });
+    res.status(500).json({ message: 'Failed to retrieve prediction' });
   }
 };
 
@@ -52,7 +52,7 @@ const getPredictionById = async (req, res) => {
 const getPredictionsByUserId = async (req, res) => {
   const { userId } = req.params;
   if (!userId) {
-    return res.status(400).json({ message: "Invalid userId" });
+    return res.status(400).json({ message: 'Invalid userId' });
   }
 
   try {
@@ -60,10 +60,10 @@ const getPredictionsByUserId = async (req, res) => {
     if (predictions.length >= 0) {
       res.status(200).json(predictions);
     } else {
-      res.status(404).json({ error: "No predictions found for this user" });
+      res.status(404).json({ error: 'No predictions found for this user' });
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve predictions" });
+    res.status(500).json({ error: 'Failed to retrieve predictions' });
   }
 };
 
@@ -71,7 +71,7 @@ const getPredictionsByUserId = async (req, res) => {
 const getPredictionsByCategory = async (req, res) => {
   const { category } = req.params;
   if (!category) {
-    return res.status(400).json({ message: "Invalid category" });
+    return res.status(400).json({ message: 'Invalid category' });
   }
 
   try {
@@ -79,10 +79,38 @@ const getPredictionsByCategory = async (req, res) => {
     if (predictions.length >= 0) {
       res.status(200).json(predictions);
     } else {
-      res.status(404).json({ error: "No predictions found for this category" });
+      res.status(404).json({ error: 'No predictions found for this category' });
     }
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve predictions" });
+    res.status(500).json({ error: 'Failed to retrieve predictions' });
+  }
+};
+
+// GET /predictions/past
+const getPastPredictions = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const pastPredictions = await Prediction.find({
+      lastVoteDate: { $lt: currentDate },
+    }).populate('comments');
+    res.status(200).json(pastPredictions);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to retrieve past predictions' });
+  }
+};
+
+// GET /predictions/active
+const getActivePredictions = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    const activePredictions = await Prediction.find({
+      lastVoteDate: { $gte: currentDate },
+    }).populate('comments');
+    res.status(200).json(activePredictions);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to retrieve active predictions' });
   }
 };
 
@@ -90,7 +118,7 @@ const getPredictionsByCategory = async (req, res) => {
 const updatePrediction = async (req, res) => {
   const { predictionId } = req.params;
   if (!mongoose.Types.ObjectId.isValid(predictionId)) {
-    return res.status(400).json({ message: "Invalid prediction ID" });
+    return res.status(400).json({ message: 'Invalid prediction ID' });
   }
 
   try {
@@ -102,10 +130,10 @@ const updatePrediction = async (req, res) => {
     if (updatedPrediction) {
       res.status(200).json(updatedPrediction);
     } else {
-      res.status(404).json({ message: "Prediction not found" });
+      res.status(404).json({ message: 'Prediction not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to update prediction" });
+    res.status(500).json({ message: 'Failed to update prediction' });
   }
 };
 
@@ -114,7 +142,7 @@ const deletePrediction = async (req, res) => {
   const { predictionId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(predictionId)) {
-    return res.status(400).json({ message: "Invalid prediction ID" });
+    return res.status(400).json({ message: 'Invalid prediction ID' });
   }
 
   try {
@@ -122,10 +150,10 @@ const deletePrediction = async (req, res) => {
     if (deletedPrediction) {
       res.status(200).json(deletedPrediction);
     } else {
-      res.status(404).json({ message: "Prediction not found" });
+      res.status(404).json({ message: 'Prediction not found' });
     }
   } catch (error) {
-    res.status(500).json({ message: "Failed to delete prediction" });
+    res.status(500).json({ message: 'Failed to delete prediction' });
   }
 };
 
@@ -135,7 +163,7 @@ const addComment = async (req, res) => {
   const { userId, username, comment } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(predictionId)) {
-    return res.status(400).json({ message: "Invalid prediction ID" });
+    return res.status(400).json({ message: 'Invalid prediction ID' });
   }
 
   try {
@@ -152,17 +180,17 @@ const addComment = async (req, res) => {
         $push: { comments: newComment._id },
       },
       { new: true }
-    ).populate("comments");
+    ).populate('comments');
 
     if (!prediction) {
-      return res.status(404).json({ message: "Prediction not found" });
+      return res.status(404).json({ message: 'Prediction not found' });
     }
 
     res.status(200).json(newComment);
   } catch (error) {
-    console.error("Error adding comment:", error);
+    console.error('Error adding comment:', error);
     res.status(500).json({
-      message: "Failed to add comment",
+      message: 'Failed to add comment',
       error: error.message,
     });
   }
@@ -173,16 +201,14 @@ const votePrediction = async (req, res) => {
   const { predictionId } = req.params;
   const { userId, voteType } = req.body;
 
-  console.log(userId);
-
   if (!mongoose.Types.ObjectId.isValid(predictionId)) {
-    return res.status(400).json({ message: "Invalid prediction ID" });
+    return res.status(400).json({ message: 'Invalid prediction ID' });
   }
 
   try {
     const prediction = await Prediction.findById(predictionId);
     if (!prediction) {
-      return res.status(404).json({ message: "Prediction not found" });
+      return res.status(404).json({ message: 'Prediction not found' });
     }
 
     prediction.agrees = prediction.agrees.filter(
@@ -193,19 +219,57 @@ const votePrediction = async (req, res) => {
     );
 
     // Add user to the appropriate array based on voteType
-    if (voteType === "agrees") {
+    if (voteType === 'agrees') {
       prediction.agrees = prediction.agrees.concat([userId]);
-    } else if (voteType === "disagrees") {
+    } else if (voteType === 'disagrees') {
       prediction.disagrees = prediction.disagrees.concat([userId]);
     }
 
-    prediction.markModified("agrees");
-    prediction.markModified("disagrees");
+    prediction.markModified('agrees');
+    prediction.markModified('disagrees');
 
     const savedPrediction = await prediction.save();
     res.status(200).json(savedPrediction);
   } catch (error) {
-    res.status(500).json({ message: "Failed to vote on prediction" });
+    res.status(500).json({ message: 'Failed to vote on prediction' });
+  }
+};
+
+const finalVotePrediction = async (req, res) => {
+  const { predictionId } = req.params;
+  const { userId, voteType } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(predictionId)) {
+    return res.status(400).json({ message: 'Invalid prediction ID' });
+  }
+
+  try {
+    const prediction = await Prediction.findById(predictionId);
+    if (!prediction) {
+      return res.status(404).json({ message: 'Prediction not found' });
+    }
+
+    prediction.trueVotes = prediction.trueVotes.filter(
+      (id) => String(id) !== String(userId)
+    );
+    prediction.falseVotes = prediction.falseVotes.filter(
+      (id) => String(id) !== String(userId)
+    );
+
+    // Add user to the appropriate array based on voteType
+    if (voteType === 'true') {
+      prediction.trueVotes = prediction.trueVotes.concat([userId]);
+    } else if (voteType === 'false') {
+      prediction.falseVotes = prediction.falseVotes.concat([userId]);
+    }
+
+    prediction.markModified('trueVotes');
+    prediction.markModified('falseVotes');
+
+    const savedPrediction = await prediction.save();
+    res.status(200).json(savedPrediction);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to final vote on prediction' });
   }
 };
 
@@ -215,8 +279,11 @@ module.exports = {
   getPredictionById,
   getPredictionsByUserId,
   getPredictionsByCategory,
+  getPastPredictions,
+  getActivePredictions,
   updatePrediction,
   deletePrediction,
   addComment,
   votePrediction,
+  finalVotePrediction,
 };

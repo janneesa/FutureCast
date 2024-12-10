@@ -41,6 +41,16 @@ const predSchema = new Schema(
       type: String,
       required: false,
     },
+    trueVotes: {
+      type: [String],
+      required: true,
+      default: [],
+    },
+    falseVotes: {
+      type: [String],
+      required: true,
+      default: [],
+    },
   },
   {
     timestamps: true,
