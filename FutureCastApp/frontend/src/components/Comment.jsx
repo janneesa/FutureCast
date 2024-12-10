@@ -26,11 +26,24 @@ function Comment({ comment, onLike }) {
     await onLike(comment._id);
   };
 
+  const formattedDate = new Date(comment.createdAt).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
   return (
     <div className='border-b pb-2'>
-      <p className='text-primaryText dark:text-darkPrimaryText text-xl font-bold self-center'>
-        {comment.username}
-      </p>
+      <div className='flex items-center gap-2'>
+        <p className='text-primaryText dark:text-darkPrimaryText text-xl font-bold self-center'>
+          {comment.username}
+        </p>
+        <span className='text-secondaryText dark:text-darkSecondaryText text-sm'>
+          {formattedDate}
+        </span>
+      </div>
       <p className='text-primaryText my-2'>{comment.comment}</p>
       <div className='flex items-center text-sm text-gray-500'>
         <span>{likeCount} likes</span>
