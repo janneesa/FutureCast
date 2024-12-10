@@ -6,6 +6,7 @@ import Card from "../Card";
 import FollowModal from "./FollowModal";
 
 import useToast from "../../hooks/useToast";
+import useNotifications from "../../hooks/useNotifications";
 
 const ProfileCard = ({ profile }) => {
   const { user, setUser } = useContext(UserContext);
@@ -22,6 +23,7 @@ const ProfileCard = ({ profile }) => {
   );
   const navigate = useNavigate();
   const { showPromiseToast } = useToast();
+  const { addNotification } = useNotifications();
   const isOwnProfile = user.id === profile.id;
 
   // Update isFollowing when user or profile changes
@@ -101,6 +103,14 @@ const ProfileCard = ({ profile }) => {
           newFollowingState
             ? `You are now following ${profile.name}.`
             : `You have unfollowed ${profile.name}.`
+        );
+
+        // Add notification to profile
+        await addNotification(
+          profile.id,
+          `${user.username} ${
+            newFollowingState ? "started following" : "unfollowed"
+          } you.`
         );
       } catch (error) {
         reject(new Error(`Error toggling follow: ${error.message}`));
