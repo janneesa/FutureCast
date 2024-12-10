@@ -16,6 +16,10 @@ const addNotification = async (userId, message) => {
       return { status: 404, error: "User not found" };
     }
 
+    if (!user.settings.notifications.push) {
+      return { status: 200, message: "Notifications are disabled" };
+    }
+
     user.notifications.push(message);
     await user.save();
     return { status: 200, message: "Notification added" };
