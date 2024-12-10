@@ -1,7 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { UserContext } from "../components/context/UserContext";
 import useToast from "./useToast";
-import { set } from "mongoose";
 
 const useNotifications = () => {
   const { user, setUser } = useContext(UserContext);
