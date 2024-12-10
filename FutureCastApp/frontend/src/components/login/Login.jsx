@@ -19,8 +19,6 @@ function Login() {
         <div className="card-header">
           <h2>Login to FutureCast</h2>
           <p>Enter your email and password to access your account</p>
-          <p>Test Credentials:</p>
-          <p>m@example.com password</p>
         </div>
 
         <div className="card-content">
