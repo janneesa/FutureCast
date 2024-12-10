@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
+const requireAuth = require("../middlewares/requireAuth");
 const {
   getMessagesBySender,
   getMessagesByReceiver,
   addMessage,
   deleteMessage,
 } = require("../controllers/msgController");
+
+router.use(requireAuth);
 
 // GET /messages/sender/:sender
 router.get("/sender/:sender", getMessagesBySender);

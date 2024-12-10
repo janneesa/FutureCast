@@ -8,30 +8,35 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
     const [searchWord, setSearchWord] = useState("");
     const [searchResults, setSearchResults] = useState([]);
 
+    // Function to handle search input change
     const handleSearchChange = (value) => {
         setSearchWord(value);
         fetchSearchResults(value);
     };
 
+    // Fetch messages when user changes
     useEffect(() => {
         fetchMessages(user.username);
     }, [user]);
 
+    // Fetch friends when messages gets added
     useEffect(() => {
         if (messages.length > 0) {
             fetchFriends(messages);
         }
     }, [messages]);
 
+    // Fetch all messages for the logged in user
     const fetchMessages = async (username) => {
         const fetchedMessages = new Set();
 
-        // Fetch messages FROM the logged in user
+        // Fetch messages where the user is the sender
         try {
             const response = await fetch(`/api/messages/sender/${username}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${user.token}`,
                 },
             });
 
@@ -45,12 +50,13 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
             console.error("messages fetch error:", error);
         }
 
-        //Fetch messages where user is receiver
+        //Fetch messages where user is the receiver
         try {
             const response = await fetch(`/api/messages/receiver/${username}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${user.token}`,
                 },
             });
 
@@ -67,6 +73,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         setMessages(Array.from(fetchedMessages).sort((a, b) => new Date(b.time) - new Date(a.time)));
     }
 
+    // Fetch all users who have messages with the logged in user
     const fetchFriends = async (messages) => {
         const fetchedFriends = [];
         for (let i = 0; i < messages.length; i++) {  
@@ -76,6 +83,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
+                            Authorization: `Bearer ${user.token}`,
                         },
                     });
                     
@@ -92,6 +100,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
                         method: "GET",
                         headers: {
                             "Content-Type": "application/json",
+                            Authorization: `Bearer ${user.token}`,
                         },
                     });
                     
@@ -111,10 +120,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         setFriends([...friends, ...fetchedFriends]);
     }
 
-    const selectContact = (username) => {
-        setSelectedFriend(username);
-    };
-
+    // Fetch search results when user types in the search bar
     const fetchSearchResults = async (searchWord) => {
         if (searchWord === "") {
             setSearchResults([]);
@@ -140,12 +146,13 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         }
     };
 
-    const addConversation = (username) => {
-        if (!friends.some(f => f.username === username)) {
-            const friend = searchResults.find(u => u.username === username);
+    // function to add a conversation to the friends list
+    const addConversation = (user) => {
+        if (!friends.some(f => f.username === user.username)) {
+            const friend = searchResults.find(u => u.username === user.username);
             setFriends([friend, ...friends]);
         }
-        selectContact(username);
+        setSelectedFriend(user);
         setSearchWord("");
         setSearchResults([]);
     }
@@ -154,7 +161,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
         <div className="card h-full p-2">
             <div>
                 <h2 className="card-header">Messages</h2>
-                <div className="hidden lg:flex p-2 relative flex-col">
+                <div className="flex p-2 relative flex-col">
                     <input
                         type="text"
                         placeholder="Search users..."
@@ -165,7 +172,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
                     {searchResults && searchResults.length > 0 && (
                         <ul className="bg-white dark:bg-gray-800 w-full mt-1 rounded-md shadow-lg z-10">
                             {searchResults.map((user) => (
-                                <li key={user.username} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => addConversation(user.username)}>
+                                <li key={user.username} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer" onClick={() => addConversation(user)}>
                                     <p>{user.name} ({user.username})</p>
                                 </li>
                             ))}
@@ -177,7 +184,7 @@ function FriendsList({ selectedFriend, setSelectedFriend, messages, setMessages 
             <div className="card">
                 <ul className="max-h-[calc(100vh-20rem)] overflow-y-auto">
                     {friends.map((friend) => (
-                        <li onClick={() => selectContact(friend.username)} className={"flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-500 "+ (friend.username === selectedFriend ? 'bg-gray-100 dark:bg-gray-600' : '')} key={friend.username}>
+                        <li onClick={() => setSelectedFriend(friend)} className={"flex items-center p-2 hover:bg-gray-200 dark:hover:bg-gray-500 "+ (selectedFriend && friend.username === selectedFriend.username ? 'bg-gray-100 dark:bg-gray-600' : '')} key={friend.username}>
                             <img
                                 src={friend.avatar}
                                 alt="avatar"

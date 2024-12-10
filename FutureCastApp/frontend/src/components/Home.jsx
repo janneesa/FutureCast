@@ -82,34 +82,10 @@ function Home() {
 
   return (
     <div className='p-4 flex flex-col gap-4 items-center'>
-      <div className='flex justify-between mt-4'>
-        <button className='button-ghost' onClick={() => setTab('active')}>
-          Active
-        </button>
-        {/*
-        <button className='button-ghost' onClick={() => setTab('past')}>
-          Filtered
-        </button>
-        <button className='button-ghost' onClick={() => setTab('past')}>
-          Trending
-        </button>
-        */}
-        <button className='button-ghost' onClick={() => setTab('past')}>
-          Past
-        </button>
-      </div>
-      {tab === 'active' && (
-        <>
-          <PredictionInput addPrediction={addPrediction} />
-          {sortedPredictions.map((prediction, index) => (
-            <Prediction key={`${prediction.id}-${index}`} {...prediction} />
-          ))}
-        </>
-      )}
-      {tab === 'past' &&
-        pastPredictions.map((prediction, index) => (
-          <PastPrediction key={`${prediction.id}-${index}`} {...prediction} />
-        ))}
+      <PredictionInput addPrediction={addPrediction} />
+      {sortedPredictions.map((prediction, index) => (
+        <Prediction key={`${prediction.id}-${index}`} {...prediction} />
+      ))}
     </div>
   );
 }

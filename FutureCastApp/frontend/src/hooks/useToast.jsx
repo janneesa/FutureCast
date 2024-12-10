@@ -12,13 +12,13 @@ const useToast = () => {
         fontFamily: "Inter, sans-serif",
         borderRadius: "8px",
         padding: "16px",
-        background: isDarkMode() ? "#2D3748" : "#FFFFFF", // dark or light card
-        color: isDarkMode() ? "#E2E8F0" : "#1F2937", // dark or light text
-        border: `1px solid ${isDarkMode() ? "#10B981" : "#10B981"}`, // consistent success green
+        background: isDarkMode() ? "#2D3748" : "#FFFFFF",
+        color: isDarkMode() ? "#E2E8F0" : "#1F2937",
+        border: `1px solid ${isDarkMode() ? "#4A5568" : "#CBD5E0"}`,
       },
       iconTheme: {
         primary: "#10B981",
-        secondary: isDarkMode() ? "#2D3748" : "#FFFFFF", // adjust for dark background
+        secondary: isDarkMode() ? "#2D3748" : "#FFFFFF",
       },
     });
   };
@@ -31,13 +31,13 @@ const useToast = () => {
         fontFamily: "Inter, sans-serif",
         borderRadius: "8px",
         padding: "16px",
-        background: isDarkMode() ? "#2D3748" : "#FFFFFF", // dark or light card
-        color: isDarkMode() ? "#F56565" : "#B91C1C", // dark or light red text
-        border: `1px solid ${isDarkMode() ? "#F56565" : "#EF4444"}`, // consistent error red
+        background: isDarkMode() ? "#2D3748" : "#FFFFFF",
+        color: isDarkMode() ? "#E2E8F0" : "#1F2937",
+        border: `1px solid ${isDarkMode() ? "#4A5568" : "#CBD5E0"}`,
       },
       iconTheme: {
         primary: "#EF4444",
-        secondary: isDarkMode() ? "#2D3748" : "#FFFFFF", // adjust for dark background
+        secondary: isDarkMode() ? "#2D3748" : "#FFFFFF",
       },
     });
   };
@@ -61,7 +61,41 @@ const useToast = () => {
     });
   };
 
-  return { showSuccessToast, showErrorToast, showInfoToast };
+  const showPromiseToast = async (promise, messages) => {
+    toast.promise(
+      promise,
+      {
+        loading: messages.loading || "Loading...",
+        success: messages.success || "Success!",
+        error: messages.error || "Something went wrong!",
+      },
+      {
+        style: {
+          top: "80px",
+          fontFamily: "Inter, sans-serif",
+          borderRadius: "8px",
+          padding: "16px",
+          background: isDarkMode() ? "#2D3748" : "#FFFFFF",
+          color: isDarkMode() ? "#E2E8F0" : "#1F2937",
+          border: `1px solid ${isDarkMode() ? "#4A5568" : "#CBD5E0"}`,
+        },
+        success: {
+          iconTheme: {
+            primary: "#10B981",
+            secondary: isDarkMode() ? "#2D3748" : "#FFFFFF",
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: "#EF4444",
+            secondary: isDarkMode() ? "#2D3748" : "#FFFFFF",
+          },
+        },
+      }
+    );
+  };
+
+  return { showSuccessToast, showErrorToast, showInfoToast, showPromiseToast };
 };
 
 export default useToast;

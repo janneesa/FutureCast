@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
@@ -11,8 +11,21 @@ function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchWord, setSearchWord] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const profileLink = user ? `/app/profile/${user.id}` : null;
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!event.target.closest(".relative")) {
+        setSearchResults([]);
+        setSearchOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -31,12 +44,44 @@ function Navigation() {
     setSearchOpen(!searchOpen);
   };
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setSearchResults([]);
     navigate("/app/search", { state: { searchWord } });
+  };
+
+  const handleChange = (value) => {
+    fetchSearchResults(value);
+    console.log(searchResults);
   };
 
   const handleNavigate = () => {
     navigate("/app/home");
+  };
+
+  const fetchSearchResults = async (searchWord) => {
+    if (searchWord === "") {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const response = await fetch(`/api/users/search/${searchWord}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        const users = await response.json();
+        //remove the logged in user and friends from the search results
+        setSearchResults(users);
+      } else {
+        throw new Error("Failed to fetch search results");
+      }
+    } catch (error) {
+      console.error("Search error:", error);
+    }
   };
 
   return (
@@ -45,18 +90,15 @@ function Navigation() {
         <div className="flex-between h-16">
           <div className="flex items-center">
             <div
-              className="text-2xl font-bold text-primaryText dark:text-darkPrimaryText"
+              className="text-2xl font-bold text-primaryText dark:text-darkPrimaryText cursor-pointer"
               onClick={handleNavigate}
             >
               FutureCast
             </div>
           </div>
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-4 ml-14">
             <Link to="/app/home" className="nav-link">
               Home
-            </Link>
-            <Link to={profileLink} className="nav-link">
-              Profile
             </Link>
             <Link to="/app/messages" className="nav-link">
               Messages
@@ -68,17 +110,50 @@ function Navigation() {
               Logout
             </Link>
           </div>
-          <div className="hidden lg:flex -ml-28">
-            <input
-              type="text"
-              placeholder="Search on FutureCast"
-              className="input"
-              value={searchWord}
-              onChange={(e) => setSearchWord(e.target.value)}
-            />
-            <button className="button ml-4" onClick={handleSearch}>
-              Search
-            </button>
+          <div className="relative flex">
+            <form
+              className="max-h-10 self-center hidden lg:flex -ml-28 text-primaryText dark:text-darkPrimaryText"
+              onSubmit={handleSearch}
+            >
+              <input
+                type="text"
+                placeholder="Search on FutureCast"
+                className="input"
+                value={searchWord}
+                onChange={(e) => {
+                  setSearchWord(e.target.value);
+                  handleChange(e.target.value);
+                }}
+              />
+            </form>
+
+            {searchResults && searchResults.length > 0 && (
+              <ul className="hidden min-w-fit max-w-fit lg:block -ml-28 mt-14 absolute bg-white dark:bg-gray-800 w-full rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+                {searchResults.map((user) => (
+                  <li
+                    key={user.username}
+                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
+                    onClick={() => {
+                      navigate(`/app/profile/${user.id}`);
+                      setSearchResults([]);
+                    }}
+                  >
+                    <p>
+                      {user.name} ({user.username})
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <div className="ml-4 hidden lg:block">
+              <Link to={profileLink} className="">
+                <img
+                  src={user.avatar}
+                  alt={user.avatar}
+                  className="h-12 w-12 rounded-full mr-2 border-2 border-primaryButton dark:border-darkPrimaryButton transition transform hover:scale-105 hover:border-secondaryButton dark:hover:border-darkSecondaryButton"
+                />
+              </Link>
+            </div>
           </div>
 
           <div className="lg:hidden">
@@ -86,22 +161,13 @@ function Navigation() {
               onClick={toggleMenu}
               className="text-primaryText hover:text-secondaryText focus:outline-none dark:text-darkPrimaryText"
             >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d={
-                    isOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"
-                  }
-                ></path>
-              </svg>
+              <div className="mt-2">
+                <img
+                  src={user.avatar}
+                  alt={user.avatar}
+                  className="h-12 w-12 rounded-full mr-2 border-2 border-primaryButton dark:border-darkPrimaryButton transition transform hover:scale-105 hover:border-secondaryButton dark:hover:border-darkSecondaryButton"
+                />
+              </div>
             </button>
           </div>
         </div>
@@ -147,21 +213,40 @@ function Navigation() {
         </div>
       )}
       {searchOpen && (
-        <div className="lg:hidden">
-          <div className=" py-2 px-4 flex items-center">
+        <div className="lg:hidden relative px-4 py-2">
+          <form onSubmit={handleSearch} className="flex items-center">
             <input
               type="text"
               placeholder="Search users"
               className="input w-full"
               value={searchWord}
-              onChange={(e) => setSearchWord(e.target.value)}
-            ></input>
-            <div className="ml-2">
-              <button className="button" onClick={handleSearch}>
-                Search
-              </button>
-            </div>
-          </div>
+              onChange={(e) => {
+                setSearchWord(e.target.value);
+                handleChange(e.target.value);
+              }}
+            />
+            <button type="submit" className="button ml-2 max-w-fit">
+              Search
+            </button>
+          </form>
+          {searchResults && searchResults.length > 0 && (
+            <ul className="absolute max-w-fit min-w-fit bg-white dark:bg-gray-800 w-full mt-2 rounded-md shadow-lg z-10 border border-gray-200 dark:border-gray-600">
+              {searchResults.map((user) => (
+                <li
+                  key={user.username}
+                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer"
+                  onClick={() => {
+                    navigate(`/app/profile/${user.id}`);
+                    setSearchResults([]);
+                  }}
+                >
+                  <p>
+                    {user.name} ({user.username})
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </nav>

@@ -1,123 +1,69 @@
-import { useState } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../components/context/UserContext";
+import useToast from "./useToast";
 
-const useRegister = (onSuccess) => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
-  const [dateofbirth, setDateofbirth] = useState("");
-  const [error, setError] = useState("");
-  const [okMessage, setOkMessage] = useState("");
+const useRegister = () => {
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+  const { showPromiseToast } = useToast();
 
   const validateDateofbirth = (dob) => {
-    // Example validation: Ensure DOB is not in the future
     const now = new Date();
     const enteredDate = new Date(dob);
     return enteredDate > now ? "Date of birth cannot be in the future" : "";
   };
 
   const registerUser = async (newUser) => {
-    try {
-      const response = await fetch("https://randomuser.me/api/");
-      const data = await response.json();
-      const avatarUrl = data.results[0].picture.large;
-      if (!avatarUrl) {
-        setError("Failed to fetch avatar");
-        throw new Error("Failed to fetch avatar");
-      }
-      newUser.avatar = avatarUrl;
-    } catch (error) {
-      console.error("Failed to fetch avatar:", error);
+    // Fetch a random avatar
+    const avatarResponse = await fetch("https://randomuser.me/api/");
+    const avatarData = await avatarResponse.json();
+    const avatarUrl = avatarData.results[0]?.picture.large || "";
+
+    if (!avatarUrl) {
+      throw new Error("Failed to fetch avatar");
     }
 
-    try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
-      });
+    newUser.avatar = avatarUrl;
 
-      const data = await response.json();
-      if (response.ok) {
-        setOkMessage("User registered successfully");
-        setError("");
-        setName("");
-        setEmail("");
-        setUsername("");
-        setPassword("");
-        setPhonenumber("");
-        setDateofbirth("");
-        onSuccess && onSuccess(data);
-      } else {
-        setOkMessage("");
-        setError(data.message);
-      }
-    } catch (error) {
-      console.log("Failed to register user", error);
-      setError("An error occurred while registering");
+    // Register user
+    const response = await fetch("/api/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newUser),
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || data.message || "Failed to register user");
+    }
+
+    if (response.ok) {
+      setUser({ ...data.user, token: data.token });
+      navigate("/app");
+      return "User registered successfully!";
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const newUser = {
-      name,
-      email,
-      username,
-      password,
-      phone_number: phonenumber,
-      date_of_birth: dateofbirth,
-      bio: "",
-      followers: [],
-      following: [],
-      predictions: [],
-      successfulPredictions: [],
-      predictionScore: 0,
-      avatar: "",
-      settings: {
-        notifications: {
-          email: true,
-          push: true,
-        },
-        preferences: {
-          darkMode: false,
-        },
-      },
-    };
-
-    const errors = [validateDateofbirth(newUser.date_of_birth)].filter(
-      (error) => error !== ""
-    );
-
+  const handleRegister = (newUser) => {
+    const errors = [validateDateofbirth(newUser.date_of_birth)].filter(Boolean);
     if (errors.length > 0) {
-      setError(errors.join(", "));
-      return;
+      return showPromiseToast(Promise.reject(new Error(errors.join(", "))), {
+        loading: "Validating inputs...",
+        error: (error) => error.message,
+      });
     }
 
-    registerUser(newUser);
+    const registrationPromise = registerUser(newUser);
+
+    return showPromiseToast(registrationPromise, {
+      loading: "Registering user...",
+      success: "User registered successfully!",
+      error: (error) => error.message,
+    });
   };
 
-  return {
-    name,
-    setName,
-    email,
-    setEmail,
-    username,
-    setUsername,
-    password,
-    setPassword,
-    phonenumber,
-    setPhonenumber,
-    dateofbirth,
-    setDateofbirth,
-    error,
-    okMessage,
-    handleSubmit,
-  };
+  return { handleRegister };
 };
 
 export default useRegister;

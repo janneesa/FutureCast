@@ -2,10 +2,14 @@ import { useState, useEffect } from "react";
 
 const useUser = () => {
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    if (storedUser) setUser(JSON.parse(storedUser));
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    setIsLoading(false); // Mark initialization as complete
   }, []);
 
   useEffect(() => {
@@ -20,7 +24,7 @@ const useUser = () => {
     }
   }, [user]);
 
-  return { user, setUser };
+  return { user, setUser, isLoading };
 };
 
 export default useUser;
