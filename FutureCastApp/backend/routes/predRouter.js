@@ -37,7 +37,7 @@ router.get("/:predictionId", getPredictionById);
 router.get("/byUserId/:userId", getPredictionsByUserId);
 
 // GET /predictions/category/:category
-router.get("/search/:category", getPredictionsByCategory);
+router.get("/category/:category", getPredictionsByCategory);
 
 router.use(requireAuth);
 

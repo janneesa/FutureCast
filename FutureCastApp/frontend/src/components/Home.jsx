@@ -5,6 +5,7 @@ import PastPrediction from "./PastPrediction";
 import Prediction from "./Prediction";
 import PredictionInput from "./PredictionInput";
 import Loading from "./Loading";
+import Card from "./Card";
 
 function Home() {
   const { user } = useContext(UserContext);
@@ -12,6 +13,8 @@ function Home() {
   const [predictions, setPredictions] = useState([]);
   const [followingPredictions, setFollowingPredictions] = useState([]);
   const [pastPredictions, setPastPredictions] = useState([]);
+  const [categoryPredictions, setCategoryPredictions] = useState([]);
+  const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState("active");
 
@@ -22,8 +25,10 @@ function Home() {
       fetchFollowingPredictions();
     } else if (tab === "past") {
       fetchPastPredictions();
+    } else if (tab === "filter" && category) {
+      fetchByCategory();
     }
-  }, [tab]);
+  }, [tab, category]);
 
   const fetchPredictions = async () => {
     setLoading(true);
@@ -71,6 +76,23 @@ function Home() {
       setPastPredictions(data);
     } catch (error) {
       console.error("Failed to fetch past predictions:", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchByCategory = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/predictions/category/${category}`);
+      if (!response.ok) {
+        showErrorToast("Failed to fetch category predictions");
+        return;
+      }
+      const data = await response.json();
+      setCategoryPredictions(data);
+    } catch (error) {
+      console.error("Failed to fetch category predictions:", error.message);
     } finally {
       setLoading(false);
     }
@@ -161,7 +183,30 @@ function Home() {
         pastPredictions.map((prediction, index) => (
           <PastPrediction key={`${prediction.id}-${index}`} {...prediction} />
         ))}
-      {tab === "filter" && <div>coming up</div>}
+      {tab === "filter" && (
+        <Card>
+          <div className="card-content">
+            <label htmlFor="filter">Filter by Category</label>
+            <select
+              id="filter"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="input w-full mb-2"
+            >
+              <option value="">Select a category</option>
+              <option value="Technology">Technology</option>
+              <option value="Science">Science</option>
+              <option value="Politics">Politics</option>
+              <option value="Sports">Sports</option>
+              <option value="Entertainment">Entertainment</option>
+            </select>
+          </div>
+        </Card>
+      )}
+      {tab === "filter" &&
+        categoryPredictions.map((prediction, index) => (
+          <Prediction key={`${prediction.id}-${index}`} {...prediction} />
+        ))}
     </div>
   );
 }
