@@ -26,13 +26,13 @@ function Comment({ comment, onLike }) {
     await onLike(comment._id);
   };
 
-  const formattedDate = new Date(comment.createdAt).toLocaleString('en-US', {
+  const formattedDate = new Intl.DateTimeFormat(navigator.language, {
     year: 'numeric',
     month: 'numeric',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
-  });
+  }).format(new Date(comment.createdAt));
 
   return (
     <div className='border-b pb-2'>

@@ -84,13 +84,19 @@ function CommentModal({
           </button>
         </div>
         <div className='flex-1 overflow-y-auto space-y-4'>
-          {comments.map((comment) => (
-            <Comment
-              key={comment.id || Math.random()}
-              comment={comment}
-              onLike={handleLike}
-            />
-          ))}
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <Comment
+                key={comment.id || Math.random()}
+                comment={comment}
+                onLike={handleLike}
+              />
+            ))
+          ) : (
+            <p className='text-center text-secondaryText dark:text-darkSecondaryText py-4'>
+              Be the first to comment!
+            </p>
+          )}
         </div>
         <CommentInput
           predictionId={predictionId}
