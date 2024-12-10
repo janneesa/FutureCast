@@ -268,6 +268,51 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const googleAuth = async (req, res) => {
+  const { email, name, username, avatar } = req.body;
+
+  try {
+    if (!email || !name) {
+      return res.status(400).json({ error: "Email and name are required" });
+    }
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      const randomPassword = Math.random().toString(36).slice(-8);
+
+      // Use the existing signup method to create the user
+      user = await User.signup(
+        name,
+        email,
+        username,
+        randomPassword, // This will be hashed in the signup method
+        "", // phone_number
+        new Date(), // Use the current date if date_of_birth is unknown
+        "", // bio
+        [], // followers
+        [], // following
+        [], // predictions
+        [], // successfulPredictions
+        0, // predictionScore
+        avatar,
+        {
+          notifications: { email: true, push: true },
+          preferences: { darkMode: false },
+        } // settings
+      );
+    }
+
+    // Generate a token and return the user object
+    const token = generateToken(user._id);
+    res.status(200).json({ user, token });
+  } catch (error) {
+    console.error("Google Auth Error:", error.message);
+    res.status(500).json({ error: "Failed to authenticate via Google" });
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
@@ -280,4 +325,5 @@ module.exports = {
   addNotificationToUser,
   clearUserNotifications,
   updateUserPassword,
+  googleAuth,
 };

@@ -13,6 +13,7 @@ const {
   addNotificationToUser,
   clearUserNotifications,
   updateUserPassword,
+  googleAuth,
   // patchUser
 } = require("../controllers/userController");
 
@@ -24,6 +25,9 @@ router.post("/", createUser);
 
 // POST /users/login
 router.post("/login", loginUser);
+
+// POST /users/google-auth
+router.post("/google-auth", googleAuth);
 
 // GET /users/:userId
 router.get("/:userId", getUserById);
