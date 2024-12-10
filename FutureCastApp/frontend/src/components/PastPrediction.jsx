@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { UserContext } from '../components/context/UserContext';
 import Card from './Card';
+import CommentModal from './CommentModal';
 
 function PastPrediction({
   id,
@@ -18,6 +19,8 @@ function PastPrediction({
   const [userVote, setUserVote] = useState(null);
   const [trueVoteCount, setTrueVoteCount] = useState(trueVotes?.length || 0);
   const [falseVoteCount, setFalseVoteCount] = useState(falseVotes?.length || 0);
+  const [predictionComments, setPredictionComments] = useState(comments);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -28,6 +31,10 @@ function PastPrediction({
       }
     }
   }, [user, trueVotes, falseVotes]);
+
+  const handleAddComment = (newComment) => {
+    setPredictionComments([...predictionComments, newComment._id]);
+  };
 
   const handleVote = async (type) => {
     if (!user) return;
@@ -80,6 +87,8 @@ function PastPrediction({
     }
   };
 
+  const formattedLastVoteDate = new Date(lastVoteDate).toLocaleDateString();
+
   return (
     <Card>
       <div className='card-content'>
@@ -97,7 +106,7 @@ function PastPrediction({
         <div className='flex justify-between mt-4'>
           <button
             className={`button-secondary ${
-              userVote === 'true' ? 'button-true' : 'button-neutral'
+              userVote === 'true' ? 'button-agree' : 'button-neutral'
             }`}
             onClick={() => handleVote('true')}
           >
@@ -105,14 +114,43 @@ function PastPrediction({
           </button>
           <button
             className={`button-secondary ${
-              userVote === 'false' ? 'button-false' : 'button-neutral'
+              userVote === 'false' ? 'button-disagree' : 'button-neutral'
             }`}
             onClick={() => handleVote('false')}
           >
             False
           </button>
         </div>
+        <div>
+          <button
+            className='button-ghost flex'
+            onClick={() => setIsModalOpen(true)}
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth='1.5'
+              stroke='currentColor'
+              className='h-5 w-5 mr-4 self-center'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.4 0-4.8.2-7.2.6-1.584.233-2.707 1.626-2.707 3.228v6.932z'
+              />
+            </svg>
+            {predictionComments.length} Comments
+          </button>
+        </div>
       </div>
+      <CommentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        initialComments={predictionComments}
+        predictionId={id}
+        onAddComment={handleAddComment}
+      />
     </Card>
   );
 }
