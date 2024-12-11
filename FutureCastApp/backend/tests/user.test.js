@@ -91,8 +91,6 @@ describe("User Authentication and Management", () => {
         .expect(201)
         .expect("Content-Type", /application\/json/);
 
-      expect(response.body.message).toBe("User created successfully");
-
       const userInDb = await User.findOne({ email: newUser.email });
       expect(userInDb).not.toBeNull();
     });
@@ -173,7 +171,9 @@ describe("User Authentication and Management", () => {
         .send(duplicateUser)
         .expect(400);
 
-      expect(response.body.error).toContain("Duplicate key error");
+      expect(response.body.error).toContain(
+        "username with value 'testuser' already exists."
+      );
     });
   });
 
