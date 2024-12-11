@@ -244,6 +244,32 @@
           }
         },
         "required": ["content"]
+      },
+      "Message": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "description": "The sender's ID.",
+            "example": "6741de86599e1effd466f99d"
+          },
+          "receiver": {
+            "type": "string",
+            "description": "The receiver's ID.",
+            "example": "6741de86599e1effd466f99e"
+          },
+          "message": {
+            "type": "string",
+            "description": "The content of the message.",
+            "example": "Hello, how are you?"
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The time the message was sent.",
+            "example": "2030-08-01"
+          }
+        }
       }
     }
   },
@@ -740,6 +766,207 @@
           },
           "404": {
             "description": "Comment not found"
+          }
+        }
+      }
+    },
+    "/messages/sender/{sender}": {
+      "get": {
+        "summary": "Get Messages by Sender",
+        "description": "Retrieve all messages sent by a specific sender.",
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The sender's ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of messages sent by the specified sender.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No messages found for the sender.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/receiver/{receiver}": {
+      "get": {
+        "summary": "Get Messages by Receiver",
+        "description": "Retrieve all messages sent to a specific receiver.",
+        "parameters": [
+          {
+            "name": "receiver",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The receiver's ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of messages sent to the specified receiver.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Message"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No messages found for the receiver.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/messages/": {
+      "post": {
+        "summary": "Create a Message",
+        "description": "Create a new message by providing sender, receiver, and message content.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sender": {
+                    "type": "string",
+                    "description": "The sender's ID."
+                  },
+                  "receiver": {
+                    "type": "string",
+                    "description": "The receiver's ID."
+                  },
+                  "message": {
+                    "type": "string",
+                    "description": "The content of the message."
+                  }
+                },
+                "required": ["sender", "receiver", "message"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Message created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request, missing or invalid fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "messages/{messageId}": {
+      "delete": {
+        "summary": "Delete a Message",
+        "description": "Delete a message by its unique ID.",
+        "parameters": [
+          {
+            "name": "messageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the message to delete."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message deleted successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Message not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
