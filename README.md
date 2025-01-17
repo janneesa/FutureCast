@@ -2,7 +2,7 @@
 <br />
 FutureCast is a social platform where users make predictions on topics like tech, sports, and lifestyle. Others can vote, comment, and discuss predictions, creating a vibrant community.
 Personalized feeds, trending topics, and messaging tools connect like-minded users, making FutureCast the hub for shaping the future—one prediction at a time.
-[Test FutureCast here!](https://futurecast.onrender.com/)
+Test FutureCast on https://futurecast.onrender.com/
 <br />
 <br />
 <b>Methods:</b>
