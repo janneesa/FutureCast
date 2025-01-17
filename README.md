@@ -21,14 +21,15 @@ Users can explore trending predictions, follow others, and participate in lively
 
 <h2> Video Demo </h2>
 
-
 https://github.com/user-attachments/assets/a3e9c490-10e7-4e0e-9259-a14c1da96dd6
 
-
-
 <h2> Images </h2>
+![desktop darkmode](https://github.com/user-attachments/assets/61798691-b7e0-4c61-b476-d3ed8ca08086)
+![darkmode](https://github.com/user-attachments/assets/23faae93-ce5a-40a5-a4ac-7575e7813caf)
+![profile](https://github.com/user-attachments/assets/4318dc1e-5a81-4617-a3e8-1d7c1472d932)
+![home](https://github.com/user-attachments/assets/526c810f-e11b-4b44-b18d-c6187eef04fc)
+![desktop settings](https://github.com/user-attachments/assets/879045f3-3d28-4e98-904b-a506fce6ecca)
 
-<!-- Add relevant images/screenshots of the project here -->
 
 <br /><b>Contributors:</b>
 <ul>
