@@ -12,7 +12,6 @@ Personalized feeds, trending topics, and messaging tools connect like-minded use
         <li>Tailwind CSS</li>
         <li>JWT Authentication</li>
     </ul>
-<br />
 
 <h2> Description </h2>
 The project includes a React frontend styled with Tailwind CSS and a Node.js backend with MongoDB for efficient data management. 
