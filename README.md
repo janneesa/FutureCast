@@ -24,11 +24,12 @@ Users can explore trending predictions, follow others, and participate in lively
 https://github.com/user-attachments/assets/a3e9c490-10e7-4e0e-9259-a14c1da96dd6
 
 <h2> Images </h2>
-![desktop darkmode](https://github.com/user-attachments/assets/61798691-b7e0-4c61-b476-d3ed8ca08086)
-![darkmode](https://github.com/user-attachments/assets/23faae93-ce5a-40a5-a4ac-7575e7813caf)
-![profile](https://github.com/user-attachments/assets/4318dc1e-5a81-4617-a3e8-1d7c1472d932)
-![home](https://github.com/user-attachments/assets/526c810f-e11b-4b44-b18d-c6187eef04fc)
-![desktop settings](https://github.com/user-attachments/assets/879045f3-3d28-4e98-904b-a506fce6ecca)
+<img width="300" alt="homepage" src="https://github.com/user-attachments/assets/a260c9ac-bbba-4a67-b5ef-ab42e618873f">
+<img width="300" alt="profile" src="https://github.com/user-attachments/assets/47a86d24-8870-44aa-ade5-5bf23c242a82">
+<img width="300" alt="homepage with darkmode" src="https://github.com/user-attachments/assets/a4d89010-132d-42bb-878b-31d5c5a477fc">
+<img width="300" alt="desktop home page with darkmode" src="https://github.com/user-attachments/assets/ac68512c-cf67-48f0-b5dc-9bd830f4f20a">
+<img width="300" alt="desktop settings" src="https://github.com/user-attachments/assets/76f5300a-32cf-4000-ae68-ccb0dce27fdd">
+
 
 
 <br /><b>Contributors:</b>
