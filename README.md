@@ -21,7 +21,7 @@ Users can explore trending predictions, follow others, and participate in lively
 
 <h2> Video Demo </h2>
 
-https://github.com/user-attachments/assets/a3e9c490-10e7-4e0e-9259-a14c1da96dd6
+[Watch the video](https://github.com/user-attachments/assets/a3e9c490-10e7-4e0e-9259-a14c1da96dd6)
 
 <h2> Images </h2>
 <img width="300" alt="homepage" src="https://github.com/user-attachments/assets/a260c9ac-bbba-4a67-b5ef-ab42e618873f">
